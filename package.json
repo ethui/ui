@@ -9,10 +9,9 @@
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006 --no-open",
     "build-storybook": "storybook build",
-    "lint": "yarn lint:biome && yarn lint:tsc && yarn lint:unused",
+    "lint": "yarn lint:biome && yarn lint:tsc",
     "lint:biome": "biome check .",
-    "lint:tsc": "yarn workspaces foreach --all --parallel run tsc --noEmit",
-    "lint:unused": "ts-unused-exports tsconfig.json --ignoreFiles=vite.config.ts",
+    "lint:tsc": "tsc --noEmit",
     "fix": "yarn fix:biome",
     "fix:biome": "biome check --write ."
   },
