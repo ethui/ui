@@ -20,7 +20,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "rewriteRelativeImportExtensions": true,
-    "noEmit": true,
+    "emitDeclarationOnly": true,
 
     "types": ["node"],
     "typeRoots": ["@types", "./node_modules/@types", "./node_modules"],
