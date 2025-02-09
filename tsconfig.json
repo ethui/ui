@@ -28,13 +28,12 @@
       "#/*": ["./*"]
     }
   },
-  "files": ["tailwind.config.js", "components", "hooks", "lib", "images"],
   "include": [
-    "components",
-    "hooks",
-    "lib",
+    "components/**/*",
+    "hooks/**/*",
+    "lib/**/*",
     "./*.ts",
-    "@types",
+    "./*.tsx",
     "vite.config.ts"
   ]
 }
