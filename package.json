@@ -1,14 +1,20 @@
 {
   "name": "@ethui/ui",
-  "private": true,
   "type": "module",
+  "license": "MIT",
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006 --no-open",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "lint": "yarn lint:biome && yarn lint:tsc && yarn lint:unused",
+    "lint:biome": "biome check .",
+    "lint:tsc": "yarn workspaces foreach --all --parallel run tsc --noEmit",
+    "lint:unused": "ts-unused-exports tsconfig.json --ignoreFiles=vite.config.ts",
+    "fix": "yarn fix:biome",
+    "fix:biome": "biome check --write ."
   },
   "dependencies": {
     "@fontsource/source-code-pro": "^5.1.1",
@@ -43,10 +49,12 @@
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "viem": "^2.22.21",
+    "vite-tsconfig-paths": "^5.1.4",
     "zod": "^3.24.1",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
     "@chromatic-com/storybook": "^3.2.4",
     "@storybook/addon-essentials": "^8.5.3",
     "@storybook/addon-interactions": "^8.5.3",
@@ -57,6 +65,7 @@
     "@storybook/react": "^8.5.3",
     "@storybook/react-vite": "^8.5.3",
     "@storybook/test": "^8.5.3",
+    "@types/node": "^22.13.1",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react-swc": "^3.7.2",
@@ -64,6 +73,7 @@
     "postcss": "^8.5.1",
     "storybook": "^8.5.3",
     "tailwindcss": "^3.4.17",
+    "ts-unused-exports": "^11.0.1",
     "typescript": "5.7.3",
     "vite": "^6.0.11"
   },

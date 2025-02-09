@@ -3,17 +3,17 @@ import { type VariantProps, cva } from "class-variance-authority";
 import { PanelLeft } from "lucide-react";
 import * as React from "react";
 
-import { Button } from "@ethui/ui/components/shadcn/button";
-import { Input } from "@ethui/ui/components/shadcn/input";
-import { Separator } from "@ethui/ui/components/shadcn/separator";
-import { Skeleton } from "@ethui/ui/components/shadcn/skeleton";
+import { Button } from "#/components/shadcn/button";
+import { Input } from "#/components/shadcn/input";
+import { Separator } from "#/components/shadcn/separator";
+import { Skeleton } from "#/components/shadcn/skeleton";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@ethui/ui/components/shadcn/tooltip";
-import { cn } from "@ethui/ui/lib/utils";
+} from "#/components/shadcn/tooltip";
+import { cn } from "#/lib/utils";
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
