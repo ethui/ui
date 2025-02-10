@@ -551,7 +551,7 @@ __metadata:
     tailwindcss-animate: "npm:^1.0.7"
     ts-unused-exports: "npm:^11.0.1"
     typescript: "npm:5.7.3"
-    viem: "npm:^2.22.21"
+    viem: "npm:^2.23.0"
     vite: "npm:^6.0.11"
     vite-tsconfig-paths: "npm:^5.1.4"
     zod: "npm:^3.24.1"
@@ -5549,9 +5549,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"viem@npm:^2.22.21":
-  version: 2.22.23
-  resolution: "viem@npm:2.22.23"
+"viem@npm:^2.23.0":
+  version: 2.23.0
+  resolution: "viem@npm:2.23.0"
   dependencies:
     "@noble/curves": "npm:1.8.1"
     "@noble/hashes": "npm:1.7.1"
@@ -5566,7 +5566,7 @@ __metadata:
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10c0/0ed8a7450df4b3906679d90aecd11ff3c981e46cde62cdf4839d8051ffc303a8b3159a66aaefbb53965191f4f95bd6294165b5d0c33ff32a68d4f8dd18b4a596
+  checksum: 10c0/4386b2ab6450a67498c7aed24a67354b724b8b7605f8820330c7c8ee22cf1ba250affae1e99a08faa7abf2ca3080a6a3583f15688adeb1600b78f39c5560c77a
   languageName: node
   linkType: hard
 
