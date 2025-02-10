@@ -2,9 +2,6 @@ name: release
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - "v*"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.sha }}
@@ -16,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.get-tag.outputs.tag }}
-      version: ${{ steps.get-version.outputs.version }}
+
     steps:
       - uses: actions/checkout@v4
 
@@ -24,6 +21,7 @@ jobs:
       - id: get-tag
         name: get tag
         run: |
+          echo "version=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
           echo "tag=$(gh api /repos/ethui/extension/releases |\
             jq -r '.[] | select(.draft == true) | .tag_name')" \
             >> $GITHUB_OUTPUT
@@ -44,25 +42,14 @@ jobs:
           scope: '@ethui'
 
       - run: yarn install --frozen-lockfile
-      - run: yarn build
-      - run: yarn pack
 
-      - run: yarn publish --non-interactive
+      - run: yarn publish --prerelease
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - run: Upload to draft release
-        run: gh release upload ${{ needs.setup.outputs.tag }} ./ethui-ui-${{ needs.setup.outputs.tag }}.tgz
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  publish:
-    needs: [setup, build]
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: publish release
-        run: gh release edit ${{ needs.setup.outputs.tag }} --draft=false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push version changes to main branch 📤
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "release ${{ github.event.release.tag_name }}"
+          branch: ${{ github.event.repository.default_branch }}
+          file_pattern: package.json
