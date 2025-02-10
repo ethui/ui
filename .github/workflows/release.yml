@@ -27,7 +27,12 @@ jobs:
 
       - run: yarn version patch
       - run: yarn build
+
+      - run: yarn 
+        working-directory: ./dist
+
       - run: yarn npm publish --access public
+        working-directory: ./dist
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
