@@ -9,31 +9,13 @@ permissions:
   contents: write
 
 jobs:
-  setup:
-    runs-on: ubuntu-latest
-    outputs:
-      tag: ${{ steps.get-tag.outputs.tag }}
-
-    steps:
-      - uses: actions/checkout@v4
-
-      # get the current draft release
-      - id: get-tag
-        name: get tag
-        run: |
-          echo "version=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
-          echo "tag=$(gh api /repos/ethui/extension/releases |\
-            jq -r '.[] | select(.draft == true) | .tag_name')" \
-            >> $GITHUB_OUTPUT
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   build:
     needs: [setup]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
+      - run: npm install -g yarn
       - uses: actions/setup-node@v4
         with:
           cache: "yarn"
