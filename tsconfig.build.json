@@ -16,6 +16,6 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "./dist",
-    "sourceMap": true
+    "sourceMap": false
   }
 }
