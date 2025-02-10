@@ -1,6 +1,6 @@
 {
   "files": {
-    "ignore": ["**/*.gen.ts", "dist"]
+    "ignore": ["**/*.gen.ts", "dist", "package.json"]
   },
   "formatter": {
     "indentStyle": "space"

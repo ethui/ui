@@ -78,9 +78,6 @@
   "peerDependencies": {
     "@tanstack/react-query": "^5.21.4"
   },
-  "files": [
-    "dist",
-    "tailwind.config.js"
-  ],
+  "files": ["dist", "tailwind.config.js"],
   "packageManager": "yarn@4.6.0"
 }
