@@ -26,7 +26,7 @@ jobs:
       - run: yarn install --frozen-lockfile
 
       - run: yarn version prerelease
-      - run: yarn npm publish --prerelease --non-inteactive
+      - run: yarn npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
