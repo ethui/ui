@@ -2,7 +2,7 @@
   "name": "@ethui/ui",
   "type": "module",
   "license": "MIT",
-  "version": "0.0.1-1",
+  "version": "0.0.1",
   "scripts": {
     "build": "tsc",
     "preview": "vite preview",
@@ -82,6 +82,5 @@
     "dist",
     "tailwind.config.js"
   ],
-  "packageManager": "yarn@4.6.0",
-  "stableVersion": "0.0.1-0"
+  "packageManager": "yarn@4.6.0"
 }
