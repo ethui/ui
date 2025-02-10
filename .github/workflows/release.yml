@@ -28,7 +28,7 @@ jobs:
       - run: yarn version patch
       - run: yarn build
 
-      - run: touch yarn.lock && yarn
+      - run: cp ../yarn.lock && yarn
         working-directory: ./dist
 
       - run: yarn npm publish --access public
