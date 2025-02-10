@@ -1,6 +1,8 @@
 {
   "name": "@ethui/ui",
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "license": "MIT",
   "version": "0.0.1",
   "scripts": {
