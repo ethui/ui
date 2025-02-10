@@ -20,7 +20,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "rewriteRelativeImportExtensions": true,
-    "allowJs": true,
 
     "types": ["node"],
     "typeRoots": ["@types", "./node_modules/@types", "./node_modules"],
