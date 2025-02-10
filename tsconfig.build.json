@@ -12,6 +12,7 @@
     "package.json",
     "./font-faces.css"
   ],
+  "exclude": ["vite.config.ts"],
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "./dist",
