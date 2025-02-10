@@ -8,7 +8,7 @@
   "scripts": {
     "build": "yarn build:clean && yarn build:prepare && yarn build:tsc",
     "build:clean": "rm -rf dist && mkdir dist",
-    "build:prepare": "cp package.json *.css dist/",
+    "build:prepare": "cp -r package.json *.css images dist/",
     "build:tsc": "tsc --project tsconfig.build.json",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006 --no-open",
