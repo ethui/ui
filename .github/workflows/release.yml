@@ -12,15 +12,27 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  setup:
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.get-tag.outputs.tag }}
+      version: ${{ steps.get-version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
 
-    permissions:
-      contents: read
-      packages: write
-      attestations: write
-      id-token: write
+      # get the current draft release
+      - id: get-tag
+        name: get tag
+        run: |
+          echo "tag=$(gh api /repos/ethui/extension/releases |\
+            jq -r '.[] | select(.draft == true) | .tag_name')" \
+            >> $GITHUB_OUTPUT
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  build:
+    needs: [setup]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -32,6 +44,25 @@ jobs:
           scope: '@ethui'
 
       - run: yarn install --frozen-lockfile
-      - run: yarn npm publish
+      - run: yarn build
+      - run: yarn pack
+
+      - run: yarn publish --non-interactive
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - run: Upload to draft release
+        run: gh release upload ${{ needs.setup.outputs.tag }} ./ethui-ui-${{ needs.setup.outputs.tag }}.tgz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish:
+    needs: [setup, build]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: publish release
+        run: gh release edit ${{ needs.setup.outputs.tag }} --draft=false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
