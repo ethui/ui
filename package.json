@@ -6,7 +6,10 @@
   "license": "MIT",
   "version": "0.0.2",
   "scripts": {
-    "build": "tsc",
+    "build": "yarn build:clean && yarn build:prepare && yarn build:tsc",
+    "build:clean": "rm -rf dist && mkdir dist",
+    "build:prepare": "cp package.json *.css dist/",
+    "build:tsc": "tsc --project tsconfig.build.json",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006 --no-open",
     "build-storybook": "storybook build",
@@ -15,6 +18,11 @@
     "lint:tsc": "tsc --noEmit",
     "fix": "yarn fix:biome",
     "fix:biome": "biome check --write ."
+  },
+  "exports":{
+    "components": "./dist/components",
+    "lib": "./dist/lib",
+    "utils": "./dist/utils"
   },
   "dependencies": {
     "@fontsource/source-code-pro": "^5.1.1",

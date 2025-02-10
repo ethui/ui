@@ -1,0 +1,20 @@
+{
+  "extends": "./tsconfig.base.json",
+  "include": [
+    "components/**/*.ts",
+    "components/**/*.tsx",
+    "lib",
+    "hooks",
+    "images",
+    "./*.tsx",
+    "./*.ts",
+    "tailwind.config.ts",
+    "package.json",
+    "./font-faces.css"
+  ],
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "./dist",
+    "sourceMap": true
+  }
+}
