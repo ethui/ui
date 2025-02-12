@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import React from "react";
-import { SolidityCall } from "../components/solidity-call";
+import { SolidityCall } from "../components/solidity-call.js";
 
 const meta: Meta<typeof SolidityCall> = {
   title: "ethui/SolidityCall",

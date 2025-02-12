@@ -10,8 +10,8 @@ import {
 
 import clsx from "clsx";
 import { Check, LoaderCircle } from "lucide-react";
-import { Button, type ButtonProps } from "./shadcn/button";
-import { Checkbox as ShadCheckbox } from "./shadcn/checkbox";
+import { Button, type ButtonProps } from "./shadcn/button.js";
+import { Checkbox as ShadCheckbox } from "./shadcn/checkbox.js";
 import {
   FormControl,
   FormField,
@@ -19,16 +19,16 @@ import {
   FormLabel,
   FormMessage,
   Form as ShadForm,
-} from "./shadcn/form";
-import { Input, type InputProps } from "./shadcn/input";
+} from "./shadcn/form.js";
+import { Input, type InputProps } from "./shadcn/input.js";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./shadcn/select";
-import { Textarea as ShadTextarea } from "./shadcn/textarea";
+} from "./shadcn/select.js";
+import { Textarea as ShadTextarea } from "./shadcn/textarea.js";
 
 interface Props<T extends FieldValues>
   extends Omit<React.FormHTMLAttributes<HTMLFormElement>, "onSubmit"> {

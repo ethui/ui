@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { EthuiLogo } from "../components/ethui-logo";
+import { EthuiLogo } from "../components/ethui-logo.js";
 
 const meta: Meta<typeof EthuiLogo> = {
   title: "ethui/EthuiLogo",

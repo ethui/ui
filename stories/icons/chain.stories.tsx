@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { ChainIcon } from "../../components/icons/chain";
+import { ChainIcon } from "../../components/icons/chain.js";
 
 const meta = {
   title: "Icons/Chain",

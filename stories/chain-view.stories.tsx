@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { ChainView } from "../components/chain-view";
+import { ChainView } from "../components/chain-view.js";
 
 const meta = {
   title: "Components/ChainView",

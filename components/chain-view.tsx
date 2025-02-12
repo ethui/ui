@@ -1,4 +1,4 @@
-import { ChainIcon } from "./icons/chain";
+import { ChainIcon } from "./icons/chain.js";
 
 export interface ChainViewProps {
   name: string;

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { EffigyIcon } from "../../components/icons/effigy";
+import { EffigyIcon } from "../../components/icons/effigy.js";
 
 const meta = {
   title: "Icons/Effigy",

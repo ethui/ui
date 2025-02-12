@@ -3,17 +3,17 @@ import { type VariantProps, cva } from "class-variance-authority";
 import { PanelLeft } from "lucide-react";
 import * as React from "react";
 
-import { Button } from "./button";
-import { Input } from "./input";
-import { Separator } from "./separator";
-import { Skeleton } from "./skeleton";
+import { Button } from "./button.js";
+import { Input } from "./input.js";
+import { Separator } from "./separator.js";
+import { Skeleton } from "./skeleton.js";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "./tooltip";
-import { cn } from "../../lib/utils";
+} from "./tooltip.js";
+import { cn } from "../../lib/utils.js"
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
