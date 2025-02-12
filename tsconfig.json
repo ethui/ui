@@ -1,5 +1,12 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {},
-  "include": ["components", "hooks", "./lib", "tailwind.config.ts"]
+  "include": [
+    "components",
+    "hooks",
+    "./lib",
+    "tailwind.config.ts",
+    "images",
+    "index.d.ts"
+  ]
 }
