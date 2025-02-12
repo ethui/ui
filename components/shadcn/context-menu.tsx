@@ -6,7 +6,7 @@ import {
 } from "@radix-ui/react-icons";
 import * as React from "react";
 
-import { cn } from "../../lib/utils.js"
+import { cn } from "../../lib/utils.js";
 
 const ContextMenu = ContextMenuPrimitive.Root;
 
