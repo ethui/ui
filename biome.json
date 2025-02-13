@@ -1,6 +1,6 @@
 {
   "files": {
-    "ignore": ["**/*.gen.ts", "dist", "package.json"]
+    "ignore": ["**/*.gen.ts", "dist", "package.json", "storybook-static"]
   },
   "formatter": {
     "indentStyle": "space"
