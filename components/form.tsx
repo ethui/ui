@@ -60,6 +60,8 @@ export function Form<S extends FieldValues>({
   );
 }
 
+// TODO: this is inheriting from InputProps, but is also being used for textarea, checkbox, etc
+// need better typings
 interface BaseInputProps<T extends FieldValues> extends InputProps {
   label?: string | React.ReactNode;
   name: Path<T>;
@@ -72,6 +74,7 @@ function Text<T extends FieldValues>({
   label,
   type = "text",
   className = "",
+  ...rest
 }: BaseInputProps<T>) {
   const { control } = useFormContext();
 
@@ -83,7 +86,7 @@ function Text<T extends FieldValues>({
         <FormItem className={className}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input {...field} type={type} />
+            <Input {...rest} {...field} type={type} />
           </FormControl>
           <FormMessage>&nbsp;</FormMessage>
         </FormItem>
@@ -121,6 +124,7 @@ Form.Textarea = Textarea;
 function NumberField<T extends FieldValues>({
   name,
   label,
+  ...rest
 }: BaseInputProps<T>) {
   const { register, control } = useFormContext();
 
@@ -133,7 +137,11 @@ function NumberField<T extends FieldValues>({
           <FormLabel>{label}</FormLabel>
           <FormControl>
             {/* TODO: maybe we should use zod's coerce instead? https://github.com/shadcn-ui/ui/issues/421 */}
-            <Input type="number" {...register(name, { valueAsNumber: true })} />
+            <Input
+              type="number"
+              {...rest}
+              {...register(name, { valueAsNumber: true })}
+            />
           </FormControl>
           <FormMessage>&nbsp;</FormMessage>
         </FormItem>
@@ -152,6 +160,7 @@ function BigIntField<T extends FieldValues>({
   label,
   decimals = 18,
   className = "",
+  ...rest
 }: BigIntProps<T>) {
   const multiplier = 10n ** BigInt(decimals);
   const { control } = useFormContext();
@@ -167,6 +176,7 @@ function BigIntField<T extends FieldValues>({
             {/* TODO: maybe we should use zod's coerce instead? https://github.com/shadcn-ui/ui/issues/421 */}
             <Input
               type="number"
+              {...rest}
               {...field}
               onChange={(e) =>
                 field.onChange(BigInt(e.target.value) * multiplier)
@@ -222,7 +232,7 @@ function Submit({
   skipDirtyCheck = false,
   label,
   isSubmitting: isSubmittingOverride = false,
-  ...props
+  ...rest
 }: SubmitProps) {
   const {
     formState: { isValid, isDirty, isSubmitting },
@@ -233,7 +243,7 @@ function Submit({
     : !isDirty || !isValid || isSubmitting;
 
   return (
-    <Button type="submit" disabled={disabled} {...props}>
+    <Button type="submit" disabled={disabled} {...rest}>
       {isSubmitting || isSubmittingOverride ? (
         <LoaderCircle className="animate-spin" />
       ) : (
