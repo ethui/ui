@@ -8,7 +8,7 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./shadcn/dropdown-menu";
+} from "./shadcn/dropdown-menu.js";
 
 interface Props extends ButtonProps {
   options: ReactNode[];
