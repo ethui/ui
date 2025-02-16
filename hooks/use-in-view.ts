@@ -3,7 +3,12 @@
 
 import { useState, useEffect } from "react";
 
-export function useInView(ref: React.RefObject<Element>) {
+interface UseInViewProps {
+  ref: React.RefObject<Element | null>;
+  parent: React.RefObject<Element | null>;
+}
+
+export function useInView({ ref, parent }: UseInViewProps) {
   const [inView, setInView] = useState(false);
 
   useEffect(() => {
@@ -12,7 +17,7 @@ export function useInView(ref: React.RefObject<Element>) {
         setInView(entry.isIntersecting);
       },
       {
-        root: null,
+        root: parent.current,
         rootMargin: "0px",
         threshold: 0.1,
       },
@@ -27,7 +32,7 @@ export function useInView(ref: React.RefObject<Element>) {
         observer.unobserve(ref.current);
       }
     };
-  }, [ref]);
+  }, [ref, parent.current]);
 
   return inView;
 }
