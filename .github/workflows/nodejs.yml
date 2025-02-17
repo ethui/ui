@@ -60,7 +60,7 @@ jobs:
       - id: generate-token
         uses: actions/create-github-app-token@v1
         with:
-          app-id: ${{ vars.ETHUI_DEPLOYER_APP_ID }}
+          app-id: ${{ secrets.ETHUI_DEPLOYER_APP_ID }}
           private-key: ${{ secrets.ETHUI_DEPLOYER_PRIVATE_KEY }}
 
       - name: Push version changes to main branch 📤
