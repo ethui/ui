@@ -33,7 +33,15 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
+      - id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.ETHUI_DEPLOYER_APP_ID }}
+          private-key: ${{ secrets.ETHUI_DEPLOYER_PKEY }}
+
       - uses: actions/checkout@v4
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
 
       - run: npm install -g yarn
       - run: corepack enable
@@ -52,22 +60,15 @@ jobs:
       - id: version
         run: echo "version=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
 
-      - id: generate-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ vars.ETHUI_DEPLOYER_APP_ID }}
-          private-key: ${{ secrets.ETHUI_DEPLOYER_PKEY }}
-
       - name: Push version changes to main branch 📤
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_user_name: ethui-deployer
           commit_user_email: dev@ethui.dev
           commit_author: ethui-deployer <dev@ethui.dev>
-          commit_message: "release ${{ github.event.release.tag_name }}\n\nskip-checks:true"
+          commit_message: "release ${{ steps.version.outputs.version }}\n\nskip-checks:true"
           branch: ${{ github.event.repository.default_branch }}
           file_pattern: package.json
-          token: ${{ steps.generate-token.outputs.token }}
 
       - run: cp ../yarn.lock . && yarn
         working-directory: ./dist
