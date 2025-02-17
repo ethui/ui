@@ -1,16 +1,37 @@
-name: release
+name: nodejs
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+    tags:
+      - "*"
+  pull_request:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.sha }}
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: write
 
 jobs:
-  build:
+  node-lint:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: corepack enable yarn
+      - uses: actions/setup-node@v4
+        with:
+          cache: "yarn"
+          node-version: "22"
+
+      - run: yarn install --frozen-lockfile
+      - run: yarn lint
+
+  bump-version-and-release:
+    needs: node-lint
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
 
