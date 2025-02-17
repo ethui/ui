@@ -28,17 +28,6 @@ jobs:
         with:
           token: ${{ steps.generate-token.outputs.token }}
 
-      - run: npm install -g yarn
-      - run: corepack enable
-      - uses: actions/setup-node@v4
-        with:
-          cache: "yarn"
-          node-version: '22.x'
-          registry-url: 'https://registry.npmjs.org'
-          scope: '@ethui'
-
-      - run: yarn install --immutable
-
       - run: echo -e "\n" >> package.json
 
       - id: version
@@ -50,6 +39,6 @@ jobs:
           commit_user_name: ethui-deployer
           commit_user_email: dev@ethui.dev
           commit_author: ethui-deployer <dev@ethui.dev>
-          commit_message: "release ${{ steps.version.outputs.version }}\n\nskip-checks:true"
+          commit_message: "release ${{ steps.version.outputs.version }}\n[skip ci]"
           branch: test
           file_pattern: package.json
