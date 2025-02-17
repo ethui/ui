@@ -39,7 +39,7 @@ jobs:
 
       - run: yarn install --immutable
 
-      - run: echo "\n" > package.json
+      - run: echo -e "\n" >> package.json
 
       - id: version
         run: echo "version=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
