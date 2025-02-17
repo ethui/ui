@@ -1,7 +1,7 @@
 // Initial draft from v0:
 // https://v0.dev/chat/load-more-on-scroll-K3f4RYuezLB
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface UseInViewProps {
   ref: React.RefObject<Element | null>;

@@ -1,8 +1,8 @@
-import { LoaderCircle } from "lucide-react";
 import type { Meta, StoryObj } from "@storybook/react";
+import { LoaderCircle } from "lucide-react";
 
-import { InfiniteScroll } from "../components/infinite-scroll.js";
 import React from "react";
+import { InfiniteScroll } from "../components/infinite-scroll.js";
 
 const meta: Meta = {
   title: "Components/InfiniteScroll",
