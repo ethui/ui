@@ -66,14 +66,14 @@ jobs:
           commit_user_name: ethui-deployer
           commit_user_email: dev@ethui.dev
           commit_author: ethui-deployer <dev@ethui.dev>
-          commit_message: "release ${{ steps.version.outputs.version }}\n\nskip-checks:true"
+          commit_message: "release ${{ steps.version.outputs.version }}\n[skip ci]"
           branch: ${{ github.event.repository.default_branch }}
           file_pattern: package.json
 
-      # - run: cp ../yarn.lock . && yarn
-      #   working-directory: ./dist
-      #
-      # - run: yarn npm publish --access public
-      #   working-directory: ./dist
-      #   env:
-      #     NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      - run: cp ../yarn.lock . && yarn
+        working-directory: ./dist
+
+      - run: yarn npm publish --access public
+        working-directory: ./dist
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
