@@ -529,7 +529,7 @@ __metadata:
     "@storybook/react": "npm:^8.5.3"
     "@storybook/react-vite": "npm:^8.5.3"
     "@storybook/test": "npm:^8.5.3"
-    "@tanstack/react-query": "npm:^5.21.4"
+    "@tanstack/react-query": "npm:^5.66.4"
     "@types/lodash-es": "npm:^4"
     "@types/node": "npm:^22.13.1"
     "@types/react": "npm:^19"
@@ -559,7 +559,7 @@ __metadata:
     zod: "npm:^3.24.1"
     zustand: "npm:^5.0.3"
   peerDependencies:
-    "@tanstack/react-query": ^5.21.4
+    "@tanstack/react-query": ^5.66.4
     "@types/react": ^18 || ^19
     "@types/react-dom": ^18 || ^19
     clsx: ^2.0.0
@@ -2394,21 +2394,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:5.66.0":
-  version: 5.66.0
-  resolution: "@tanstack/query-core@npm:5.66.0"
-  checksum: 10c0/a03afcb3a075f1923ce3d03dcb16662bb35159280bf87598b9d446366cfd47f5c736be41fb90938c4e6848633c036087d7019f0dbb95f2f2450a9fea4764adbb
+"@tanstack/query-core@npm:5.66.4":
+  version: 5.66.4
+  resolution: "@tanstack/query-core@npm:5.66.4"
+  checksum: 10c0/ef0ebf572e0109791e53e9a7c2790a93cbfe1c6f3fb462793c621c0f2d44c0b38f78f22a32526e124790f69a017ae3254877281f418ffef06d83f4edb82df51a
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:^5.21.4":
-  version: 5.66.0
-  resolution: "@tanstack/react-query@npm:5.66.0"
+"@tanstack/react-query@npm:^5.66.4":
+  version: 5.66.4
+  resolution: "@tanstack/react-query@npm:5.66.4"
   dependencies:
-    "@tanstack/query-core": "npm:5.66.0"
+    "@tanstack/query-core": "npm:5.66.4"
   peerDependencies:
     react: ^18 || ^19
-  checksum: 10c0/60e1a3fd7f2f8b2038d70954b51eeb84c31273d09a68537babdc2ac3d8c200968a1f7865a8e189ffd63be0c30387985b4b4eaf1d9065990bd3699ac5872b7523
+  checksum: 10c0/90378598c4d95f1e7c378e5cb65c7e7cf7fee9ff4bc65feccfa9c56703ffe2b74f59245d9e255279b7029219877e0f98dde895940b8db26f5a619b33aa48d063
   languageName: node
   linkType: hard
 
