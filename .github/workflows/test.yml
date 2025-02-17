@@ -39,7 +39,7 @@ jobs:
 
       - run: yarn install --immutable
 
-      - run: yarn version patch
+      - run: touch asd.json
 
       - id: version
         run: echo "version=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
