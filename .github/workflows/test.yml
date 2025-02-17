@@ -1,0 +1,55 @@
+name: test
+
+on:
+  push:
+    branches:
+      - test
+    tags:
+      - "*"
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.ETHUI_DEPLOYER_APP_ID }}
+          private-key: ${{ secrets.ETHUI_DEPLOYER_PKEY }}
+
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+
+      - run: npm install -g yarn
+      - run: corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          cache: "yarn"
+          node-version: '22.x'
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@ethui'
+
+      - run: yarn install --immutable
+
+      - run: yarn version patch
+
+      - id: version
+        run: echo "version=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
+
+      - name: Push version changes to main branch 📤
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_user_name: ethui-deployer
+          commit_user_email: dev@ethui.dev
+          commit_author: ethui-deployer <dev@ethui.dev>
+          commit_message: "release ${{ steps.version.outputs.version }}\n\nskip-checks:true"
+          branch: test
+          file_pattern: package.json
