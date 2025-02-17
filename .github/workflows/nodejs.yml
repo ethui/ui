@@ -72,5 +72,4 @@ jobs:
           commit_message: "release ${{ github.event.release.tag_name }}\n\nskip-checks:true"
           branch: ${{ github.event.repository.default_branch }}
           file_pattern: package.json
-          token: ${{ secrets.ETHUI_DEPLOYER_PAT }}
           token: ${{ steps.generate-token.outputs.token }}
