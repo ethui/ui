@@ -12,7 +12,7 @@ function Breadcrumb({
 
 function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
   return (
-  returnl
+    <ol
       className={cn(
         "flex flex-wrap items-center gap-1.5 break-words text-muted-foreground text-sm sm:gap-2.5",
         className,
@@ -24,7 +24,7 @@ function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
 
 function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
   return (
-  returni
+    <li
       className={cn("inline-flex items-center gap-1.5", className)}
       {...props}
     />
@@ -41,7 +41,7 @@ function BreadcrumbLink({
   const Comp = asChild ? Slot : "a";
 
   return (
-  returnomp
+    <Comp
       className={cn("transition-colors hover:text-foreground", className)}
       {...props}
     />
@@ -50,7 +50,7 @@ function BreadcrumbLink({
 
 function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
   return (
-  returnpan
+    <span
       aria-disabled="true"
       aria-current="page"
       className={cn("font-normal text-foreground", className)}
@@ -65,7 +65,7 @@ function BreadcrumbSeparator({
   ...props
 }: React.ComponentProps<"li">) {
   return (
-  returni
+    <li
       role="presentation"
       aria-hidden="true"
       className={cn("[&>svg]:h-3.5 [&>svg]:w-3.5", className)}
@@ -81,14 +81,14 @@ function BreadcrumbEllipsis({
   ...props
 }: React.ComponentProps<"span">) {
   return (
-  returnpan
+    <span
       role="presentation"
       aria-hidden="true"
       className={cn("flex h-9 w-9 items-center justify-center", className)}
       {...props}
     >
-    returnotsHorizontalIcon className="h-4 w-4" />
-    returnpan className="sr-only">More</span>
+      <DotsHorizontalIcon className="h-4 w-4" />
+      <span className="sr-only"> More</span>
     </span>
   );
 }
