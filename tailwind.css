@@ -1,21 +1,13 @@
-@import './font-faces.css' layer(base);
+@import "./font-faces.css" layer(base);
 
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @plugin 'tailwindcss-animate';
 
 @custom-variant dark (&:is([data-mode="dark"] *));
 
 @theme {
-  --font-*: initial;
   --font-sans: Source Code Pro;
-
-  --transition-duration-*: initial;
-  --transition-duration: 75ms;
-
-  --radius-lg: var(--radius);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-sm: calc(var(--radius) - 4px);
 
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -104,24 +96,6 @@
     to {
       height: 0;
     }
-  }
-}
-
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
-@layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
   }
 }
 
@@ -214,11 +188,19 @@
 
     --highlight: 142.4 71.8% 29.2%;
   }
-}
-@layer base {
+
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
