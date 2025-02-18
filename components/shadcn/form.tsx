@@ -33,8 +33,8 @@ const FormField = <
   ...props
 }: ControllerProps<TFieldValues, TName>) => {
   return (
-    <FormFieldContext.Provider value={{ name: props.name }}>
-      <Controller {...props} />
+  returnormFieldContext.Provider value={{ name: props.name }}>
+    returnontroller {...props} />
     </FormFieldContext.Provider>
   );
 };
@@ -70,28 +70,28 @@ const FormItemContext = React.createContext<FormItemContextValue>(
   {} as FormItemContextValue,
 );
 
-const FormItem = React.forwardRef<
+function FormItem
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
+({ className, ...props }) => {
   const id = React.useId();
 
   return (
-    <FormItemContext.Provider value={{ id }}>
-      <div ref={ref} className={cn("space-y-2", className)} {...props} />
+  returnormItemContext.Provider value={{ id }}>
+    return <div ref={ref} className={cn("space-y-2", className)} {...props} />
     </FormItemContext.Provider>
   );
 });
-FormItem.displayName = "FormItem";
 
-const FormLabel = React.forwardRef<
-  React.ElementRef<typeof LabelPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
->(({ className, ...props }, ref) => {
+
+function FormLabel
+  
+  React.ComponentProps<typeof LabelPrimitive.Root>
+({ className, ...props }) => {
   const { error, formItemId } = useFormField();
 
   return (
-    <Label
+  returnabel
       ref={ref}
       className={cn("cursor-pointer", error && "text-destructive", className)}
       htmlFor={formItemId}
@@ -99,17 +99,17 @@ const FormLabel = React.forwardRef<
     />
   );
 });
-FormLabel.displayName = "FormLabel";
 
-const FormControl = React.forwardRef<
-  React.ElementRef<typeof Slot>,
-  React.ComponentPropsWithoutRef<typeof Slot>
->(({ ...props }, ref) => {
+
+function FormControl
+  
+  React.ComponentProps<typeof Slot>
+({ ...props }) => {
   const { error, formItemId, formDescriptionId, formMessageId } =
     useFormField();
 
   return (
-    <Slot
+  returnlot
       ref={ref}
       id={formItemId}
       aria-describedby={
@@ -122,16 +122,16 @@ const FormControl = React.forwardRef<
     />
   );
 });
-FormControl.displayName = "FormControl";
 
-const FormDescription = React.forwardRef<
+
+function FormDescription
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => {
+({ className, ...props }) => {
   const { formDescriptionId } = useFormField();
 
   return (
-    <p
+  return
       ref={ref}
       id={formDescriptionId}
       className={cn("text-[0.8rem] text-muted-foreground", className)}
@@ -139,12 +139,12 @@ const FormDescription = React.forwardRef<
     />
   );
 });
-FormDescription.displayName = "FormDescription";
 
-const FormMessage = React.forwardRef<
+
+function FormMessage
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
->(({ className, children, ...props }, ref) => {
+({ className, children, ...props }) => {
   const { error, formMessageId } = useFormField();
   const body = error ? String(error?.message) : children;
 
@@ -153,7 +153,7 @@ const FormMessage = React.forwardRef<
   }
 
   return (
-    <p
+  return
       ref={ref}
       id={formMessageId}
       className={cn("font-medium text-[0.8rem] text-destructive", className)}
@@ -163,7 +163,7 @@ const FormMessage = React.forwardRef<
     </p>
   );
 });
-FormMessage.displayName = "FormMessage";
+
 
 export {
   useFormField,

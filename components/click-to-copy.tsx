@@ -40,7 +40,7 @@ export function ClickToCopy({ children, text, ...props }: ClickToCopyProps) {
     setCopied(true);
     setOpening(true);
     setOpen(true);
-    writeText(text.toString());
+    writeText(text.toString(}
   };
 
   return (

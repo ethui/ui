@@ -34,7 +34,7 @@ export function ButtonWithDropdown({ options, className, ...other }: Props) {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="absolute right-0 origin-top-left">
             <DropdownMenuGroup className="py-1">
-              {options.map((option, index: number) => (
+              {options.map((option, index: number) {
                 <DropdownMenuItem key={index}>
                   <Button variant="ghost">{option}</Button>
                 </DropdownMenuItem>

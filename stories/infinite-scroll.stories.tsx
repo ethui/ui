@@ -44,7 +44,7 @@ export const Default: Story = {
       const newItems = Array.from({ length: 10 }, (_, i) => ({
         id: items.length + i + 1,
         title: `Item ${items.length + i + 1}`,
-      }));
+      }}
 
       setItems((prev) => [...prev, ...newItems]);
 

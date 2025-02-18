@@ -82,7 +82,7 @@ function Text<T extends FieldValues>({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({ field }) {
         <FormItem className={className}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
@@ -107,7 +107,7 @@ function Textarea<T extends FieldValues>({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({ field }) {
         <FormItem className={className}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
@@ -132,7 +132,7 @@ function NumberField<T extends FieldValues>({
     <FormField
       control={control}
       name={name}
-      render={() => (
+      render={() {
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
@@ -169,7 +169,7 @@ function BigIntField<T extends FieldValues>({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({ field }) {
         <FormItem className={className}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
@@ -199,7 +199,7 @@ function Checkbox<T extends FieldValues>({ name, label }: BaseInputProps<T>) {
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({ field }) {
         <FormItem className="flex flex-col">
           <div className="flex flex-row items-start space-x-3 space-y-0">
             <FormControl>
@@ -300,7 +300,7 @@ function SelectInput<
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {items.map((v: Item) => (
+                {items.map((v: Item) {
                   <SelectItem key={toValue(v)} value={toValue(v)}>
                     {render(v)}
                   </SelectItem>
