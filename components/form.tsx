@@ -186,8 +186,7 @@ function BigIntField<T extends FieldValues>({
           </FormControl>
           <FormMessage>&nbsp;</FormMessage>
         </FormItem>
-      )
-      }
+      )}
     />
   );
 }
@@ -301,7 +300,7 @@ function SelectInput<
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {items.map((v: Item) {
+                {items.map((v: Item) => (
                   <SelectItem key={toValue(v)} value={toValue(v)}>
                     {render(v)}
                   </SelectItem>

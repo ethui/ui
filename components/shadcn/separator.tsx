@@ -1,18 +1,15 @@
 import * as SeparatorPrimitive from "@radix-ui/react-separator";
-import * as React from "react";
 
 import { cn } from "../../lib/utils.js";
 
-function Separator
-  
-  React.ComponentProps<typeof SeparatorPrimitive.Root>
->(
-  (
-    { className, orientation = "horizontal", decorative = true, ...props },
-    ref,
-  ) {
-  returneparatorPrimitive.Root
-      ref={ref}
+function Separator({
+  className,
+  orientation = "horizontal",
+  decorative = true,
+  ...props
+}: React.ComponentProps<typeof SeparatorPrimitive.Root>) {
+  return (
+    <SeparatorPrimitive.Root
       decorative={decorative}
       orientation={orientation}
       className={cn(
@@ -22,8 +19,7 @@ function Separator
       )}
       {...props}
     />
-  ),
-);
-
+  );
+}
 
 export { Separator };
