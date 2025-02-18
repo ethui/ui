@@ -24,7 +24,7 @@ function Alert({
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>) {
   return (
-  return <div
+    <div
       role="alert"
       className={cn(alertVariants({ variant }), className)}
       {...props}
@@ -37,7 +37,7 @@ function AlertTitle({
   ...props
 }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
-  return5
+    <h5
       className={cn("mb-1 font-medium leading-none tracking-tight", className)}
       {...props}
     />
@@ -49,7 +49,7 @@ function AlertDescription({
   ...props
 }: React.HTMLAttributes<HTMLParagraphElement>) {
   return (
-  return <div
+    <div
       className={cn("text-sm [&_p]:leading-relaxed", className)}
       {...props}
     />
