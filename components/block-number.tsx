@@ -5,8 +5,10 @@ export interface BlockNumberProps {
 }
 
 export function BlockNumber({ number }: BlockNumberProps) {
-  <div className="flex flex-ro items-center gap-x-1">
-    <BoxIcon size={14} />
-    {number}
-  </div>;
+  return (
+    <div className="flex flex-ro items-center gap-x-1">
+      <BoxIcon size={14} />
+      {number}
+    </div>
+  );
 }
