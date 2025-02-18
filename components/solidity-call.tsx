@@ -155,7 +155,7 @@ function Call({ value, data, to, decimals, abi, ArgProps }: CallProps) {
         <Separator text="(" />
       </div>
       <div>
-        {[...args].map({ value, type, label }, i) {
+        {[...args].map(({ value, type, label }, i) => (
           <div className="flex pl-8" key={i}>
             <Arg variant="arg" {...{ label, value, type }} {...ArgProps} />
             {i! < args.length - 1 && <Separator text="," />}
@@ -184,7 +184,7 @@ function Arg({
   value,
   variant,
   addressRenderer,
-  defaultRenderer = (v: string | bigint) {
+  defaultRenderer = (v: string | bigint) => (
     <ClickToCopy text={v}>
       <span className="font-mono">
         {raw && v.toString()}

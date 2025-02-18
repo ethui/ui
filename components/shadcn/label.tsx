@@ -12,7 +12,12 @@ function Label({
   ...props
 }: React.ComponentProps<typeof LabelPrimitive.Root> &
   VariantProps<typeof labelVariants>) {
-  <LabelPrimitive.Root className={cn(labelVariants(), className)} {...props} />;
+  return (
+    <LabelPrimitive.Root
+      className={cn(labelVariants(), className)}
+      {...props}
+    />
+  );
 }
 
 export { Label };

@@ -7,7 +7,7 @@ function Breadcrumb({
 }: React.ComponentProps<"nav"> & {
   separator?: React.ReactNode;
 }) {
-  return <nav ref={ref} aria-label="breadcrumb" {...props} />;
+  return <nav aria-label="breadcrumb" {...props} />;
 }
 
 function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
