@@ -42,8 +42,6 @@ function DropdownMenuSubTrigger({
   );
 }
 
-DropdownMenuPrimitive.SubTrigger.displayName;
-
 function DropdownMenuSubContent({
   className,
   ...props
@@ -58,8 +56,6 @@ function DropdownMenuSubContent({
     />
   );
 }
-
-DropdownMenuPrimitive.SubContent.displayName;
 
 function DropdownMenuContent({
   className,
@@ -124,8 +120,6 @@ function DropdownMenuCheckboxItem({
     </DropdownMenuPrimitive.CheckboxItem>
   );
 }
-
-DropdownMenuPrimitive.CheckboxItem.displayName;
 
 function DropdownMenuRadioItem({
   className,

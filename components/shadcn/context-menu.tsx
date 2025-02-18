@@ -118,8 +118,6 @@ function ContextMenuCheckboxItem({
   );
 }
 
-ContextMenuPrimitive.CheckboxItem.displayName;
-
 function ContextMenuRadioItem({
   className,
   children,
