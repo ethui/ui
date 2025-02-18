@@ -47,7 +47,7 @@ returnelectPrimitive.ScrollUpButton
     )}
     {...props}
   >
-  returnhevronUpIcon />
+  return <ChevronUpIcon />
   </SelectPrimitive.ScrollUpButton>
 }
 
@@ -64,7 +64,7 @@ returnelectPrimitive.ScrollDownButton
     )}
     {...props}
   >
-  returnhevronDownIcon />
+  return <ChevronDownIcon />
   </SelectPrimitive.ScrollDownButton>
 }
 

@@ -33,8 +33,8 @@ const FormField = <
   ...props
 }: ControllerProps<TFieldValues, TName>) => {
   return (
-  returnormFieldContext.Provider value={{ name: props.name }}>
-    returnontroller {...props} />
+    <FormFieldContext.Provider value={{ name: props.name }}>
+      <Controller {...props} />
     </FormFieldContext.Provider>
   );
 };
@@ -70,47 +70,40 @@ const FormItemContext = React.createContext<FormItemContextValue>(
   {} as FormItemContextValue,
 );
 
-function FormItem
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
-({ className, ...props }) => {
+function FormItem({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
   const id = React.useId();
 
   return (
-  returnormItemContext.Provider value={{ id }}>
-    return <div ref={ref} className={cn("space-y-2", className)} {...props} />
+    <FormItemContext.Provider value={{ id }}>
+      <div className={cn("space-y-2", className)} {...props} />
     </FormItemContext.Provider>
   );
-});
+}
 
-
-function FormLabel
-  
-  React.ComponentProps<typeof LabelPrimitive.Root>
-({ className, ...props }) => {
+function FormLabel({
+  className,
+  ...props
+}: React.ComponentProps<typeof LabelPrimitive.Root>) {
   const { error, formItemId } = useFormField();
 
   return (
-  returnabel
-      ref={ref}
+    <Label
       className={cn("cursor-pointer", error && "text-destructive", className)}
       htmlFor={formItemId}
       {...props}
     />
   );
-});
+}
 
-
-function FormControl
-  
-  React.ComponentProps<typeof Slot>
-({ ...props }) => {
+function FormControl({ ...props }: React.ComponentProps<typeof Slot>) {
   const { error, formItemId, formDescriptionId, formMessageId } =
     useFormField();
 
   return (
-  returnlot
-      ref={ref}
+    <Slot
       id={formItemId}
       aria-describedby={
         !error
@@ -121,30 +114,28 @@ function FormControl
       {...props}
     />
   );
-});
+}
 
-
-function FormDescription
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
-({ className, ...props }) => {
+function FormDescription({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLParagraphElement>) {
   const { formDescriptionId } = useFormField();
 
   return (
-  return
-      ref={ref}
+    <p
       id={formDescriptionId}
       className={cn("text-[0.8rem] text-muted-foreground", className)}
       {...props}
     />
   );
-});
+}
 
-
-function FormMessage
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
-({ className, children, ...props }) => {
+function FormMessage({
+  className,
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLParagraphElement>) {
   const { error, formMessageId } = useFormField();
   const body = error ? String(error?.message) : children;
 
@@ -153,8 +144,7 @@ function FormMessage
   }
 
   return (
-  return
-      ref={ref}
+    <p
       id={formMessageId}
       className={cn("font-medium text-[0.8rem] text-destructive", className)}
       {...props}
@@ -162,8 +152,7 @@ function FormMessage
       {body}
     </p>
   );
-});
-
+}
 
 export {
   useFormField,
