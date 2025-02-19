@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
+import { ChevronRightIcon } from "@radix-ui/react-icons";
+import React from "react";
+import { EthuiLogo } from "../components/ethui-logo";
 import {
   Collapsible,
   CollapsibleContent,
@@ -17,9 +20,6 @@ import {
   SidebarMenuItem,
   SidebarProvider,
 } from "../components/shadcn/sidebar";
-import React from "react";
-import { EthuiLogo } from "../components/ethui-logo";
-import { ChevronRightIcon } from "@radix-ui/react-icons";
 
 const meta: Meta<typeof Sidebar> = {
   title: "ethui/Sidebar",
