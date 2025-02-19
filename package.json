@@ -4,7 +4,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "license": "MIT",
-  "version": "0.0.21",
+  "version": "0.0.23",
   "scripts": {
     "build": "yarn build:clean && yarn build:prepare && yarn build:tsc",
     "build:clean": "rm -rf dist && mkdir dist",
@@ -65,10 +65,10 @@
     "@types/react-dom": "^19",
     "clsx": "^2.0.0",
     "lucide-react": "^0.475.0",
-    "react": "^18 || ^19",
-    "react-dom": "^18 || ^19",
-    "tailwind-merge": "^2.0.0",
-    "tailwindcss": "^3.4.0",
+    "react": "^19",
+    "react-dom": "^19",
+    "tailwind-merge": "^3.0.0",
+    "tailwindcss": "^4.0.0",
     "tailwindcss-animate": "^1.0.0"
   },
   "devDependencies": {
