@@ -6,11 +6,11 @@ import * as React from "react";
 import { useCallback, useEffect, useMemo } from "react";
 import { useIsMobile } from "../../hooks/use-mobile.js";
 import { cn } from "../../lib/utils.js";
-import { Button } from "./button";
-import { Input } from "./input";
-import { Separator } from "./separator";
-import { Sheet, SheetContent } from "./sheet";
-import { Skeleton } from "./skeleton";
+import { Button } from "./button.js";
+import { Input } from "./input.js";
+import { Separator } from "./separator.js";
+import { Sheet, SheetContent } from "./sheet.js";
+import { Skeleton } from "./skeleton.js";
 import {
   Tooltip,
   TooltipContent,
