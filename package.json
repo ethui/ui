@@ -82,6 +82,7 @@
     "@storybook/react": "^8.5.8",
     "@storybook/react-vite": "^8.5.8",
     "@storybook/test": "^8.5.8",
+    "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.0.6",
     "@types/lodash-es": "^4",
     "@types/node": "^22.13.4",
