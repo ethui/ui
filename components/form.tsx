@@ -140,7 +140,10 @@ function NumberField<T extends FieldValues>({
             <Input
               type="number"
               {...rest}
-              {...register(name, { valueAsNumber: true })}
+              {...register(name, {
+                setValueAs: (value) =>
+                  value === "" ? undefined : Number.parseInt(value),
+              })}
             />
           </FormControl>
           <FormMessage>&nbsp;</FormMessage>
