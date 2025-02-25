@@ -60,7 +60,6 @@
     "zustand": "^5.0.3"
   },
   "peerDependencies": {
-    "@tailwindcss/typography": "^0.5.16",
     "@tanstack/react-query": "^5.66.9",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -83,7 +82,6 @@
     "@storybook/react": "^8.5.8",
     "@storybook/react-vite": "^8.5.8",
     "@storybook/test": "^8.5.8",
-    "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.0.8",
     "@types/lodash-es": "^4",
     "@types/node": "^22.13.5",
