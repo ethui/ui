@@ -124,6 +124,7 @@ Form.Textarea = Textarea;
 function NumberField<T extends FieldValues>({
   name,
   label,
+  className = "",
   ...rest
 }: BaseInputProps<T>) {
   const { register, control } = useFormContext();
@@ -133,7 +134,7 @@ function NumberField<T extends FieldValues>({
       control={control}
       name={name}
       render={() => (
-        <FormItem>
+        <FormItem className={className}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
             {/* TODO: maybe we should use zod's coerce instead? https://github.com/shadcn-ui/ui/issues/421 */}
