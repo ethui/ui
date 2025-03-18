@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
+import { CircleCheck, CircleX, Info } from "lucide-react";
+import React from "react";
 import {
   Alert,
   AlertDescription,
   AlertTitle,
 } from "../components/shadcn/alert.js";
-import { CircleCheck, CircleX, Info } from "lucide-react";
-import React from "react";
 
 const meta = {
   title: "Components/Alert",
