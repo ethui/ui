@@ -551,7 +551,7 @@ __metadata:
     react-hook-form: "npm:^7.55.0"
     storybook: "npm:^8.6.3"
     tailwind-merge: "npm:^3.0.2"
-    tailwindcss: "npm:^4.0.8"
+    tailwindcss: "npm:^4.1.3"
     tailwindcss-animate: "npm:^1.0.0"
     ts-unused-exports: "npm:^11.0.1"
     typescript: "npm:5.8.2"
@@ -5115,10 +5115,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tailwindcss@npm:4.0.8, tailwindcss@npm:^4.0.8":
+"tailwindcss@npm:4.0.8":
   version: 4.0.8
   resolution: "tailwindcss@npm:4.0.8"
   checksum: 10c0/4e7656792405fe085f788510139e37a4cd2d904c620ad90222f541f3227a64885e3423413f4748870d3480253b0f50c3ddafd70bc3acd9ec33f494c12e6278aa
+  languageName: node
+  linkType: hard
+
+"tailwindcss@npm:^4.1.3":
+  version: 4.1.3
+  resolution: "tailwindcss@npm:4.1.3"
+  checksum: 10c0/e1a57c6fa8d3b2a950b50ee599bf40734e472f719d2a7c74d6fa95584ac09554625481a9c28420bb32396a7f49e1b9eafe628eb61c230fcdc134b86999bf0bae
   languageName: node
   linkType: hard
 
