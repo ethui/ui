@@ -13,6 +13,8 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-patch"]
+      - dependency-name: "lucide-react"
+      - dependency-name: "@types/node"
     groups:
       react:
         patterns:
@@ -20,18 +22,21 @@ updates:
           - "react-dom"
           - "@types/react"
           - "@types/react-dom"
+      vite:
+        patterns:
+          - "vite"
+          - "@vitejs/*"
+          - "vite-*"
       shadcn:
         patterns:
           - "@radix-ui/*"
-          - "lucide-react"
           - "class-variance-authority"
           - "clsx"
       tailwind:
         patterns:
-          - "tailwindcss"
+          - "tailwind*"
           - "postcss"
           - "autoprefixer"
-          - "tailwind-merge"
           - "@tailwindcss/*"
       tanstack:
         patterns:
