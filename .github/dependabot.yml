@@ -7,7 +7,7 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
-    open-pull-requests-limit: 20
+    open-pull-requests-limit: 5
     schedule:
       interval: "weekly"
     ignore:
@@ -31,6 +31,11 @@ updates:
           - "tailwindcss"
           - "postcss"
           - "autoprefixer"
+          - "tailwind-merge"
+          - "@tailwindcss/*"
+      tanstack:
+        patterns:
+          - "@tanstack/*"
       storybook:
         patterns:
           - "storybook"
