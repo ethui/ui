@@ -29,6 +29,7 @@ import {
   SelectValue,
 } from "./shadcn/select.js";
 import { Textarea as ShadTextarea } from "./shadcn/textarea.js";
+import { Switch } from "./shadcn/switch.js";
 
 interface Props<T extends FieldValues>
   extends Omit<React.FormHTMLAttributes<HTMLFormElement>, "onSubmit"> {
@@ -204,19 +205,15 @@ function Checkbox<T extends FieldValues>({ name, label }: BaseInputProps<T>) {
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="flex flex-col">
-          <div className="flex flex-row items-start space-x-3 space-y-0">
+        <FormItem className="flex flex-col w-full">
+          <div className="flex flex-row space-x-3 space-y-0 w-full justify-between">
+            <FormLabel className="cursor-pointer w-full grow leading-none">
+              {label}
+            </FormLabel>
             <FormControl>
               {/* TODO: maybe we should use zod's coerce instead? https://github.com/shadcn-ui/ui/issues/421 */}
-
-              <ShadCheckbox
-                checked={field.value}
-                onCheckedChange={field.onChange}
-              />
+              <Switch checked={field.value} onCheckedChange={field.onChange} />
             </FormControl>
-            <div className="space-y-1 leading-none">
-              <FormLabel className="cursor-pointer">{label}</FormLabel>
-            </div>
           </div>
           <FormMessage>&nbsp;</FormMessage>
         </FormItem>
