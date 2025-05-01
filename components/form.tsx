@@ -11,7 +11,6 @@ import {
 import clsx from "clsx";
 import { Check, LoaderCircle } from "lucide-react";
 import { Button, type ButtonProps } from "./shadcn/button.js";
-import { Checkbox as ShadCheckbox } from "./shadcn/checkbox.js";
 import {
   FormControl,
   FormField,
