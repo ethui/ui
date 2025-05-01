@@ -205,7 +205,7 @@ function Checkbox<T extends FieldValues>({ name, label }: BaseInputProps<T>) {
       name={name}
       render={({ field }) => (
         <FormItem className="flex w-full flex-col">
-          <div className="flex w-full flex-row justify-between space-x-3 space-y-0">
+          <div className="flex w-full flex-row items-center justify-between space-x-3 space-y-0">
             <FormLabel className="w-full grow cursor-pointer leading-none">
               {label}
             </FormLabel>
