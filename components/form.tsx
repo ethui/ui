@@ -28,8 +28,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./shadcn/select.js";
-import { Textarea as ShadTextarea } from "./shadcn/textarea.js";
 import { Switch } from "./shadcn/switch.js";
+import { Textarea as ShadTextarea } from "./shadcn/textarea.js";
 
 interface Props<T extends FieldValues>
   extends Omit<React.FormHTMLAttributes<HTMLFormElement>, "onSubmit"> {
@@ -205,9 +205,9 @@ function Checkbox<T extends FieldValues>({ name, label }: BaseInputProps<T>) {
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="flex flex-col w-full">
-          <div className="flex flex-row space-x-3 space-y-0 w-full justify-between">
-            <FormLabel className="cursor-pointer w-full grow leading-none">
+        <FormItem className="flex w-full flex-col">
+          <div className="flex w-full flex-row justify-between space-x-3 space-y-0">
+            <FormLabel className="w-full grow cursor-pointer leading-none">
               {label}
             </FormLabel>
             <FormControl>
