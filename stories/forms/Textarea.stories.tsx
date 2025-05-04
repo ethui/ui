@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Check } from "lucide-react";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Form } from "../../components/form.js";
-import { Check } from "lucide-react";
 
 const meta = {
   title: "Components/Form/Textarea",

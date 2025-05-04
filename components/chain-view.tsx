@@ -6,7 +6,7 @@ export interface ChainViewProps {
   online?: boolean;
 }
 
-export function ChainView({ name, chainId, online }: ChainViewProps) {
+export function ChainView({ name, chainId }: ChainViewProps) {
   return (
     <div className="flex items-center gap-x-2">
       <ChainIcon chainId={chainId} />

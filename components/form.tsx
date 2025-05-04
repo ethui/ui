@@ -9,6 +9,7 @@ import {
 } from "react-hook-form";
 
 import clsx from "clsx";
+import { cn } from "lib/utils.js";
 import { Check, LoaderCircle } from "lucide-react";
 import { Button, type ButtonProps } from "./shadcn/button.js";
 import {
@@ -29,7 +30,6 @@ import {
 } from "./shadcn/select.js";
 import { Switch } from "./shadcn/switch.js";
 import { Textarea as ShadTextarea } from "./shadcn/textarea.js";
-import { cn } from "lib/utils.js";
 
 interface Props<T extends FieldValues>
   extends Omit<React.FormHTMLAttributes<HTMLFormElement>, "onSubmit"> {
