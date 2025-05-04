@@ -7,9 +7,9 @@ import { ClickToCopy } from "../components/click-to-copy.js";
 const meta = {
   title: "Components/ClickToCopy",
   component: ClickToCopy,
-  parameters: {
-    layout: "centered",
-  },
+  // parameters: {
+  //   layout: "centered",
+  // },
   tags: ["autodocs"],
   argTypes: {
     text: { control: "text" },

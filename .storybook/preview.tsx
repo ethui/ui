@@ -12,24 +12,30 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
+    darkMode: {
+      darkClass: "dark",
+      lightClass: "light",
+      stylePreview: true,
+    },
   },
 
-  decorators: [
-    withThemeByClassName({
-      themes: {
-        light: "light",
-        dark: "dark",
-      },
-      defaultTheme: "light",
-    }),
-    (Story) => (
-      <div className="dark:bg-gray-800">
-        <ClipboardProvider>
-          <Story />
-        </ClipboardProvider>
-      </div>
-    ),
-  ],
+  // decorators: [
+  //   withThemeByClassName({
+  //     themes: {
+  //       light: "light",
+  //       dark: "dark",
+  //     },
+  //     defaultTheme: "light",
+  //   }),
+  //   (Story) => (
+  //     <div className="dark:bg-gray-800">
+  //       <ClipboardProvider>
+  //         <Story />
+  //       </ClipboardProvider>
+  //     </div>
+  //   ),
+  // ],
+  //
 };
 
 export default preview;
