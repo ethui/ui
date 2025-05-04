@@ -181,6 +181,7 @@ function BigIntField<T extends FieldValues>({
   label,
   decimals = 18,
   className = "",
+  icon,
   ...rest
 }: BigIntProps<T>) {
   const multiplier = 10n ** BigInt(decimals);
