@@ -5,6 +5,7 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Form } from "../../components/form.js";
+import { Check } from "lucide-react";
 
 const meta = {
   title: "Components/Form/Text",
@@ -40,6 +41,26 @@ export const Default: Story = {
   args: {
     name: "default",
     label: "Default text input",
+    className: "w-full",
+  },
+};
+
+export const WithIcon: Story = {
+  decorators: [
+    (Story) => {
+      const form = useForm({ defaultValues: { default: null } });
+      return (
+        <Form form={form} onSubmit={() => console.log("submitted")}>
+          <Story />
+        </Form>
+      );
+    },
+  ],
+
+  args: {
+    name: "with-icon",
+    label: "With Icon",
+    icon: <Check className="stroke-success" />,
     className: "w-full",
   },
 };

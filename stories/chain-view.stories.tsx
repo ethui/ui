@@ -12,7 +12,6 @@ const meta = {
   argTypes: {
     chainId: { control: "number" },
     name: { control: "text" },
-    online: { control: "boolean" },
   },
 } satisfies Meta<typeof ChainView>;
 
@@ -37,21 +36,5 @@ export const Op: Story = {
   args: {
     chainId: 10,
     name: "Optimism",
-  },
-};
-
-export const AnvilOnline: Story = {
-  args: {
-    chainId: 31337,
-    name: "Anvil",
-    online: true,
-  },
-};
-
-export const AnvilOffline: Story = {
-  args: {
-    chainId: 31337,
-    name: "Anvil",
-    online: false,
   },
 };

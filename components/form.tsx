@@ -29,6 +29,7 @@ import {
 } from "./shadcn/select.js";
 import { Switch } from "./shadcn/switch.js";
 import { Textarea as ShadTextarea } from "./shadcn/textarea.js";
+import { cn } from "lib/utils.js";
 
 interface Props<T extends FieldValues>
   extends Omit<React.FormHTMLAttributes<HTMLFormElement>, "onSubmit"> {
@@ -67,6 +68,7 @@ interface BaseInputProps<T extends FieldValues> extends InputProps {
   name: Path<T>;
   type?: string;
   className?: string;
+  icon?: React.ReactNode;
 }
 
 function Text<T extends FieldValues>({
@@ -74,6 +76,7 @@ function Text<T extends FieldValues>({
   label,
   type = "text",
   className = "",
+  icon,
   ...rest
 }: BaseInputProps<T>) {
   const { control } = useFormContext();
@@ -86,7 +89,14 @@ function Text<T extends FieldValues>({
         <FormItem className={className}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input {...rest} {...field} type={type} />
+            <WithIcon icon={icon}>
+              <Input
+                {...rest}
+                {...field}
+                type={type}
+                className={cn(icon && "pr-10")}
+              />
+            </WithIcon>
           </FormControl>
           <FormMessage>&nbsp;</FormMessage>
         </FormItem>
@@ -99,6 +109,7 @@ Form.Text = Text;
 function Textarea<T extends FieldValues>({
   name,
   label,
+  icon,
   className = "",
 }: BaseInputProps<T>) {
   const { control } = useFormContext();
@@ -111,7 +122,9 @@ function Textarea<T extends FieldValues>({
         <FormItem className={className}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <ShadTextarea {...field} />
+            <WithIcon icon={icon}>
+              <ShadTextarea {...field} className={cn(icon && "pr-10")} />
+            </WithIcon>
           </FormControl>
           <FormMessage>&nbsp;</FormMessage>
         </FormItem>
@@ -125,6 +138,7 @@ function NumberField<T extends FieldValues>({
   name,
   label,
   className = "",
+  icon,
   ...rest
 }: BaseInputProps<T>) {
   const { register, control } = useFormContext();
@@ -137,15 +151,18 @@ function NumberField<T extends FieldValues>({
         <FormItem className={className}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            {/* TODO: maybe we should use zod's coerce instead? https://github.com/shadcn-ui/ui/issues/421 */}
-            <Input
-              type="number"
-              {...rest}
-              {...register(name, {
-                setValueAs: (value) =>
-                  value === "" ? undefined : Number.parseInt(value),
-              })}
-            />
+            <WithIcon icon={icon}>
+              {/* TODO: maybe we should use zod's coerce instead? https://github.com/shadcn-ui/ui/issues/421 */}
+              <Input
+                type="number"
+                {...rest}
+                {...register(name, {
+                  setValueAs: (value) =>
+                    value === "" ? undefined : Number.parseInt(value),
+                })}
+                className={cn(icon && "pr-10")}
+              />
+            </WithIcon>
           </FormControl>
           <FormMessage>&nbsp;</FormMessage>
         </FormItem>
@@ -177,16 +194,18 @@ function BigIntField<T extends FieldValues>({
         <FormItem className={className}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            {/* TODO: maybe we should use zod's coerce instead? https://github.com/shadcn-ui/ui/issues/421 */}
-            <Input
-              type="number"
-              {...rest}
-              {...field}
-              onChange={(e) =>
-                field.onChange(BigInt(e.target.value) * multiplier)
-              }
-              value={(BigInt(field.value) / multiplier).toString()}
-            />
+            <WithIcon icon={icon}>
+              {/* TODO: maybe we should use zod's coerce instead? https://github.com/shadcn-ui/ui/issues/421 */}
+              <Input
+                type="number"
+                {...rest}
+                {...field}
+                onChange={(e) =>
+                  field.onChange(BigInt(e.target.value) * multiplier)
+                }
+                value={(BigInt(field.value) / multiplier).toString()}
+              />
+            </WithIcon>
           </FormControl>
           <FormMessage>&nbsp;</FormMessage>
         </FormItem>
@@ -315,3 +334,22 @@ function SelectInput<
   );
 }
 Form.Select = SelectInput;
+
+function WithIcon({
+  icon,
+  children,
+}: {
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="relative w-full">
+      {children}
+      {icon && (
+        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-baseline pt-2 pr-2">
+          {icon}
+        </div>
+      )}
+    </div>
+  );
+}
