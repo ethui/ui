@@ -347,7 +347,7 @@ function WithIcon({
     <div className="relative w-full">
       {children}
       {icon && (
-        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-baseline pt-2 pr-2">
+        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
           {icon}
         </div>
       )}
