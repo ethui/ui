@@ -92,5 +92,5 @@
     "vite": "^6.3.4",
     "vite-tsconfig-paths": "^5.1.4"
   },
-  "packageManager": "yarn@4.6.0"
+  "packageManager": "yarn@4.9.1"
 }

@@ -3,6 +3,7 @@ import { ChainIcon } from "./icons/chain.js";
 export interface ChainViewProps {
   name: string;
   chainId: number;
+  online?: boolean;
 }
 
 export function ChainView({ name, chainId }: ChainViewProps) {

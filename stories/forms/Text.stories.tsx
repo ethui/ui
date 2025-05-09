@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Check, LoaderCircle } from "lucide-react";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -40,6 +41,46 @@ export const Default: Story = {
   args: {
     name: "default",
     label: "Default text input",
+    className: "w-full",
+  },
+};
+
+export const WithSuccessIcon: Story = {
+  decorators: [
+    (Story) => {
+      const form = useForm({ defaultValues: { default: null } });
+      return (
+        <Form form={form} onSubmit={() => console.log("submitted")}>
+          <Story />
+        </Form>
+      );
+    },
+  ],
+
+  args: {
+    name: "with-icon",
+    label: "With Icon",
+    icon: <Check className="stroke-success" />,
+    className: "w-full",
+  },
+};
+
+export const WithLoadingIcon: Story = {
+  decorators: [
+    (Story) => {
+      const form = useForm({ defaultValues: { default: null } });
+      return (
+        <Form form={form} onSubmit={() => console.log("submitted")}>
+          <Story />
+        </Form>
+      );
+    },
+  ],
+
+  args: {
+    name: "with-icon",
+    label: "With Icon",
+    icon: <LoaderCircle className="animate-spin stroke-input" />,
     className: "w-full",
   },
 };
