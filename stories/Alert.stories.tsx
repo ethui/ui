@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { CircleCheck, CircleX, Info } from "lucide-react";
 import React from "react";
