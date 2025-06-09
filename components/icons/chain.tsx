@@ -16,10 +16,12 @@ import scroll from "../../images/chains/534352.webp";
 import sepolia from "../../images/chains/11155111.webp";
 import optimismSepolia from "../../images/chains/11155420.webp";
 import unknown from "../../images/chains/unknown.webp";
+import { cn } from "lib/utils";
 
 export interface IconChainProps {
   chainId: number;
   className?: string;
+  status?: "online" | "offline" | "error";
 }
 
 const Mappings: Record<number, string> = {
@@ -40,12 +42,24 @@ const Mappings: Record<number, string> = {
   534351: scrollSepolia,
 };
 
-export function ChainIcon({ chainId, className }: IconChainProps) {
+export function ChainIcon({ chainId, className, status }: IconChainProps) {
   return (
-    <img
-      alt={`Chain ${chainId}`}
-      className={clsx("h-5 w-5", className)}
-      src={Mappings[chainId] || unknown}
-    />
+    <div className="relative">
+      <img
+        alt={`Chain ${chainId}`}
+        className={clsx("h-5 w-5", className)}
+        src={Mappings[chainId] || unknown}
+      />
+      <div
+        className={cn(
+          "absolute top-[-10%] right-[-10%] h-2 w-2 rounded-full transition-colors",
+          {
+            "bg-success": status === "online",
+            "bg-border": status === "offline",
+            "bg-error": status === "error",
+          },
+        )}
+      />
+    </div>
   );
 }
