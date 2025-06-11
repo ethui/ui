@@ -37,21 +37,21 @@ export const Op: Story = {
 
 export const MainnetOnline: Story = {
   args: {
-    chainId: 10,
+    chainId: 1,
     status: "online",
   },
 };
 
 export const MainnetOffline: Story = {
   args: {
-    chainId: 10,
+    chainId: 1,
     status: "offline",
   },
 };
 
 export const MainnetError: Story = {
   args: {
-    chainId: 10,
+    chainId: 1,
     status: "error",
   },
 };

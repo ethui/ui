@@ -50,16 +50,18 @@ export function ChainIcon({ chainId, className, status }: IconChainProps) {
         className={clsx("h-5 w-5", className)}
         src={Mappings[chainId] || unknown}
       />
-      <div
-        className={cn(
-          "absolute top-[-10%] right-[-10%] h-2 w-2 rounded-full transition-colors",
-          {
-            "bg-success": status === "online",
-            "bg-border": status === "offline",
-            "bg-error": status === "error",
-          },
-        )}
-      />
+      {status && (
+        <div
+          className={cn(
+            "absolute top-[-10%] right-[-10%] h-2 w-2 rounded-full transition-colors",
+            {
+              "bg-success": status === "online",
+              "bg-border": status === "offline",
+              "bg-error": status === "error",
+            },
+          )}
+        />
+      )}
     </div>
   );
 }
