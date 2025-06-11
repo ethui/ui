@@ -53,7 +53,7 @@ export function ChainIcon({ chainId, className, status }: IconChainProps) {
       {status && (
         <div
           className={cn(
-            "absolute top-[-10%] right-[-10%] h-2 w-2 rounded-full transition-colors",
+            "-translate-y-1/4 absolute top-0 right-0 h-2 w-2 translate-x-1/4 rounded-full transition-colors",
             {
               "bg-success": status === "online",
               "bg-offline": status === "offline",
