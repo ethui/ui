@@ -1,15 +1,15 @@
-import { ChainIcon } from "./icons/chain.js";
+import { ChainIcon, type IconChainProps } from "./icons/chain.js";
 
-export interface ChainViewProps {
+export interface ChainViewProps
+  extends Pick<IconChainProps, "chainId" | "status"> {
   name: string;
   chainId: number;
-  online?: boolean;
 }
 
-export function ChainView({ name, chainId }: ChainViewProps) {
+export function ChainView({ name, chainId, status }: ChainViewProps) {
   return (
     <div className="flex items-center gap-x-2">
-      <ChainIcon chainId={chainId} />
+      <ChainIcon chainId={chainId} status={status} />
       <span>{name}</span>
     </div>
   );

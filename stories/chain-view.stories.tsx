@@ -38,3 +38,27 @@ export const Op: Story = {
     name: "Optimism",
   },
 };
+
+export const MainnetOnline: Story = {
+  args: {
+    chainId: 1,
+    name: "Mainnet",
+    status: "online",
+  },
+};
+
+export const MainnetOffline: Story = {
+  args: {
+    chainId: 1,
+    name: "Mainnet",
+    status: "offline",
+  },
+};
+
+export const MainnetError: Story = {
+  args: {
+    chainId: 1,
+    name: "Mainnet",
+    status: "error",
+  },
+};
