@@ -56,7 +56,7 @@ export function ChainIcon({ chainId, className, status }: IconChainProps) {
             "absolute top-[-10%] right-[-10%] h-2 w-2 rounded-full transition-colors",
             {
               "bg-success": status === "online",
-              "bg-border": status === "offline",
+              "bg-offline": status === "offline",
               "bg-error": status === "error",
             },
           )}
