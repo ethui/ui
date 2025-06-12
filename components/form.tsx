@@ -10,7 +10,7 @@ import {
 
 import clsx from "clsx";
 import { Check, LoaderCircle } from "lucide-react";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../lib/utils.js";
 import { Button, type ButtonProps } from "./shadcn/button.js";
 import {
   FormControl,
