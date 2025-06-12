@@ -9,7 +9,7 @@ import {
 } from "react-hook-form";
 
 import clsx from "clsx";
-import { cn } from "lib/utils.js";
+import { cn } from "../../lib/utils.js";
 import { Check, LoaderCircle } from "lucide-react";
 import { Button, type ButtonProps } from "./shadcn/button.js";
 import {
