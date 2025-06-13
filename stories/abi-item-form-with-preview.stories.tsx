@@ -42,8 +42,8 @@ const transferFunction = {
 export const WithAbiFunction: Story = {
   args: {
     abiFunction: transferFunction,
-    address: "0x1234567890123456789012345678901234567890",
-    sender: "0x0987654321098765432109876543210987654321",
+    address: "0x1234...7890",
+    sender: "0x0987...54321",
     chainId: 1,
   },
 };
@@ -51,8 +51,8 @@ export const WithAbiFunction: Story = {
 export const Raw: Story = {
   args: {
     abiFunction: "raw",
-    address: "0x1234567890123456789012345678901234567890",
-    sender: "0x0987654321098765432109876543210987654321",
+    address: "0x1234...7890",
+    sender: "0x0987...54321",
     chainId: 1,
   },
 };
