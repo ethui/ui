@@ -56,13 +56,3 @@ export const Raw: Story = {
     chainId: 1,
   },
 };
-
-export const RawCall: Story = {
-  args: {
-    abiFunction: "rawCall",
-    address: "0x1234567890123456789012345678901234567890",
-    sender: "0x0987654321098765432109876543210987654321",
-    chainId: 1,
-    defaultCalldata: "0x1234",
-  },
-};
