@@ -2,7 +2,7 @@ import type { AbiFunction, Address } from "abitype";
 import { SolidityCall, type SolidityCallProps } from "components/solidity-call";
 import { cn } from "lib/utils";
 import { useCallback, useState } from "react";
-import { AbiItemForm } from "./AbiItemForm";
+import { AbiItemForm } from "./abi-item-form";
 
 interface AbiItemFormWithPreview {
   abiFunction: AbiFunction | "raw" | "rawCall";

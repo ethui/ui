@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 
-import type { InnerProps } from "./AbiInput";
+import type { InnerProps } from "./abi-input";
 
 import { parse } from "@ethui/abiparse";
 import { Input } from "components/shadcn/input";

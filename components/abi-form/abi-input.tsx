@@ -1,8 +1,8 @@
 import { cn } from "lib/utils";
 import { matchArrayType } from "lib/utils";
 import { useCallback } from "react";
-import { ArrayInput } from "./ArrayInput";
-import { Basic } from "./Basic";
+import { ArrayInput } from "./array-input";
+import { Basic } from "./basic";
 
 export interface BaseProps {
   name: string;
