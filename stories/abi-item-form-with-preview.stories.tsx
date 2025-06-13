@@ -2,21 +2,28 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import React from "react";
 import { AbiItemFormWithPreview } from "../components/abi-form/abi-item-form-with-preview";
 
-const meta = {
-  title: "Components/Form/AbiItemFormWithPreview",
+const meta: Meta<typeof AbiItemFormWithPreview> = {
+  title: "ethui/AbiItemFormWithPreview",
   component: AbiItemFormWithPreview,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
+  argTypes: {
+    address: { control: "text" },
+    sender: { control: "text" },
+    chainId: { control: "number" },
+    defaultCalldata: { control: "text" },
+    defaultEther: { control: "text" },
+  },
   decorators: [
     (Story) => (
-      <div className="w-[800px]">
+      <div className="w-md">
         <Story />
       </div>
     ),
   ],
-} satisfies Meta<typeof AbiItemFormWithPreview>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
