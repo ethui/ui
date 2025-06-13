@@ -4,9 +4,9 @@ import { useState } from "react";
 
 import { Button } from "components/shadcn/button";
 import { Separator } from "components/shadcn/separator";
+import { Debug } from "lib/utils";
 import { AbiInput, type InnerProps } from "./AbiInput";
 import { Basic } from "./Basic";
-import { Debug } from "lib/utils";
 
 type ArrayInputProps = InnerProps & {
   length?: number;
