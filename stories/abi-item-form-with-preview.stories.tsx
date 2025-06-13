@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import React from "react";
-import { AbiItemFormWithPreview } from "../../components/abi-form/abi-item-form-with-preview";
+import { AbiItemFormWithPreview } from "../components/abi-form/abi-item-form-with-preview";
 
 const meta = {
   title: "Components/Form/AbiItemFormWithPreview",
@@ -21,7 +21,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const sampleFunction = {
+const transferFunction = {
   type: "function",
   name: "transfer",
   inputs: [
@@ -32,23 +32,21 @@ const sampleFunction = {
   stateMutability: "nonpayable",
 } as const;
 
-export const Default: Story = {
+export const WithAbiFunction: Story = {
   args: {
-    abiFunction: sampleFunction,
+    abiFunction: transferFunction,
     address: "0x1234567890123456789012345678901234567890",
     sender: "0x0987654321098765432109876543210987654321",
     chainId: 1,
   },
 };
 
-export const WithDefaultValues: Story = {
+export const Raw: Story = {
   args: {
-    abiFunction: sampleFunction,
+    abiFunction: "raw",
     address: "0x1234567890123456789012345678901234567890",
     sender: "0x0987654321098765432109876543210987654321",
     chainId: 1,
-    defaultEther: BigInt("1000000000000000000"), // 1 ETH
-    defaultCalldata: "0x1234",
   },
 };
 
