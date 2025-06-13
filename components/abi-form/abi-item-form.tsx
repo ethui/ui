@@ -5,7 +5,7 @@ import { AlertCircle } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { type AbiFunction, parseAbiItem } from "viem";
 import { encodeFunctionData } from "viem/utils";
-import { AbiInput } from "./AbiInput";
+import { AbiInput } from "./abi-input";
 
 interface AbiItemFormProps {
   item?: AbiFunction | "raw" | "rawCall";
