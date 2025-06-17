@@ -1,6 +1,5 @@
 import { clsx } from "clsx";
 
-import { cn } from "../../lib/utils.js";
 import mainnet from "../../images/chains/1.webp";
 import optimism from "../../images/chains/10.webp";
 import polygon from "../../images/chains/137.webp";
@@ -17,6 +16,7 @@ import scroll from "../../images/chains/534352.webp";
 import sepolia from "../../images/chains/11155111.webp";
 import optimismSepolia from "../../images/chains/11155420.webp";
 import unknown from "../../images/chains/unknown.webp";
+import { cn } from "../../lib/utils.js";
 
 export interface IconChainProps {
   chainId: number;
