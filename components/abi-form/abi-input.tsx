@@ -1,6 +1,5 @@
-import { cn } from "lib/utils.js";
-import { matchArrayType } from "lib/utils.js";
 import { useCallback } from "react";
+import { cn, matchArrayType } from "../../lib/utils.js";
 import { ArrayInput } from "./array-input.js";
 import { Basic } from "./basic.js";
 
