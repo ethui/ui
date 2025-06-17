@@ -47,26 +47,11 @@ export function AbiItemForm({
     );
   }
 
-  let item: AbiFunction;
-  try {
-    item = (
-      typeof abiItem === "string" ? parseAbiItem(abiItem) : abiItem
-    ) as AbiFunction;
-  } catch (e: any) {
-    const msg = e.message.replace(/Version: abitype.*$/, "");
-    return (
-      <Alert variant="destructive">
-        <AlertCircle className="h-4 w-4" />
-        <AlertDescription>{msg}</AlertDescription>
-      </Alert>
-    );
-  }
-
   return (
     <AbiItemFormInner
       {...{
         submit,
-        item,
+        item: abiItem,
         debug,
         onChange,
         onSubmit,

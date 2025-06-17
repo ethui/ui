@@ -1,11 +1,13 @@
 import type { AbiFunction, Address } from "abitype";
 import { SolidityCall, type SolidityCallProps } from "components/solidity-call";
 import { cn } from "lib/utils";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { AbiItemForm } from "./abi-item-form";
+import { parseAbiItem } from "viem";
 
 interface AbiItemFormWithPreview {
-  abiFunction: AbiFunction | "raw" | "rawCall";
+  abiFunction: AbiFunction | "raw" | "rawCall" | "signature";
+  signature?: string;
   address: Address;
   sender?: Address;
   chainId: number;
@@ -17,6 +19,7 @@ interface AbiItemFormWithPreview {
 
 export function AbiItemFormWithPreview({
   abiFunction,
+  signature,
   address,
   sender,
   chainId,
@@ -27,10 +30,6 @@ export function AbiItemFormWithPreview({
 }: AbiItemFormWithPreview) {
   const [value, setValue] = useState<bigint | undefined>(defaultEther);
   const [data, setData] = useState<`0x${string}` | undefined>(defaultCalldata);
-  const showForm =
-    abiFunction === "raw" ||
-    abiFunction === "rawCall" ||
-    abiFunction.inputs.length > 0;
 
   const onChange = useCallback(
     ({ value, data }: { value?: bigint; data?: `0x${string}` }) => {
@@ -40,6 +39,26 @@ export function AbiItemFormWithPreview({
     },
     [parentOnChange],
   );
+  const parsedAbiFunction = useMemo(() => {
+    if (abiFunction === "signature" && signature) {
+      try {
+        return parseAbiItem(signature) as AbiFunction;
+      } catch {
+        return null;
+      }
+    }
+    return abiFunction === "signature" ? null : abiFunction;
+  }, [abiFunction, signature]);
+
+  if (parsedAbiFunction === null) {
+    return null;
+  }
+
+  const showForm =
+    parsedAbiFunction === "raw" ||
+    parsedAbiFunction === "rawCall" ||
+    (typeof parsedAbiFunction === "object" &&
+      parsedAbiFunction.inputs.length > 0);
 
   return (
     <div className="grid grid-cols-3 gap-2">
@@ -50,7 +69,7 @@ export function AbiItemFormWithPreview({
         )}
       >
         <AbiItemForm
-          item={abiFunction}
+          item={parsedAbiFunction}
           onChange={onChange}
           defaultEther={defaultEther}
           defaultCalldata={defaultCalldata}
@@ -65,8 +84,8 @@ export function AbiItemFormWithPreview({
               from: sender,
               to: address,
               abi:
-                abiFunction !== "raw" && abiFunction !== "rawCall"
-                  ? [abiFunction]
+                parsedAbiFunction !== "raw" && parsedAbiFunction !== "rawCall"
+                  ? [parsedAbiFunction]
                   : [],
               chainId,
               ArgProps,
