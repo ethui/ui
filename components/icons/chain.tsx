@@ -1,6 +1,6 @@
 import { clsx } from "clsx";
 
-import { cn } from "lib/utils";
+import { cn } from "../../lib/utils.js";
 import mainnet from "../../images/chains/1.webp";
 import optimism from "../../images/chains/10.webp";
 import polygon from "../../images/chains/137.webp";
