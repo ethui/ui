@@ -1,7 +1,7 @@
 import { Button } from "components/shadcn/button.js";
 import { decodeDefaultArgs } from "lib/utils.js";
 import { useCallback, useEffect, useState } from "react";
-import { type AbiFunction } from "viem";
+import type { AbiFunction } from "viem";
 import { encodeFunctionData } from "viem/utils";
 import { AbiInput } from "./abi-input.js";
 
