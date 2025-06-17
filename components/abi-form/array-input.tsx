@@ -1,12 +1,12 @@
-import { cn } from "lib/utils";
+import { cn } from "lib/utils.js";
 import { Plus, X } from "lucide-react";
 import { useState } from "react";
 
-import { Button } from "components/shadcn/button";
-import { Separator } from "components/shadcn/separator";
-import { Debug } from "lib/utils";
-import { AbiInput, type InnerProps } from "./abi-input";
-import { Basic } from "./basic";
+import { Button } from "components/shadcn/button.js";
+import { Separator } from "components/shadcn/separator.js";
+import { Debug } from "lib/utils.js";
+import { AbiInput, type InnerProps } from "./abi-input.js";
+import { Basic } from "./basic.js";
 
 type ArrayInputProps = InnerProps & {
   length?: number;

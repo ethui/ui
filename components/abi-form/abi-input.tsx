@@ -1,8 +1,8 @@
-import { cn } from "lib/utils";
-import { matchArrayType } from "lib/utils";
+import { cn } from "lib/utils.js";
+import { matchArrayType } from "lib/utils.js";
 import { useCallback } from "react";
-import { ArrayInput } from "./array-input";
-import { Basic } from "./basic";
+import { ArrayInput } from "./array-input.js";
+import { Basic } from "./basic.js";
 
 export interface BaseProps {
   name: string;
