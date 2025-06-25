@@ -9,7 +9,7 @@ import {
 } from "react-hook-form";
 
 import clsx from "clsx";
-import { Check, LoaderCircle } from "lucide-react";
+import { Check, LoaderCircle, Save } from "lucide-react";
 import { cn } from "../lib/utils.js";
 import { Button, type ButtonProps } from "./shadcn/button.js";
 import {
@@ -30,6 +30,7 @@ import {
 } from "./shadcn/select.js";
 import { Switch } from "./shadcn/switch.js";
 import { Textarea as ShadTextarea } from "./shadcn/textarea.js";
+import { createElement } from "react";
 
 interface Props<T extends FieldValues>
   extends Omit<React.FormHTMLAttributes<HTMLFormElement>, "onSubmit"> {
@@ -246,30 +247,49 @@ interface SubmitProps extends ButtonProps {
   label: React.ReactNode;
   skipDirtyCheck?: boolean;
   isSubmitting?: boolean;
+  submittingLabel?: string;
+  successLabel?: string;
 }
 
 function Submit({
   skipDirtyCheck = false,
-  label,
+  label = "Save",
+  submittingLabel = "Saving",
+  successLabel = "Saved",
   isSubmitting: isSubmittingOverride = false,
   ...rest
 }: SubmitProps) {
   const {
-    formState: { isValid, isDirty, isSubmitting },
+    formState: { isValid, isDirty, isSubmitting, isSubmitSuccessful },
   } = useFormContext();
+
+  const isSubmittingWithOverride = isSubmittingOverride || isSubmitting;
 
   const disabled = skipDirtyCheck
     ? !isValid || isSubmitting
     : !isDirty || !isValid || isSubmitting;
 
+  const computedLabel = isSubmittingWithOverride
+    ? submittingLabel
+    : isSubmitSuccessful
+      ? successLabel
+      : label;
+
+  const icon = isSubmittingWithOverride
+    ? LoaderCircle
+    : isDirty
+      ? Save
+      : isSubmitSuccessful
+        ? Check
+        : Save;
+  const iconProps = isSubmittingWithOverride
+    ? { className: "animate-spin" }
+    : {};
+
   return (
     <Button type="submit" disabled={disabled} {...rest}>
-      {isSubmitting || isSubmittingOverride ? (
-        <LoaderCircle className="animate-spin" />
-      ) : (
-        <Check />
-      )}
-      {label}
+      {createElement(icon, iconProps)}
+      {computedLabel}
     </Button>
   );
 }
