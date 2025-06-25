@@ -4,7 +4,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "license": "MIT",
-  "version": "0.0.72",
+  "version": "0.0.75",
   "scripts": {
     "build": "yarn build:clean && yarn build:prepare && yarn build:tsc",
     "build:clean": "rm -rf dist && mkdir dist",
@@ -20,6 +20,7 @@
     "fix:biome": "biome check --write ."
   },
   "dependencies": {
+    "@ethui/abiparse": "^0.0.4",
     "@fontsource/source-code-pro": "^5.2.5",
     "@hookform/resolvers": "^5.0.1",
     "@radix-ui/react-accordion": "^1.2.8",
