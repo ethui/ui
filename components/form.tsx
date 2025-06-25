@@ -9,7 +9,8 @@ import {
 } from "react-hook-form";
 
 import clsx from "clsx";
-import { Check, LoaderCircle } from "lucide-react";
+import { Check, LoaderCircle, type LucideIcon, Save } from "lucide-react";
+import { createElement } from "react";
 import { cn } from "../lib/utils.js";
 import { Button, type ButtonProps } from "./shadcn/button.js";
 import {
@@ -242,34 +243,76 @@ function Checkbox<T extends FieldValues>({ name, label }: BaseInputProps<T>) {
 }
 Form.Checkbox = Checkbox;
 
+interface SubmitLabelMapping {
+  save: string;
+  saving: string;
+  saved: string;
+}
+
+const submitLabelKnownMappings: Record<string, SubmitLabelMapping> = {
+  save: { save: "Save", saving: "Saving", saved: "Saved" },
+  unlock: { save: "Unlock", saving: "Unlocking", saved: "Unlocked" },
+};
+
 interface SubmitProps extends ButtonProps {
-  label: React.ReactNode;
+  label: string | SubmitLabelMapping;
   skipDirtyCheck?: boolean;
   isSubmitting?: boolean;
+  submittingLabel?: string;
+  successLabel?: string;
 }
 
 function Submit({
   skipDirtyCheck = false,
-  label,
+  label = submitLabelKnownMappings.save,
   isSubmitting: isSubmittingOverride = false,
   ...rest
 }: SubmitProps) {
   const {
-    formState: { isValid, isDirty, isSubmitting },
+    formState: { isValid, isDirty, isSubmitting, isSubmitSuccessful },
   } = useFormContext();
 
+  const isSubmittingWithOverride = isSubmittingOverride || isSubmitting;
+
   const disabled = skipDirtyCheck
-    ? !isValid || isSubmitting
-    : !isDirty || !isValid || isSubmitting;
+    ? !isValid || isSubmittingWithOverride
+    : !isDirty || !isValid || isSubmittingWithOverride;
+
+  const labelMapping =
+    typeof label === "string"
+      ? submitLabelKnownMappings[label.toLowerCase()] || label
+      : label;
+
+  let computedLabel: string;
+  if (!labelMapping) {
+    // at this point it can only be a string
+    computedLabel = label as string;
+  } else if (isSubmittingWithOverride) {
+    computedLabel = labelMapping.saving;
+  } else if (isSubmitSuccessful) {
+    computedLabel = labelMapping.saved;
+  } else {
+    computedLabel = labelMapping.save;
+  }
+
+  let icon: LucideIcon;
+  if (isSubmittingWithOverride) {
+    icon = LoaderCircle;
+  } else if (isDirty) {
+    icon = Save;
+  } else if (isSubmitSuccessful) {
+    icon = Check;
+  } else {
+    icon = Save;
+  }
+  const iconProps = isSubmittingWithOverride
+    ? { className: "animate-spin" }
+    : {};
 
   return (
     <Button type="submit" disabled={disabled} {...rest}>
-      {isSubmitting || isSubmittingOverride ? (
-        <LoaderCircle className="animate-spin" />
-      ) : (
-        <Check />
-      )}
-      {label}
+      {createElement(icon, iconProps)}
+      {computedLabel}
     </Button>
   );
 }
