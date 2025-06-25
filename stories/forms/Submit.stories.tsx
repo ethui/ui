@@ -100,7 +100,7 @@ export const WithOptionalInput: Story = {
 
   args: {
     name: "default",
-    label: "Default text input",
+    label: "Submit",
     className: "w-full",
   },
 };
