@@ -275,8 +275,8 @@ function Submit({
   const isSubmittingWithOverride = isSubmittingOverride || isSubmitting;
 
   const disabled = skipDirtyCheck
-    ? !isValid || isSubmitting
-    : !isDirty || !isValid || isSubmitting;
+    ? !isValid || isSubmittingWithOverride
+    : !isDirty || !isValid || isSubmittingWithOverride;
 
   let labelMapping =
     typeof label === "string" ? SubmitLabelMapping[label.toLowerCase()] : label;
