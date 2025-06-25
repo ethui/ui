@@ -243,8 +243,19 @@ function Checkbox<T extends FieldValues>({ name, label }: BaseInputProps<T>) {
 }
 Form.Checkbox = Checkbox;
 
+interface SubmitLabelMapping {
+  save: string;
+  saving: string;
+  saved: string;
+}
+
+const SubmitLabelMapping: Record<string, SubmitLabelMapping> = {
+  save: { save: "Save", saving: "Saving", saved: "Saved" },
+  unlock: { save: "Unlock", saving: "Unlocking", saved: "Unlocked" },
+};
+
 interface SubmitProps extends ButtonProps {
-  label: React.ReactNode;
+  label: string | SubmitLabelMapping;
   skipDirtyCheck?: boolean;
   isSubmitting?: boolean;
   submittingLabel?: string;
@@ -253,9 +264,7 @@ interface SubmitProps extends ButtonProps {
 
 function Submit({
   skipDirtyCheck = false,
-  label = "Save",
-  submittingLabel = "Saving",
-  successLabel = "Saved",
+  label = SubmitLabelMapping.save,
   isSubmitting: isSubmittingOverride = false,
   ...rest
 }: SubmitProps) {
@@ -269,11 +278,14 @@ function Submit({
     ? !isValid || isSubmitting
     : !isDirty || !isValid || isSubmitting;
 
+  let labelMapping =
+    typeof label === "string" ? SubmitLabelMapping[label.toLowerCase()] : label;
+
   const computedLabel = isSubmittingWithOverride
-    ? submittingLabel
+    ? labelMapping.saving
     : isSubmitSuccessful
-      ? successLabel
-      : label;
+      ? labelMapping.saved
+      : labelMapping.save;
 
   const icon = isSubmittingWithOverride
     ? LoaderCircle
