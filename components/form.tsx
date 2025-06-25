@@ -9,7 +9,8 @@ import {
 } from "react-hook-form";
 
 import clsx from "clsx";
-import { Check, LoaderCircle, Save } from "lucide-react";
+import { Check, LoaderCircle, type LucideIcon, Save } from "lucide-react";
+import { createElement } from "react";
 import { cn } from "../lib/utils.js";
 import { Button, type ButtonProps } from "./shadcn/button.js";
 import {
@@ -30,7 +31,6 @@ import {
 } from "./shadcn/select.js";
 import { Switch } from "./shadcn/switch.js";
 import { Textarea as ShadTextarea } from "./shadcn/textarea.js";
-import { createElement } from "react";
 
 interface Props<T extends FieldValues>
   extends Omit<React.FormHTMLAttributes<HTMLFormElement>, "onSubmit"> {
@@ -249,7 +249,7 @@ interface SubmitLabelMapping {
   saved: string;
 }
 
-const SubmitLabelMapping: Record<string, SubmitLabelMapping> = {
+const submitLabelKnownMappings: Record<string, SubmitLabelMapping> = {
   save: { save: "Save", saving: "Saving", saved: "Saved" },
   unlock: { save: "Unlock", saving: "Unlocking", saved: "Unlocked" },
 };
@@ -264,7 +264,7 @@ interface SubmitProps extends ButtonProps {
 
 function Submit({
   skipDirtyCheck = false,
-  label = SubmitLabelMapping.save,
+  label = submitLabelKnownMappings.save,
   isSubmitting: isSubmittingOverride = false,
   ...rest
 }: SubmitProps) {
@@ -278,16 +278,24 @@ function Submit({
     ? !isValid || isSubmittingWithOverride
     : !isDirty || !isValid || isSubmittingWithOverride;
 
-  let labelMapping =
-    typeof label === "string" ? SubmitLabelMapping[label.toLowerCase()] : label;
+  const labelMapping =
+    typeof label === "string"
+      ? submitLabelKnownMappings[label.toLowerCase()] || label
+      : label;
 
-  const computedLabel = isSubmittingWithOverride
-    ? labelMapping.saving
-    : isSubmitSuccessful
-      ? labelMapping.saved
-      : labelMapping.save;
+  let computedLabel: string;
+  if (!labelMapping) {
+    // at this point it can only be a string
+    computedLabel = label as string;
+  } else if (isSubmittingWithOverride) {
+    computedLabel = labelMapping.saving;
+  } else if (isSubmitSuccessful) {
+    computedLabel = labelMapping.saved;
+  } else {
+    computedLabel = labelMapping.save;
+  }
 
-  let icon;
+  let icon: LucideIcon;
   if (isSubmittingWithOverride) {
     icon = LoaderCircle;
   } else if (isDirty) {
