@@ -257,7 +257,6 @@ const submitLabelKnownMappings: Record<string, SubmitLabelMapping> = {
 interface SubmitProps extends ButtonProps {
   label: string | SubmitLabelMapping;
   skipDirtyCheck?: boolean;
-  isSubmitting?: boolean;
   submittingLabel?: string;
   successLabel?: string;
 }
@@ -265,18 +264,15 @@ interface SubmitProps extends ButtonProps {
 function Submit({
   skipDirtyCheck = false,
   label = submitLabelKnownMappings.save,
-  isSubmitting: isSubmittingOverride = false,
   ...rest
 }: SubmitProps) {
   const {
     formState: { isValid, isDirty, isSubmitting, isSubmitSuccessful },
   } = useFormContext();
 
-  const isSubmittingWithOverride = isSubmittingOverride || isSubmitting;
-
   const disabled = skipDirtyCheck
-    ? !isValid || isSubmittingWithOverride
-    : !isDirty || !isValid || isSubmittingWithOverride;
+    ? !isValid || isSubmitting
+    : !isDirty || !isValid || isSubmitting;
 
   const labelMapping =
     typeof label === "string"
@@ -287,7 +283,7 @@ function Submit({
   if (!labelMapping) {
     // at this point it can only be a string
     computedLabel = label as string;
-  } else if (isSubmittingWithOverride) {
+  } else if (isSubmitting) {
     computedLabel = labelMapping.saving;
   } else if (isSubmitSuccessful) {
     computedLabel = labelMapping.saved;
@@ -296,7 +292,7 @@ function Submit({
   }
 
   let icon: LucideIcon;
-  if (isSubmittingWithOverride) {
+  if (isSubmitting) {
     icon = LoaderCircle;
   } else if (isDirty) {
     icon = Save;
@@ -305,9 +301,7 @@ function Submit({
   } else {
     icon = Save;
   }
-  const iconProps = isSubmittingWithOverride
-    ? { className: "animate-spin" }
-    : {};
+  const iconProps = isSubmitting ? { className: "animate-spin" } : {};
 
   return (
     <Button type="submit" disabled={disabled} {...rest}>
