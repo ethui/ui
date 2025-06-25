@@ -287,13 +287,16 @@ function Submit({
       ? labelMapping.saved
       : labelMapping.save;
 
-  const icon = isSubmittingWithOverride
-    ? LoaderCircle
-    : isDirty
-      ? Save
-      : isSubmitSuccessful
-        ? Check
-        : Save;
+  let icon;
+  if (isSubmittingWithOverride) {
+    icon = LoaderCircle;
+  } else if (isDirty) {
+    icon = Save;
+  } else if (isSubmitSuccessful) {
+    icon = Check;
+  } else {
+    icon = Save;
+  }
   const iconProps = isSubmittingWithOverride
     ? { className: "animate-spin" }
     : {};
