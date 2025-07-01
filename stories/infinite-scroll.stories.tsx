@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { LoaderCircle } from "lucide-react";
-
-import React from "react";
+// biome-ignore lint/correctness/noUnusedImports: ignore
+import React, { useRef, useState } from "react";
 import { InfiniteScroll } from "../components/infinite-scroll.js";
 
 const meta: Meta = {
@@ -33,10 +33,10 @@ const Item = ({ item }: { item: Item }) => {
 
 export const Default: Story = {
   render: () => {
-    const [loading, setLoading] = React.useState(false);
-    const [hasMore, setHasMore] = React.useState(true);
-    const [items, setItems] = React.useState<Item[]>([]);
-    const listRef = React.useRef<HTMLDivElement>(null);
+    const [loading, setLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+    const [items, setItems] = useState<Item[]>([]);
+    const listRef = useRef<HTMLDivElement>(null);
 
     const next = async () => {
       setLoading(true);

@@ -1,7 +1,6 @@
 import type { Abi, AbiFunction, Address } from "abitype";
-import { decodeFunctionData, formatUnits, parseAbi } from "viem";
-
 import clsx from "clsx";
+import { decodeFunctionData, formatUnits, parseAbi } from "viem";
 import { ClickToCopy } from "./click-to-copy.js";
 
 export interface SolidityCallProps {
@@ -63,25 +62,23 @@ interface DeployProps {
 
 function Deploy({ value, from, decimals, ArgProps }: DeployProps) {
   return (
-    <>
-      <div className="flex gap-x-1">
-        <Arg
-          label="Ξ"
-          type="uint256"
-          {...ArgProps}
-          value={formatUnits(value, decimals)}
-          variant="value"
-        />
-        <Arg
-          label="from"
-          type="address"
-          {...ArgProps}
-          value={from}
-          variant="caller"
-        />
-        <span className="font-mono">to newly deployed contract</span>
-      </div>
-    </>
+    <div className="flex gap-x-1">
+      <Arg
+        label="Ξ"
+        type="uint256"
+        {...ArgProps}
+        value={formatUnits(value, decimals)}
+        variant="value"
+      />
+      <Arg
+        label="from"
+        type="address"
+        {...ArgProps}
+        value={from}
+        variant="caller"
+      />
+      <span className="font-mono">to newly deployed contract</span>
+    </div>
   );
 }
 

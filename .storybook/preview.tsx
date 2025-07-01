@@ -1,6 +1,7 @@
 import { withThemeByClassName } from "@storybook/addon-themes";
 import type { Preview } from "@storybook/react-vite";
 import "../tailwind.css";
+// biome-ignore lint/correctness/noUnusedImports: ignore
 import React from "react";
 import { ClipboardProvider } from "../components/providers/clipboard-provider";
 
