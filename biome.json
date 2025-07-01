@@ -1,6 +1,12 @@
 {
   "files": {
-    "ignore": ["**/*.gen.ts", "dist", "package.json", "storybook-static"]
+    "includes": [
+      "**",
+      "!**/*.gen.ts",
+      "!**/dist",
+      "!**/package.json",
+      "!**/storybook-static"
+    ]
   },
   "formatter": {
     "indentStyle": "space"
@@ -15,7 +21,16 @@
       },
       "style": {
         "noUselessElse": "off",
-        "noNonNullAssertion": "off"
+        "noNonNullAssertion": "off",
+        "noParameterAssign": "error",
+        "useAsConstAssertion": "error",
+        "useDefaultParameterLast": "error",
+        "useEnumInitializers": "error",
+        "useSelfClosingElements": "error",
+        "useSingleVarDeclarator": "error",
+        "noUnusedTemplateLiteral": "error",
+        "useNumberNamespace": "error",
+        "noInferrableTypes": "error"
       },
       "performance": {
         "noAccumulatingSpread": "error",

@@ -43,6 +43,7 @@ export function ClickToCopy({ children, text, ...props }: ClickToCopyProps) {
     writeText(text.toString());
   };
 
+  // biome-ignore-start lint/a11y/noStaticElementInteractions: ignore
   return (
     <TooltipProvider>
       <Tooltip open={open}>
@@ -66,4 +67,5 @@ export function ClickToCopy({ children, text, ...props }: ClickToCopyProps) {
       </Tooltip>
     </TooltipProvider>
   );
+  // biome-ignore-end lint/a11y/noStaticElementInteractions: ignore
 }

@@ -1,6 +1,6 @@
 import { Plus, X } from "lucide-react";
 import { useState } from "react";
-import { Debug, cn } from "../../lib/utils.js";
+import { cn, Debug } from "../../lib/utils.js";
 import { Button } from "../shadcn/button.js";
 import { Separator } from "../shadcn/separator.js";
 import { AbiInput, type InnerProps } from "./abi-input.js";
@@ -56,26 +56,24 @@ export function ArrayInput({
           Expanded
         </Button>
       </div>
-      <>
-        {tab === "text" && (
-          <Basic
-            {...{ ...rest, label, type, defaultValue: value }}
+      {tab === "text" && (
+        <Basic
+          {...{ ...rest, label, type, defaultValue: value }}
+          onChange={onChange}
+        />
+      )}
+      {tab === "expanded" && (
+        <div className="border-bg-secondary border-l-2 border-solid pl-1">
+          <ArrayElements
+            {...{
+              ...rest,
+              elemType: `${baseType}${subArrays}`,
+              defaultValue: value,
+            }}
             onChange={onChange}
           />
-        )}
-        {tab === "expanded" && (
-          <div className="border-bg-secondary border-l-2 border-solid pl-1">
-            <ArrayElements
-              {...{
-                ...rest,
-                elemType: `${baseType}${subArrays}`,
-                defaultValue: value,
-              }}
-              onChange={onChange}
-            />
-          </div>
-        )}
-      </>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,10 +1,8 @@
-import { useCallback, useState } from "react";
-
-import type { InnerProps } from "./abi-input.js";
-
 import { parse } from "@ethui/abiparse";
+import { useCallback, useState } from "react";
 import { Debug, stringify } from "../../lib/utils.js";
 import { Input } from "../shadcn/input.js";
+import type { InnerProps } from "./abi-input.js";
 
 export type BasicProps = Omit<InnerProps, "depth" | "type" | "label">;
 export function Basic({ name, defaultValue, onChange, debug }: BasicProps) {

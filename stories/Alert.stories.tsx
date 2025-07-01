@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { CircleCheck, CircleX, Info } from "lucide-react";
+// biome-ignore lint/correctness/noUnusedImports: ignore
 import React from "react";
 import {
   Alert,
