@@ -31,9 +31,11 @@ export function InfiniteScroll({
     (element: HTMLElement | null) => {
       let safeThreshold = threshold;
       if (threshold < 0 || threshold > 1) {
-        console.warn(
-          "threshold should be between 0 and 1. You are exceed the range. will use default value: 1",
-        );
+        if (process.env.NODE_ENV === "development") {
+          console.warn(
+            "threshold should be between 0 and 1. You are exceed the range. will use default value: 1",
+          );
+        }
         safeThreshold = 1;
       }
       // When isLoading is true, this callback will do nothing.
@@ -67,15 +69,15 @@ export function InfiniteScroll({
     <>
       {flattenChildren.map((child, index) => {
         if (!React.isValidElement(child)) {
-          process.env.NODE_ENV === "development" &&
+          if (process.env.NODE_ENV === "development") {
             console.warn("You should use a valid element with InfiniteScroll");
+          }
           return child;
         }
 
         const isObserveTarget = reverse
           ? index === 0
           : index === flattenChildren.length - 1;
-        console.log("is", isObserveTarget);
         const ref = isObserveTarget ? observerRef : null;
         // @ts-ignore ignore ref type
         return React.cloneElement(child, { ref });

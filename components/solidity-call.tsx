@@ -255,7 +255,7 @@ function parseCall(data: `0x${string}`, abi: Abi | string[] | undefined) {
 
     label = decoded?.functionName;
   } catch (e) {
-    console.log(e);
+    // ABI parsing failed, using fallback display
   }
 
   return { label, args };
