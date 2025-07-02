@@ -16,7 +16,7 @@ import scroll from "../../images/chains/534352.webp";
 import sepolia from "../../images/chains/11155111.webp";
 import optimismSepolia from "../../images/chains/11155420.webp";
 import unknown from "../../images/chains/unknown.webp";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../../lib/utils";
 
 export interface IconChainProps {
   chainId: number;
