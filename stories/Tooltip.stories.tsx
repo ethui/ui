@@ -2,8 +2,13 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 // biome-ignore lint/correctness/noUnusedImports: ignore
 import React from "react";
-import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "../components/shadcn/tooltip.js";
 import { Button } from "../components/shadcn/button.js";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../components/shadcn/tooltip.js";
 
 const meta = {
   title: "Components/Tooltip",
@@ -52,7 +57,7 @@ export const WithDelay: Story = {
 
 export const Positioning: Story = {
   render: () => (
-    <div className="grid grid-cols-3 gap-8 place-items-center">
+    <div className="grid grid-cols-3 place-items-center gap-8">
       <Tooltip>
         <TooltipTrigger asChild>
           <Button variant="outline">Top</Button>
@@ -61,7 +66,7 @@ export const Positioning: Story = {
           <p>Top tooltip</p>
         </TooltipContent>
       </Tooltip>
-      
+
       <Tooltip>
         <TooltipTrigger asChild>
           <Button variant="outline">Right</Button>
@@ -70,7 +75,7 @@ export const Positioning: Story = {
           <p>Right tooltip</p>
         </TooltipContent>
       </Tooltip>
-      
+
       <Tooltip>
         <TooltipTrigger asChild>
           <Button variant="outline">Bottom</Button>
@@ -79,9 +84,9 @@ export const Positioning: Story = {
           <p>Bottom tooltip</p>
         </TooltipContent>
       </Tooltip>
-      
-      <div></div>
-      
+
+      <div />
+
       <Tooltip>
         <TooltipTrigger asChild>
           <Button variant="outline">Left</Button>
@@ -114,7 +119,10 @@ export const LongContent: Story = {
         <Button variant="outline">Long content</Button>
       </TooltipTrigger>
       <TooltipContent className="max-w-xs">
-        <p>This is a tooltip with much longer content that demonstrates how the tooltip handles wrapping text and longer descriptions.</p>
+        <p>
+          This is a tooltip with much longer content that demonstrates how the
+          tooltip handles wrapping text and longer descriptions.
+        </p>
       </TooltipContent>
     </Tooltip>
   ),
