@@ -1,10 +1,10 @@
 import { Plus, X } from "lucide-react";
 import { useState } from "react";
-import { cn, Debug } from "../../lib/utils";
-import { Button } from "../shadcn/button";
-import { Separator } from "../shadcn/separator";
-import { AbiInput, type InnerProps } from "./abi-input";
-import { Basic } from "./basic";
+import { cn, Debug } from "../../lib/utils.js";
+import { Button } from "../shadcn/button.js";
+import { Separator } from "../shadcn/separator.js";
+import { AbiInput, type InnerProps } from "./abi-input.js";
+import { Basic } from "./basic.js";
 
 type ArrayInputProps = InnerProps & {
   length?: number;

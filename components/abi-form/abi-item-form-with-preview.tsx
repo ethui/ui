@@ -1,9 +1,9 @@
 import type { AbiFunction, Address } from "abitype";
 import { useCallback, useMemo, useState } from "react";
 import { parseAbiItem } from "viem";
-import { cn } from "../../lib/utils";
-import { SolidityCall, type SolidityCallProps } from "../solidity-call";
-import { AbiItemForm } from "./abi-item-form";
+import { cn } from "../../lib/utils.js";
+import { SolidityCall, type SolidityCallProps } from "../solidity-call.js";
+import { AbiItemForm } from "./abi-item-form.js";
 
 interface AbiItemFormWithPreview {
   abiFunction: AbiFunction | "raw" | "rawCall" | "signature";

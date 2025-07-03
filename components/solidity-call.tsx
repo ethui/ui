@@ -1,7 +1,7 @@
 import type { Abi, AbiFunction, Address } from "abitype";
 import clsx from "clsx";
 import { decodeFunctionData, formatUnits, parseAbi } from "viem";
-import { ClickToCopy } from "./click-to-copy";
+import { ClickToCopy } from "./click-to-copy.js";
 
 export interface SolidityCallProps {
   value?: string | bigint;

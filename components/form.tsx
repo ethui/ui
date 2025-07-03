@@ -10,8 +10,8 @@ import {
   type UseFormReturn,
   useFormContext,
 } from "react-hook-form";
-import { cn } from "../lib/utils";
-import { Button, type ButtonProps } from "./shadcn/button";
+import { cn } from "../lib/utils.js";
+import { Button, type ButtonProps } from "./shadcn/button.js";
 import {
   FormControl,
   FormField,
@@ -19,17 +19,17 @@ import {
   FormLabel,
   FormMessage,
   Form as ShadForm,
-} from "./shadcn/form";
-import { Input, type InputProps } from "./shadcn/input";
+} from "./shadcn/form.js";
+import { Input, type InputProps } from "./shadcn/input.js";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./shadcn/select";
-import { Switch } from "./shadcn/switch";
-import { Textarea as ShadTextarea } from "./shadcn/textarea";
+} from "./shadcn/select.js";
+import { Switch } from "./shadcn/switch.js";
+import { Textarea as ShadTextarea } from "./shadcn/textarea.js";
 
 interface Props<T extends FieldValues>
   extends Omit<React.FormHTMLAttributes<HTMLFormElement>, "onSubmit"> {

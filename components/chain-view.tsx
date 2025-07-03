@@ -1,4 +1,4 @@
-import { ChainIcon, type IconChainProps } from "./icons/chain";
+import { ChainIcon, type IconChainProps } from "./icons/chain.js";
 
 export interface ChainViewProps
   extends Pick<IconChainProps, "chainId" | "status"> {

@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from "react";
-import { ClipboardContext } from "./providers/clipboard-provider";
+import { ClipboardContext } from "./providers/clipboard-provider.js";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "./shadcn/tooltip";
+} from "./shadcn/tooltip.js";
 
 export interface ClickToCopyProps {
   text: string | bigint | number;

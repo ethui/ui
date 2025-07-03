@@ -1,14 +1,14 @@
 import clsx from "clsx";
 import { ChevronDown } from "lucide-react";
 import { type ReactNode, useState } from "react";
-import { Button, type ButtonProps } from "./shadcn/button";
+import { Button, type ButtonProps } from "./shadcn/button.js";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./shadcn/dropdown-menu";
+} from "./shadcn/dropdown-menu.js";
 
 interface Props extends ButtonProps {
   options: ReactNode[];
