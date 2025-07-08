@@ -21,7 +21,7 @@ import { cn } from "../../lib/utils.js";
 export interface IconChainProps {
   chainId: number;
   className?: string;
-  status?: "online" | "offline" | "error";
+  status?: "online" | "offline" | "unknown";
 }
 
 const Mappings: Record<number, string> = {
@@ -56,8 +56,8 @@ export function ChainIcon({ chainId, className, status }: IconChainProps) {
             "-translate-y-1/4 absolute top-0 right-0 h-2 w-2 translate-x-1/4 rounded-full transition-colors",
             {
               "bg-success": status === "online",
+              "bg-unknown": status === "unknown",
               "bg-offline": status === "offline",
-              "bg-error": status === "error",
             },
           )}
         />
