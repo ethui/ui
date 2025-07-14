@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import { Check, LoaderCircle, type LucideIcon, Save } from "lucide-react";
-import { Checkbox as ShadCheckbox } from "./shadcn/checkbox.js";
 import { createElement } from "react";
 import {
   type FieldPath,
@@ -13,6 +12,7 @@ import {
 } from "react-hook-form";
 import { cn } from "../lib/utils.js";
 import { Button, type ButtonProps } from "./shadcn/button.js";
+import { Checkbox as ShadCheckbox } from "./shadcn/checkbox.js";
 import {
   FormControl,
   FormField,
@@ -231,7 +231,10 @@ function Checkbox<T extends FieldValues>({ name, label }: BaseInputProps<T>) {
             </FormLabel>
             <FormControl>
               {/* TODO: maybe we should use zod's coerce instead? https://github.com/shadcn-ui/ui/issues/421 */}
-              <ShadCheckbox checked={field.value} onCheckedChange={field.onChange} />
+              <ShadCheckbox
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
             </FormControl>
           </div>
           <FormMessage>&nbsp;</FormMessage>
