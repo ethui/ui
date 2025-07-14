@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { Check, LoaderCircle, type LucideIcon, Save } from "lucide-react";
+import { Checkbox as ShadCheckbox } from "./shadcn/checkbox.js";
 import { createElement } from "react";
 import {
   type FieldPath,
@@ -28,7 +29,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./shadcn/select.js";
-import { Switch } from "./shadcn/switch.js";
 import { Textarea as ShadTextarea } from "./shadcn/textarea.js";
 
 interface Props<T extends FieldValues>
@@ -231,7 +231,7 @@ function Checkbox<T extends FieldValues>({ name, label }: BaseInputProps<T>) {
             </FormLabel>
             <FormControl>
               {/* TODO: maybe we should use zod's coerce instead? https://github.com/shadcn-ui/ui/issues/421 */}
-              <Switch checked={field.value} onCheckedChange={field.onChange} />
+              <ShadCheckbox checked={field.value} onCheckedChange={field.onChange} />
             </FormControl>
           </div>
           <FormMessage>&nbsp;</FormMessage>
