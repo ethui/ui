@@ -4,7 +4,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "license": "MIT",
-  "version": "0.0.88",
+  "version": "0.0.90",
   "scripts": {
     "build": "yarn build:clean && yarn build:prepare && yarn build:tsc",
     "build:clean": "rm -rf dist && mkdir dist",
@@ -61,7 +61,7 @@
     "zod": "^3.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.0.6",
+    "@biomejs/biome": "^2.1.1",
     "@chromatic-com/storybook": "^4.0.0-next.16",
     "@ethui/abiparse": "^0.0.4",
     "@fontsource/source-code-pro": "^5.2.5",
