@@ -24,7 +24,7 @@ const preview: Preview = {
       defaultTheme: "light",
     }),
     (Story) => (
-      <div className="">
+      <div className="dark:bg-background p-4">
         <ClipboardProvider>
           <Story />
         </ClipboardProvider>

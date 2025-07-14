@@ -49,9 +49,9 @@ export const MainnetOffline: Story = {
   },
 };
 
-export const MainnetError: Story = {
+export const MainnetUnknown: Story = {
   args: {
     chainId: 1,
-    status: "error",
+    status: "unknown",
   },
 };
