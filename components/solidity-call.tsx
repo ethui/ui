@@ -27,7 +27,8 @@ export function SolidityCall({
   const isDeploy = !to && !!data;
   const isCall = to && !!data && data.length > 0 && data !== "0x";
   const isFallback = !!to && (!data || data === "0x");
-  const value = BigInt(valueStr);
+
+  const value = fallibleBigIntParse(valueStr);
 
   return (
     <>
@@ -96,7 +97,7 @@ function Fallback({ value, from, to, decimals, ArgProps }: FallbackProps) {
       <Arg
         label="Ξ"
         type="uint256"
-        value={formatUnits(BigInt(value), decimals)}
+        value={formatUnits(fallibleBigIntParse(value), decimals)}
         variant="caller"
       />
       <Arg
@@ -259,4 +260,12 @@ function parseCall(data: `0x${string}`, abi: Abi | string[] | undefined) {
   }
 
   return { label, args };
+}
+
+function fallibleBigIntParse(value: string | bigint): bigint {
+  try {
+    return BigInt(value);
+  } catch (_) {
+    return 0n;
+  }
 }
