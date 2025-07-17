@@ -1,47 +1,37 @@
-import { Form } from "./index.js";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../shadcn/form.js";
 import { Input } from "../shadcn/input";
 import { cn } from "../../lib/utils.js";
 import { Check, Loader2, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
 
-interface AutoSubmitTextInputProps {
+interface AutoSubmitTextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   asyncSubmit: (value: string) => void | Promise<void>;
-  name: string;
-  label: string;
   debounceMs?: number;
-  className?: string;
+  label?: string;
+  successLabel?: string;
 }
 
 type ValidationState = "idle" | "pending" | "success" | "error";
 
 export function AutoSubmitTextInput({
   asyncSubmit,
-  name,
-  label,
   debounceMs = 250,
+  label,
+  successLabel,
+  value: controlledValue,
+  onChange: controlledOnChange,
+  onFocus: controlledOnFocus,
+  onBlur: controlledOnBlur,
   className,
+  ...inputProps
 }: AutoSubmitTextInputProps) {
   const [validationState, setValidationState] =
     useState<ValidationState>("idle");
+  const [internalValue, setInternalValue] = useState<string>(controlledValue?.toString() || "");
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const lastValidatedValueRef = useRef<string | undefined>(undefined);
   const hasInteractedRef = useRef<boolean>(false);
-  const [isFocused, setIsFocused] = useState<boolean>(false);
-  const flashTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const form = useForm({
-    mode: "all", // Enable both onChange and onBlur
-  });
-
-  const fieldValue = form.watch(name);
+  const fieldValue = controlledValue?.toString() || internalValue;
 
   const validateAndSubmit = useCallback(
     async (value: string) => {
@@ -51,32 +41,12 @@ export function AutoSubmitTextInput({
         await asyncSubmit(value);
         setValidationState("success");
         lastValidatedValueRef.current = value;
-
-        // If not focused, flash the border color temporarily
-        if (!isFocused) {
-          if (flashTimerRef.current) {
-            clearTimeout(flashTimerRef.current);
-          }
-          flashTimerRef.current = setTimeout(() => {
-            setValidationState("idle");
-          }, 1500);
-        }
       } catch (error) {
         setValidationState("error");
         lastValidatedValueRef.current = value;
-
-        // If not focused, flash the border color temporarily
-        if (!isFocused) {
-          if (flashTimerRef.current) {
-            clearTimeout(flashTimerRef.current);
-          }
-          flashTimerRef.current = setTimeout(() => {
-            setValidationState("idle");
-          }, 1500);
-        }
       }
     },
-    [asyncSubmit, isFocused],
+    [asyncSubmit],
   );
 
   useEffect(() => {
@@ -86,21 +56,17 @@ export function AutoSubmitTextInput({
       debounceTimerRef.current = null;
     }
 
-    // Only validate if user has interacted and no form errors
-    if (hasInteractedRef.current && !form.formState.errors[name]) {
+    // Only validate if user has interacted and value has changed
+    if (hasInteractedRef.current && lastValidatedValueRef.current !== fieldValue) {
       debounceTimerRef.current = setTimeout(() => {
         validateAndSubmit(fieldValue || "");
       }, debounceMs);
-    } else {
+    } else if (!hasInteractedRef.current) {
+      // Only set to idle if user hasn't interacted yet
       setValidationState("idle");
     }
-  }, [
-    fieldValue,
-    form.formState.errors[name],
-    debounceMs,
-    validateAndSubmit,
-    name,
-  ]);
+    // If user has interacted but value hasn't changed, preserve current validation state
+  }, [fieldValue, debounceMs, validateAndSubmit]);
 
   // Cleanup effect
   useEffect(() => {
@@ -108,14 +74,11 @@ export function AutoSubmitTextInput({
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
       }
-      if (flashTimerRef.current) {
-        clearTimeout(flashTimerRef.current);
-      }
     };
   }, []);
 
-  const handleBlur = useCallback(() => {
-    setIsFocused(false);
+  const handleBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
+    controlledOnBlur?.(e);
 
     // Check if this value has already been validated
     if (lastValidatedValueRef.current === fieldValue) {
@@ -128,69 +91,77 @@ export function AutoSubmitTextInput({
       debounceTimerRef.current = null;
     }
 
-    if (hasInteractedRef.current && !form.formState.errors[name]) {
+    if (hasInteractedRef.current) {
       validateAndSubmit(fieldValue || "");
     }
-  }, [fieldValue, form.formState.errors[name], validateAndSubmit, name]);
+  }, [fieldValue, validateAndSubmit, controlledOnBlur]);
 
-  const handleFocus = useCallback(() => {
-    setIsFocused(true);
-    // Clear any pending flash timer when focusing
-    if (flashTimerRef.current) {
-      clearTimeout(flashTimerRef.current);
-      flashTimerRef.current = null;
+  const handleFocus = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
+    controlledOnFocus?.(e);
+  }, [controlledOnFocus]);
+
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    hasInteractedRef.current = true;
+    const newValue = e.target.value;
+    
+    if (controlledValue === undefined) {
+      setInternalValue(newValue);
     }
-  }, []);
+    
+    controlledOnChange?.(e);
+  }, [controlledValue, controlledOnChange]);
 
   const renderValidationIcon = () => {
     switch (validationState) {
       case "pending":
         return (
-          <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+          <div className="flex h-full w-10 items-center justify-center">
+            <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+          </div>
         );
       case "success":
-        return <Check className="h-4 w-4 text-success" />;
+        return (
+          <div className={cn("flex h-full items-center justify-center bg-success", successLabel ? "w-16" : "w-10")}>
+            {successLabel ? (
+              <span className="text-xs font-medium text-white">{successLabel}</span>
+            ) : (
+              <Check className="h-5 w-5 text-white" />
+            )}
+          </div>
+        );
       case "error":
-        return <X className="h-4 w-4 text-destructive" />;
+        return (
+          <div className="flex h-full w-10 items-center justify-center bg-destructive">
+            <X className="h-5 w-5 text-white" />
+          </div>
+        );
       default:
         return null;
     }
   };
 
   return (
-    <Form form={form} onSubmit={() => {}}>
-      <FormField
-        control={form.control}
-        name={name}
-        render={({ field }) => (
-          <FormItem className={cn("w-full", className)}>
-            <FormLabel>{label}</FormLabel>
-            <FormControl>
-              <Input
-                {...field}
-                type="text"
-                icon={renderValidationIcon()}
-                className={cn(
-                  validationState === "success" &&
-                    "border-success focus-visible:ring-success",
-                  validationState === "error" &&
-                    "border-destructive focus-visible:ring-destructive",
-                )}
-                onChange={(e) => {
-                  hasInteractedRef.current = true;
-                  field.onChange(e);
-                }}
-                onFocus={handleFocus}
-                onBlur={() => {
-                  field.onBlur();
-                  handleBlur();
-                }}
-              />
-            </FormControl>
-            <FormMessage>&nbsp;</FormMessage>
-          </FormItem>
+    <div className={cn("w-full", className)}>
+      {label && (
+        <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          {label}
+        </label>
+      )}
+      <Input
+        {...inputProps}
+        type="text"
+        value={fieldValue}
+        onChange={handleChange}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        icon={renderValidationIcon()}
+        className={cn(
+          validationState === "success" &&
+            "!border-success focus-visible:ring-success",
+          validationState === "error" &&
+            "!border-destructive focus-visible:ring-destructive",
         )}
       />
-    </Form>
+    </div>
   );
 }
