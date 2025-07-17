@@ -1,9 +1,10 @@
-import { Input } from "../shadcn/input";
-import { cn } from "../../lib/utils.js";
 import { Check, Loader2, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { cn } from "../../lib/utils.js";
+import { Input } from "../shadcn/input";
 
-interface AutoSubmitTextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface AutoSubmitTextInputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   asyncSubmit: (value: string) => void | Promise<void>;
   debounceMs?: number;
   label?: string;
@@ -26,7 +27,9 @@ export function AutoSubmitTextInput({
 }: AutoSubmitTextInputProps) {
   const [validationState, setValidationState] =
     useState<ValidationState>("idle");
-  const [internalValue, setInternalValue] = useState<string>(controlledValue?.toString() || "");
+  const [internalValue, setInternalValue] = useState<string>(
+    controlledValue?.toString() || "",
+  );
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const lastValidatedValueRef = useRef<string | undefined>(undefined);
   const hasInteractedRef = useRef<boolean>(false);
@@ -41,7 +44,7 @@ export function AutoSubmitTextInput({
         await asyncSubmit(value);
         setValidationState("success");
         lastValidatedValueRef.current = value;
-      } catch (error) {
+      } catch (_error) {
         setValidationState("error");
         lastValidatedValueRef.current = value;
       }
@@ -57,7 +60,10 @@ export function AutoSubmitTextInput({
     }
 
     // Only validate if user has interacted and value has changed
-    if (hasInteractedRef.current && lastValidatedValueRef.current !== fieldValue) {
+    if (
+      hasInteractedRef.current &&
+      lastValidatedValueRef.current !== fieldValue
+    ) {
       debounceTimerRef.current = setTimeout(() => {
         validateAndSubmit(fieldValue || "");
       }, debounceMs);
@@ -77,39 +83,48 @@ export function AutoSubmitTextInput({
     };
   }, []);
 
-  const handleBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
-    controlledOnBlur?.(e);
+  const handleBlur = useCallback(
+    (e: React.FocusEvent<HTMLInputElement>) => {
+      controlledOnBlur?.(e);
 
-    // Check if this value has already been validated
-    if (lastValidatedValueRef.current === fieldValue) {
-      return;
-    }
+      // Check if this value has already been validated
+      if (lastValidatedValueRef.current === fieldValue) {
+        return;
+      }
 
-    // Clear any pending debounce timer since we're submitting immediately
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-      debounceTimerRef.current = null;
-    }
+      // Clear any pending debounce timer since we're submitting immediately
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+        debounceTimerRef.current = null;
+      }
 
-    if (hasInteractedRef.current) {
-      validateAndSubmit(fieldValue || "");
-    }
-  }, [fieldValue, validateAndSubmit, controlledOnBlur]);
+      if (hasInteractedRef.current) {
+        validateAndSubmit(fieldValue || "");
+      }
+    },
+    [fieldValue, validateAndSubmit, controlledOnBlur],
+  );
 
-  const handleFocus = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
-    controlledOnFocus?.(e);
-  }, [controlledOnFocus]);
+  const handleFocus = useCallback(
+    (e: React.FocusEvent<HTMLInputElement>) => {
+      controlledOnFocus?.(e);
+    },
+    [controlledOnFocus],
+  );
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    hasInteractedRef.current = true;
-    const newValue = e.target.value;
-    
-    if (controlledValue === undefined) {
-      setInternalValue(newValue);
-    }
-    
-    controlledOnChange?.(e);
-  }, [controlledValue, controlledOnChange]);
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      hasInteractedRef.current = true;
+      const newValue = e.target.value;
+
+      if (controlledValue === undefined) {
+        setInternalValue(newValue);
+      }
+
+      controlledOnChange?.(e);
+    },
+    [controlledValue, controlledOnChange],
+  );
 
   const renderValidationIcon = () => {
     switch (validationState) {
@@ -121,9 +136,16 @@ export function AutoSubmitTextInput({
         );
       case "success":
         return (
-          <div className={cn("flex h-full items-center justify-center bg-success", successLabel ? "w-16" : "w-10")}>
+          <div
+            className={cn(
+              "flex h-full items-center justify-center bg-success",
+              successLabel ? "w-16" : "w-10",
+            )}
+          >
             {successLabel ? (
-              <span className="text-xs font-medium text-white">{successLabel}</span>
+              <span className="font-medium text-white text-xs">
+                {successLabel}
+              </span>
             ) : (
               <Check className="h-5 w-5 text-white" />
             )}
@@ -143,12 +165,16 @@ export function AutoSubmitTextInput({
   return (
     <div className={cn("w-full", className)}>
       {label && (
-        <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+        <label
+          htmlFor={inputProps.id}
+          className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        >
           {label}
         </label>
       )}
       <Input
         {...inputProps}
+        id={inputProps.id}
         type="text"
         value={fieldValue}
         onChange={handleChange}
