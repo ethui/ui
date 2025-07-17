@@ -22,41 +22,45 @@ type Story = StoryObj<typeof meta>;
 
 export const AlwaysValid: Story = {
   args: {
-    asyncSubmit: async () => {
+    callback: async (_v: string) => {
       await sleep(500);
     },
+    name: "valid",
     label: "Always valid",
   },
 };
 
 export const AlwaysInvalid: Story = {
   args: {
-    asyncSubmit: async () => {
+    callback: async () => {
       await sleep(500);
       throw false;
     },
+    name: "invalid",
     label: "Always invalid",
   },
 };
 
 export const WithCustomLabel: Story = {
   args: {
-    asyncSubmit: async () => {
+    callback: async () => {
       await sleep(500);
     },
     label: "Custom success label",
+    name: "custom-label",
     successLabel: "saved",
   },
 };
 
 export const Required: Story = {
   args: {
-    asyncSubmit: async (value: string) => {
+    callback: async (value: string) => {
       await sleep(500);
       if (!value || value === "") {
         throw false;
       }
     },
+    name: "required",
     label: "Cannot be empty",
     successLabel: "saved",
   },
