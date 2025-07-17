@@ -4,7 +4,7 @@ import { Check, LoaderCircle } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Form } from "../../components/form.js";
+import { Form } from "../../components/form/index.js";
 
 const meta = {
   title: "Components/Form/Text",
