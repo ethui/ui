@@ -95,7 +95,7 @@ export function AutoSubmitTextInput({
   return (
     <div className={cn("w-full", className)}>
       <label
-        htmlFor={name}
+        htmlFor={inputProps.id || name}
         className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
       >
         {label}
@@ -103,7 +103,7 @@ export function AutoSubmitTextInput({
       <Input
         {...inputProps}
         name={name}
-        id={inputProps.id}
+        id={inputProps.id || name}
         type="text"
         value={value}
         onChange={onChange}

@@ -29,6 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../shadcn/select.js";
+import { Switch as ShadSwitch } from "../shadcn/switch.js";
 import { Textarea as ShadTextarea } from "../shadcn/textarea.js";
 
 interface Props<T extends FieldValues>
@@ -236,6 +237,39 @@ function Checkbox<T extends FieldValues>({
   );
 }
 Form.Checkbox = Checkbox;
+
+function Switch<T extends FieldValues>({
+  name,
+  label,
+  className = "",
+}: BaseInputProps<T>) {
+  const { control } = useFormContext();
+
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className={cn("flex w-full flex-col", className)}>
+          <div className="flex w-full flex-row items-center justify-between space-y-0">
+            <FormLabel className="w-full grow cursor-pointer leading-none">
+              {label}
+            </FormLabel>
+            <FormControl>
+              {/* TODO: maybe we should use zod's coerce instead? https://github.com/shadcn-ui/ui/issues/421 */}
+              <ShadSwitch
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+            </FormControl>
+          </div>
+          <FormMessage>&nbsp;</FormMessage>
+        </FormItem>
+      )}
+    />
+  );
+}
+Form.Switch = Switch;
 
 interface SubmitLabelMapping {
   save: string;
