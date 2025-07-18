@@ -10,9 +10,9 @@ import {
   type UseFormReturn,
   useFormContext,
 } from "react-hook-form";
-import { cn } from "../lib/utils.js";
-import { Button, type ButtonProps } from "./shadcn/button.js";
-import { Checkbox as ShadCheckbox } from "./shadcn/checkbox.js";
+import { cn } from "../../lib/utils.js";
+import { Button, type ButtonProps } from "../shadcn/button.js";
+import { Checkbox as ShadCheckbox } from "../shadcn/checkbox.js";
 import {
   FormControl,
   FormField,
@@ -20,16 +20,16 @@ import {
   FormLabel,
   FormMessage,
   Form as ShadForm,
-} from "./shadcn/form.js";
-import { Input, type InputProps } from "./shadcn/input.js";
+} from "../shadcn/form.js";
+import { Input, type InputProps } from "../shadcn/input.js";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./shadcn/select.js";
-import { Textarea as ShadTextarea } from "./shadcn/textarea.js";
+} from "../shadcn/select.js";
+import { Textarea as ShadTextarea } from "../shadcn/textarea.js";
 
 interface Props<T extends FieldValues>
   extends Omit<React.FormHTMLAttributes<HTMLFormElement>, "onSubmit"> {
@@ -86,17 +86,10 @@ function Text<T extends FieldValues>({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className={className}>
+        <FormItem className={cn("w-full", className)}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <WithIcon icon={icon}>
-              <Input
-                {...rest}
-                {...field}
-                type={type}
-                className={cn(icon && "pr-10")}
-              />
-            </WithIcon>
+            <Input {...rest} {...field} type={type} icon={icon} />
           </FormControl>
           <FormMessage>&nbsp;</FormMessage>
         </FormItem>
@@ -119,12 +112,10 @@ function Textarea<T extends FieldValues>({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className={className}>
+        <FormItem className={cn("w-full", className)}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <WithIcon icon={icon}>
-              <ShadTextarea {...field} className={cn(icon && "pr-10")} />
-            </WithIcon>
+            <ShadTextarea {...field} icon={icon} />
           </FormControl>
           <FormMessage>&nbsp;</FormMessage>
         </FormItem>
@@ -148,21 +139,19 @@ function NumberField<T extends FieldValues>({
       control={control}
       name={name}
       render={() => (
-        <FormItem className={className}>
+        <FormItem className={cn("w-full", className)}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <WithIcon icon={icon}>
-              {/* TODO: maybe we should use zod's coerce instead? https://github.com/shadcn-ui/ui/issues/421 */}
-              <Input
-                type="number"
-                {...rest}
-                {...register(name, {
-                  setValueAs: (value) =>
-                    value === "" ? undefined : Number.parseInt(value),
-                })}
-                className={cn(icon && "pr-10")}
-              />
-            </WithIcon>
+            {/* TODO: maybe we should use zod's coerce instead? https://github.com/shadcn-ui/ui/issues/421 */}
+            <Input
+              type="number"
+              {...rest}
+              {...register(name, {
+                setValueAs: (value) =>
+                  value === "" ? undefined : Number.parseInt(value),
+              })}
+              icon={icon}
+            />
           </FormControl>
           <FormMessage>&nbsp;</FormMessage>
         </FormItem>
@@ -192,21 +181,20 @@ function BigIntField<T extends FieldValues>({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className={className}>
+        <FormItem className={cn("w-full", className)}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <WithIcon icon={icon}>
-              {/* TODO: maybe we should use zod's coerce instead? https://github.com/shadcn-ui/ui/issues/421 */}
-              <Input
-                type="number"
-                {...rest}
-                {...field}
-                onChange={(e) =>
-                  field.onChange(BigInt(e.target.value) * multiplier)
-                }
-                value={(BigInt(field.value) / multiplier).toString()}
-              />
-            </WithIcon>
+            {/* TODO: maybe we should use zod's coerce instead? https://github.com/shadcn-ui/ui/issues/421 */}
+            <Input
+              type="number"
+              {...rest}
+              {...field}
+              onChange={(e) =>
+                field.onChange(BigInt(e.target.value) * multiplier)
+              }
+              value={(BigInt(field.value) / multiplier).toString()}
+              icon={icon}
+            />
           </FormControl>
           <FormMessage>&nbsp;</FormMessage>
         </FormItem>
@@ -216,7 +204,11 @@ function BigIntField<T extends FieldValues>({
 }
 Form.BigInt = BigIntField;
 
-function Checkbox<T extends FieldValues>({ name, label }: BaseInputProps<T>) {
+function Checkbox<T extends FieldValues>({
+  name,
+  label,
+  className = "",
+}: BaseInputProps<T>) {
   const { control } = useFormContext();
 
   return (
@@ -224,7 +216,7 @@ function Checkbox<T extends FieldValues>({ name, label }: BaseInputProps<T>) {
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="flex w-full flex-col">
+        <FormItem className={cn("flex w-full flex-col", className)}>
           <div className="flex w-full flex-row items-center justify-between space-y-0">
             <FormLabel className="w-full grow cursor-pointer leading-none">
               {label}
@@ -329,6 +321,7 @@ interface SelectProps<
   items: Item[];
   toValue?: (v: Item) => string;
   render?: (v: Item) => React.ReactNode;
+  className?: string;
 }
 
 function SelectInput<
@@ -342,6 +335,7 @@ function SelectInput<
   items,
   toValue = (v) => v.toString(),
   render = (v) => v.toString(),
+  className = "",
 }: SelectProps<T, TName, Item>) {
   const { control } = useFormContext();
 
@@ -351,7 +345,9 @@ function SelectInput<
       name={name}
       render={({ field }) => {
         return (
-          <FormItem className="flex items-baseline gap-2">
+          <FormItem
+            className={cn("flex w-full items-baseline gap-2", className)}
+          >
             <FormLabel className="shrink-0">{label}</FormLabel>
             <Select
               onValueChange={field.onChange}
@@ -378,22 +374,3 @@ function SelectInput<
   );
 }
 Form.Select = SelectInput;
-
-function WithIcon({
-  icon,
-  children,
-}: {
-  icon: React.ReactNode;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="relative w-full">
-      {children}
-      {icon && (
-        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-          {icon}
-        </div>
-      )}
-    </div>
-  );
-}
