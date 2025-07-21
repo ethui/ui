@@ -118,7 +118,7 @@ export function AutoSubmitTextInput({
         className={cn(
           state === "success" && "!border-success focus-visible:ring-success",
           state === "error" &&
-          "!border-destructive focus-visible:ring-destructive",
+            "!border-destructive focus-visible:ring-destructive",
         )}
       />
       <p
