@@ -5,7 +5,7 @@ import { Label } from "../../shadcn/label";
 import { Switch as ShadSwitch } from "../../shadcn/switch";
 
 interface AutoSubmitSwitchProps
-  extends Omit<React.ComponentProps<"input">, "value"> {
+  extends Omit<React.ComponentProps<typeof ShadSwitch>, "value"> {
   callback: (value: boolean) => void | Promise<void>;
   name: string;
   debounce?: number;
