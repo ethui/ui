@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { AutoSubmitTextInput } from "../../components/form/auto-submit-text-input.js";
+import { AutoSubmitTextInput } from "../../../components/form/auto-submit/text-input.js";
 
 const meta = {
   title: "Components/Form/AutoSubmit/TextInput",

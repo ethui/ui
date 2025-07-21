@@ -39,6 +39,11 @@ interface Props<T extends FieldValues>
   onSubmit: SubmitHandler<T>;
 }
 
+import { AutoSubmitSwitch } from "./auto-submit/switch";
+import { AutoSubmitTextInput } from "./auto-submit/text-input";
+
+export const AutoSubmit = { AutoSubmitTextInput, AutoSubmitSwitch };
+
 export function Form<S extends FieldValues>({
   form,
   children,

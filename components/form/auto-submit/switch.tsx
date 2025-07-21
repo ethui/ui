@@ -1,20 +1,22 @@
 import { Check, Loader2, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { cn } from "../../lib/utils.js";
-import { Input } from "../shadcn/input";
+import { cn } from "../../../lib/utils.js";
+import { Label } from "../../shadcn/label";
+import { Switch as ShadSwitch } from "../../shadcn/switch";
 
-interface AutoSubmitTextInputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
-  callback: (value: string) => void | Promise<void>;
+interface AutoSubmitSwitchProps
+  extends Omit<React.ComponentProps<"input">, "value"> {
+  callback: (value: boolean) => void | Promise<void>;
   name: string;
   debounce?: number;
   label?: string;
   successLabel?: string;
+  value: boolean;
 }
 
 type State = "idle" | "pending" | "success" | "error";
 
-export function AutoSubmitTextInput({
+export function AutoSubmitSwitch({
   label,
   name,
   callback,
@@ -23,16 +25,16 @@ export function AutoSubmitTextInput({
   value: controlledValue,
   className,
   ...inputProps
-}: AutoSubmitTextInputProps) {
+}: AutoSubmitSwitchProps) {
   const [state, setState] = useState<State>("idle");
   const [error, setError] = useState<any>(null);
-  const [value, setValue] = useState<string>(controlledValue?.toString() || "");
+  const [value, setValue] = useState<boolean>(controlledValue || false);
   const debouncerRef = useRef<NodeJS.Timeout>(null);
-  const lastValueRef = useRef<string>(null);
+  const lastValueRef = useRef<boolean>(null);
   const interactedRef = useRef(false);
 
   const submit = useCallback(
-    async (v: string) => {
+    async (v: boolean) => {
       setState("pending");
       try {
         await callback(v);
@@ -85,39 +87,40 @@ export function AutoSubmitTextInput({
     }
 
     if (interactedRef.current) {
-      submit(value || "");
+      submit(value || false);
     }
   };
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = (v: boolean) => {
     interactedRef.current = true;
-    setValue(e.target.value);
+    setValue(v);
   };
 
   console.log(error);
   return (
-    <div className={cn("w-full", className)}>
-      <label
-        htmlFor={inputProps.id || name}
-        className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-      >
-        {label}
-      </label>
-      <Input
-        {...inputProps}
-        name={name}
-        id={inputProps.id || name}
-        type="text"
-        value={value}
-        onChange={onChange}
-        onBlur={onBlur}
-        icon={<StateIcon {...{ state, successLabel }} />}
-        className={cn(
-          state === "success" && "!border-success focus-visible:ring-success",
-          state === "error" &&
-          "!border-destructive focus-visible:ring-destructive",
-        )}
-      />
+    <div className={cn("flex w-full flex-col", className)}>
+      <div className="relative flex w-full flex-row items-center justify-between space-y-0">
+        <Label
+          htmlFor={inputProps.id || name}
+          className={cn(
+            "w-full grow cursor-pointer leading-none",
+            state === "error" && "text-destructive",
+          )}
+        >
+          {label}
+        </Label>
+        <ShadSwitch
+          checked={value}
+          {...inputProps}
+          name={name}
+          id={inputProps.id || name}
+          onCheckedChange={onChange}
+          onBlur={onBlur}
+        />
+        <div className="absolute right-0 bottom-0 translate-x-[100%] pl-0">
+          <StateIcon {...{ state, successLabel }} />
+        </div>
+      </div>
       <p
         className={cn(
           "font-medium text-[0.8rem] text-destructive",
@@ -150,12 +153,7 @@ function StateIcon({ state, successLabel }: StateIconProps) {
 
   if (state === "success") {
     return (
-      <div
-        className={cn(
-          baseClasses,
-          "bg-success px-2 font-medium text-white text-xs",
-        )}
-      >
+      <div className={cn(baseClasses, "px-2 font-medium text-success text-xs")}>
         {successLabel || <Check className="h-5 w-5" />}
       </div>
     );
@@ -163,8 +161,8 @@ function StateIcon({ state, successLabel }: StateIconProps) {
 
   if (state === "error") {
     return (
-      <div className={cn(baseClasses, "bg-destructive")}>
-        <X className="h-5 w-5 text-white" />
+      <div className={cn(baseClasses, "text-destructive")}>
+        <X className="h-5 w-5" />
       </div>
     );
   }
