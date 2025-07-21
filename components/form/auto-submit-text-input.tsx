@@ -25,6 +25,7 @@ export function AutoSubmitTextInput({
   ...inputProps
 }: AutoSubmitTextInputProps) {
   const [state, setState] = useState<State>("idle");
+  const [error, setError] = useState<any>(null);
   const [value, setValue] = useState<string>(controlledValue?.toString() || "");
   const debouncerRef = useRef<NodeJS.Timeout>(null);
   const lastValueRef = useRef<string>(null);
@@ -36,8 +37,10 @@ export function AutoSubmitTextInput({
 
       try {
         await callback(v);
+        setError(null);
         setState("success");
-      } catch (_error) {
+      } catch (error) {
+        setError(error);
         setState("error");
       }
       lastValueRef.current = v;
@@ -112,9 +115,12 @@ export function AutoSubmitTextInput({
         className={cn(
           state === "success" && "!border-success focus-visible:ring-success",
           state === "error" &&
-            "!border-destructive focus-visible:ring-destructive",
+          "!border-destructive focus-visible:ring-destructive",
         )}
       />
+      <p className="font-medium text-[0.8rem] text-destructive">
+        {error.toString()}
+      </p>
     </div>
   );
 }
