@@ -34,7 +34,6 @@ export function AutoSubmitTextInput({
   const submit = useCallback(
     async (v: string) => {
       setState("pending");
-
       try {
         await callback(v);
         setError(null);
@@ -95,6 +94,7 @@ export function AutoSubmitTextInput({
     setValue(e.target.value);
   };
 
+  console.log(error);
   return (
     <div className={cn("w-full", className)}>
       <label
@@ -118,8 +118,13 @@ export function AutoSubmitTextInput({
           "!border-destructive focus-visible:ring-destructive",
         )}
       />
-      <p className="font-medium text-[0.8rem] text-destructive">
-        {error.toString()}
+      <p
+        className={cn(
+          "font-medium text-[0.8rem] text-destructive",
+          state === "error" && "text-destructive",
+        )}
+      >
+        {error?.toString ? `${error}` : "\u00A0"}
       </p>
     </div>
   );

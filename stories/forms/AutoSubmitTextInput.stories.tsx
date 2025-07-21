@@ -34,7 +34,7 @@ export const AlwaysInvalid: Story = {
   args: {
     callback: async () => {
       await sleep(500);
-      throw false;
+      throw "invalid";
     },
     name: "invalid",
     label: "Always invalid",
@@ -57,7 +57,7 @@ export const Required: Story = {
     callback: async (value: string) => {
       await sleep(500);
       if (!value || value === "") {
-        throw false;
+        throw "cannot be empty";
       }
     },
     name: "required",
