@@ -36,7 +36,12 @@ export function ClickToCopy({ children, text, ...props }: ClickToCopyProps) {
     return () => clearTimeout(timeout);
   }, [opening]);
 
-  const handleCopy = () => {
+  const handleCopy = (
+    e:
+      | React.MouseEvent<HTMLSpanElement, MouseEvent>
+      | React.KeyboardEvent<HTMLSpanElement>,
+  ) => {
+    e.preventDefault();
     setCopied(true);
     setOpening(true);
     setOpen(true);
@@ -67,5 +72,5 @@ export function ClickToCopy({ children, text, ...props }: ClickToCopyProps) {
       </Tooltip>
     </TooltipProvider>
   );
-  // biome-ignore-end lint/a11y/noStaticElementInteractions: ignore
+// biome-ignore-end lint/a11y/noStaticElementInteractions: ignore
 }
