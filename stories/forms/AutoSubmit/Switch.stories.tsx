@@ -22,7 +22,7 @@ type Story = StoryObj<typeof meta>;
 
 export const AlwaysValid: Story = {
   args: {
-    callback: async (_v: string) => {
+    callback: async (_value: boolean) => {
       await sleep(500);
     },
     name: "valid",
@@ -48,21 +48,19 @@ export const WithCustomLabel: Story = {
     },
     label: "Custom success label",
     name: "custom-label",
-    successLabel: "saved",
   },
 };
 
 export const Required: Story = {
   args: {
-    callback: async (value: string) => {
+    callback: async (value: boolean) => {
       await sleep(500);
-      if (!value || value === "") {
+      if (!value) {
         throw "cannot be empty";
       }
     },
     name: "required",
     label: "Cannot be empty",
-    successLabel: "saved",
   },
 };
 
