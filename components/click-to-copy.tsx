@@ -72,5 +72,5 @@ export function ClickToCopy({ children, text, ...props }: ClickToCopyProps) {
       </Tooltip>
     </TooltipProvider>
   );
-// biome-ignore-end lint/a11y/noStaticElementInteractions: ignore
+  // biome-ignore-end lint/a11y/noStaticElementInteractions: ignore
 }
