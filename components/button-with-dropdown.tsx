@@ -1,6 +1,6 @@
-import clsx from "clsx";
 import { ChevronDown } from "lucide-react";
 import { type ReactNode, useState } from "react";
+import { cn } from "../lib/utils.js";
 import { Button, type ButtonProps } from "./shadcn/button.js";
 import {
   DropdownMenu,
@@ -18,7 +18,7 @@ export function ButtonWithDropdown({ options, className, ...other }: Props) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className={clsx("relative inline-block w-full", className)}>
+    <div className={cn("relative inline-block w-full", className)}>
       <div className="flex">
         <Button {...other} />
         <DropdownMenu onOpenChange={setIsOpen}>
@@ -28,7 +28,7 @@ export function ButtonWithDropdown({ options, className, ...other }: Props) {
               className="relative before:absolute before:top-[10%] before:left-0 before:h-[80%] before:w-px before:bg-primary-foreground/30"
             >
               <ChevronDown
-                className={clsx("h-5 w-5", isOpen && "rotate-180 transform")}
+                className={cn("h-5 w-5", isOpen && "rotate-180 transform")}
               />
             </Button>
           </DropdownMenuTrigger>

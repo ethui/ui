@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import { cn } from "../lib/utils.js";
 
 export interface HighlightBoxProps {
   children: React.ReactNode;
@@ -7,8 +7,6 @@ export interface HighlightBoxProps {
 
 export function HighlightBox({ children, className }: HighlightBoxProps) {
   return (
-    <div className={clsx("max-w-full bg-accent p-2", className)}>
-      {children}
-    </div>
+    <div className={cn("max-w-full bg-accent p-2", className)}>{children}</div>
   );
 }

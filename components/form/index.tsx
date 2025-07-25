@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import { Check, LoaderCircle, type LucideIcon, Save } from "lucide-react";
 import { createElement } from "react";
 import {
@@ -55,10 +54,7 @@ export function Form<S extends FieldValues>({
     <ShadForm {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className={clsx(
-          "flex flex-col items-start gap-2 align-start",
-          className,
-        )}
+        className={cn("flex flex-col items-start gap-2 align-start", className)}
         {...props}
       >
         {children}

@@ -1,5 +1,3 @@
-import { clsx } from "clsx";
-
 import mainnet from "../../images/chains/1.webp";
 import optimism from "../../images/chains/10.webp";
 import polygon from "../../images/chains/137.webp";
@@ -47,7 +45,7 @@ export function ChainIcon({ chainId, className, status }: IconChainProps) {
     <div className="relative">
       <img
         alt={`Chain ${chainId}`}
-        className={clsx("h-5 w-5", className)}
+        className={cn("h-5 w-5", className)}
         src={Mappings[chainId] || unknown}
       />
       {status && (

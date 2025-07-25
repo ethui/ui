@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import { cn } from "../lib/utils.js";
 
 interface Props {
   size?: number;
@@ -29,7 +29,7 @@ export function EthuiLogo({
       className="cursor-pointer"
     >
       <title>ethui logo</title>
-      <Background color={clsx(bg || (dev ? "fill-dev" : "fill-background"))} />
+      <Background color={cn(bg || (dev ? "fill-dev" : "fill-background"))} />
       <DiamondTop color={fg} />
       <DiamondBottom color={fg} />
       {attention && <Attention color="fill-destructive" />}

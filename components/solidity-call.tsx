@@ -1,6 +1,6 @@
 import type { Abi, AbiFunction, Address } from "abitype";
-import clsx from "clsx";
 import { decodeFunctionData, formatUnits, parseAbi } from "viem";
+import { cn } from "../lib/utils.js";
 import { ClickToCopy } from "./click-to-copy.js";
 
 export interface SolidityCallProps {
@@ -203,7 +203,7 @@ function Arg({
   };
 
   return (
-    <div className={clsx("flex items-baseline px-1 py-0.5", variants[variant])}>
+    <div className={cn("flex items-baseline px-1 py-0.5", variants[variant])}>
       {label && (
         <span className="mr-1 shrink-0 font-mono text-primary-background">
           {label}

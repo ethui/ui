@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import { cn } from "../../lib/utils.js";
 
 export interface EffigyIconProps {
   address: string;
@@ -10,7 +10,7 @@ export function EffigyIcon({ address, className }: EffigyIconProps) {
   return (
     <img
       alt={`Effigy for ${address}`}
-      className={clsx("h-6 w-6", className)}
+      className={cn("h-6 w-6", className)}
       src={`https://effigy.im/a/${address}.svg`}
     />
   );
