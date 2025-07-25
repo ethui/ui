@@ -94,7 +94,6 @@ export function AutoSubmitTextInput({
     setValue(e.target.value);
   };
 
-  console.log(error);
   return (
     <div className={cn("w-full", className)}>
       <Label
