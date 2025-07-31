@@ -37,7 +37,6 @@ export const AutocompleteTextInput = ({
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState(value);
 
-  // Debounced fetch function
   const fetchData = useCallback(
     async (searchQuery: string) => {
       if (searchQuery.length < minQueryLength) {
@@ -59,12 +58,10 @@ export const AutocompleteTextInput = ({
     [fetchOptions, minQueryLength],
   );
 
-  // Immediate search effect
   useEffect(() => {
     fetchData(query);
   }, [query, fetchData]);
 
-  // Update query when value changes externally
   useEffect(() => {
     setQuery(value);
   }, [value]);
@@ -73,21 +70,21 @@ export const AutocompleteTextInput = ({
     const newValue = e.target.value;
     setQuery(newValue);
     onChange?.(newValue);
-    // Keep dropdown open while typing to show filtered results
+
     setOpen(true);
   };
 
   const handleInputFocus = () => {
     setOpen(true);
-    // Always fetch options on focus to show all available options
+
     if (options.length === 0 && !loading) {
-      fetchData(query || ""); // Fetch with empty query to get all options
+      fetchData(query || "");
     }
   };
 
   const handleInputClick = () => {
     setOpen(true);
-    // Ensure the input gets focus when clicked
+
     if (options.length === 0 && !loading) {
       fetchData(query || "");
     }
@@ -106,7 +103,6 @@ export const AutocompleteTextInput = ({
       setOpen(false);
     }
     if (e.key === "Enter") {
-      // Always treat Enter as "submit current value" if no option is highlighted
       e.preventDefault();
       const customOption: AutocompleteOption = {
         value: query,
@@ -150,24 +146,19 @@ export const AutocompleteTextInput = ({
                 <div
                   key={option.value}
                   onMouseDown={(e) => {
-                    e.preventDefault(); // Prevent input blur
+                    e.preventDefault();
                     e.stopPropagation();
                     console.log("Option selected:", option);
                     handleSelect(option);
                   }}
-                  className="px-4 py-3 cursor-pointer hover:bg-accent hover:text-accent-foreground border-b border-border last:border-b-0 transition-colors"
+                  className="px-4 py-1 cursor-pointer hover:bg-accent hover:text-accent-foreground border-b border-border last:border-b-0 transition-colors"
                 >
                   <div className="flex flex-col gap-1 justify-center min-h-[48px]">
                     <span className="font-medium text-sm leading-none">
                       {option.label}
                     </span>
                     <span className="text-muted-foreground text-sm font-mono leading-none truncate">
-                      {option.description
-                        ? `${option.description.slice(
-                            0,
-                            6,
-                          )}...${option.description.slice(-4)}`
-                        : ""}
+                      {option.description}
                     </span>
                   </div>
                 </div>

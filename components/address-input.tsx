@@ -18,10 +18,7 @@ export interface AddressInputProps
   chainId?: number;
 }
 
-// Default fetch function - this would typically call your backend API
 const defaultFetchAddresses = async (query: string): Promise<AddressData[]> => {
-  // TODO: Replace this with actual backend API call
-  // For now, return mock data for demonstration
   const mockAddresses: AddressData[] = [
     {
       address: "0x742d35Cc6639C0532fEb2ba6BEaAF05DF0f1A8a0",
@@ -37,12 +34,10 @@ const defaultFetchAddresses = async (query: string): Promise<AddressData[]> => {
     },
   ];
 
-  // If no query, return all addresses (for when dropdown opens)
   if (!query.trim()) {
     return mockAddresses;
   }
 
-  // Simple filtering for demo purposes
   return mockAddresses.filter(
     (addr) =>
       addr.address.toLowerCase().includes(query.toLowerCase()) ||
@@ -78,15 +73,14 @@ export const AddressInput = ({
 
   const handleOptionSelect = useCallback(
     (option: AutocompleteOption) => {
-      // Find the original address data
       const addressData: AddressData = {
         address: option.value,
         alias: option.description ? option.label : undefined,
         chainId,
       };
-      // Update the input value
+
       onChange?.(option.value);
-      // Notify parent about address selection
+
       onAddressSelect?.(addressData);
     },
     [onAddressSelect, chainId, onChange],
