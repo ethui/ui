@@ -41,6 +41,10 @@ interface Props<T extends FieldValues>
 
 import { AutoSubmitSwitch } from "./auto-submit/switch";
 import { AutoSubmitTextInput } from "./auto-submit/text-input";
+import {
+  AddressInput as AddressInputComponent,
+  type AddressData,
+} from "../address-input.js";
 
 export const AutoSubmit = { AutoSubmitTextInput, AutoSubmitSwitch };
 
@@ -413,3 +417,51 @@ function SelectInput<
   );
 }
 Form.Select = SelectInput;
+
+interface AddressInputFormProps<T extends FieldValues>
+  extends BaseInputProps<T> {
+  onAddressSelect?: (addressData: AddressData) => void;
+  fetchAddresses?: (query: string) => Promise<AddressData[]>;
+  chainId?: number;
+}
+
+function AddressInput<T extends FieldValues>({
+  name,
+  label,
+  className = "",
+  onAddressSelect,
+  fetchAddresses,
+  chainId,
+  ...rest
+}: AddressInputFormProps<T>) {
+  const { control } = useFormContext();
+
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className={cn("w-full", className)}>
+          <FormLabel>{label}</FormLabel>
+          <FormControl>
+            <AddressInputComponent
+              {...rest}
+              value={field.value}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              name={field.name}
+              onAddressSelect={(addressData) => {
+                field.onChange(addressData.address);
+                onAddressSelect?.(addressData);
+              }}
+              fetchAddresses={fetchAddresses}
+              chainId={chainId}
+            />
+          </FormControl>
+          <FormMessage>&nbsp;</FormMessage>
+        </FormItem>
+      )}
+    />
+  );
+}
+Form.AddressInput = AddressInput;
