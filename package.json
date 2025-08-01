@@ -48,7 +48,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "peerDependencies": {
-    "@hookform/resolvers": "^5.0.1",
+    "@hookform/resolvers": "^5.2.1",
     "@tailwindcss/postcss": "4.1.5",
     "@tanstack/react-query": "^5.81.5",
     "@types/react": "^19",
@@ -65,7 +65,7 @@
     "@chromatic-com/storybook": "^4.0.0-next.16",
     "@ethui/abiparse": "^0.0.4",
     "@fontsource/source-code-pro": "^5.2.5",
-    "@hookform/resolvers": "^5.0.1",
+    "@hookform/resolvers": "^5.2.1",
     "@storybook/addon-docs": "^9.0.16",
     "@storybook/addon-links": "^9.0.16",
     "@storybook/addon-themes": "^9.0.16",
