@@ -426,7 +426,6 @@ interface AddressInputFormProps<T extends FieldValues>
   extends BaseInputProps<T> {
   onAddressSelect?: (addressData: AddressData) => void;
   fetchAddresses: (query: string) => Promise<AddressData[]>;
-  chainId?: number;
 }
 
 interface AutoCompleteTextInputFormProps<T extends FieldValues>
@@ -441,7 +440,6 @@ function AddressAutoCompleteTextInput<T extends FieldValues>({
   className = "",
   onAddressSelect,
   fetchAddresses,
-  chainId,
   ...rest
 }: AddressInputFormProps<T>) {
   const { control } = useFormContext();
