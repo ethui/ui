@@ -1,10 +1,11 @@
-import { forwardRef, useCallback, useEffect, useState } from "react";
-import { cn } from "../lib/utils.js";
+import { useCallback, useEffect, useState } from "react";
+import { cn, truncateHex } from "../lib/utils.js";
 import { Input, type InputProps } from "./shadcn/input.js";
+import { isAddress } from "viem";
 
 export interface AutocompleteOption {
   value: string;
-  label: string;
+  label?: string;
   description?: string;
 }
 
@@ -12,8 +13,6 @@ export interface AutocompleteTextInputProps
   extends Omit<InputProps, "onChange" | "onSelect" | "onBlur"> {
   value?: string;
   onChange?: (value: string) => void;
-  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
-  onOptionSelect?: (option: AutocompleteOption) => void;
   fetchOptions: (query: string) => Promise<AutocompleteOption[]>;
   placeholder?: string;
   emptyMessage?: string;
@@ -23,8 +22,6 @@ export interface AutocompleteTextInputProps
 export const AutocompleteTextInput = ({
   value = "",
   onChange,
-  onBlur,
-  onOptionSelect,
   fetchOptions,
   placeholder = "Type to search...",
   emptyMessage = "No results found.",
@@ -62,53 +59,29 @@ export const AutocompleteTextInput = ({
     fetchData(query);
   }, [query, fetchData]);
 
-  useEffect(() => {
-    setQuery(value);
-  }, [value]);
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setQuery(newValue);
     onChange?.(newValue);
-
     setOpen(true);
-  };
-
-  const handleInputFocus = () => {
-    setOpen(true);
-
-    if (options.length === 0 && !loading) {
-      fetchData(query || "");
-    }
   };
 
   const handleInputClick = () => {
     setOpen(true);
 
     if (options.length === 0 && !loading) {
-      fetchData(query || "");
+      fetchData(query);
     }
   };
 
   const handleSelect = (option: AutocompleteOption) => {
-    console.log("handleSelect called with:", option);
     setQuery(option.value);
     onChange?.(option.value);
-    onOptionSelect?.(option);
     setOpen(false);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
-      setOpen(false);
-    }
-    if (e.key === "Enter") {
-      e.preventDefault();
-      const customOption: AutocompleteOption = {
-        value: query,
-        label: query,
-      };
-      onOptionSelect?.(customOption);
       setOpen(false);
     }
   };
@@ -118,11 +91,9 @@ export const AutocompleteTextInput = ({
       <Input
         value={query}
         onChange={handleInputChange}
-        onFocus={handleInputFocus}
         onClick={handleInputClick}
-        onBlur={(e) => {
+        onBlur={() => {
           setOpen(false);
-          onBlur?.(e);
         }}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
@@ -155,11 +126,13 @@ export const AutocompleteTextInput = ({
                 >
                   <div className="flex flex-col gap-1 justify-center min-h-[48px]">
                     <span className="font-medium text-sm leading-none">
-                      {option.label}
+                      {option.label ?? displayValue(option.value)}
                     </span>
-                    <span className="text-muted-foreground text-sm font-mono leading-none truncate">
-                      {option.description}
-                    </span>
+                    {option.label && (
+                      <span className="text-muted-foreground text-sm font-mono leading-none truncate">
+                        {displayValue(option.value)}
+                      </span>
+                    )}
                   </div>
                 </div>
               ))}
@@ -170,3 +143,7 @@ export const AutocompleteTextInput = ({
     </div>
   );
 };
+
+function displayValue(value: string) {
+  return isAddress(value) ? truncateHex(value) : value;
+}

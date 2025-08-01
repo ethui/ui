@@ -421,7 +421,7 @@ Form.Select = SelectInput;
 interface AddressInputFormProps<T extends FieldValues>
   extends BaseInputProps<T> {
   onAddressSelect?: (addressData: AddressData) => void;
-  fetchAddresses?: (query: string) => Promise<AddressData[]>;
+  fetchAddresses: (query: string) => Promise<AddressData[]>;
   chainId?: number;
 }
 
@@ -448,14 +448,8 @@ function AddressInput<T extends FieldValues>({
               {...rest}
               value={field.value}
               onChange={field.onChange}
-              onBlur={field.onBlur}
               name={field.name}
-              onAddressSelect={(addressData) => {
-                field.onChange(addressData.address);
-                onAddressSelect?.(addressData);
-              }}
               fetchAddresses={fetchAddresses}
-              chainId={chainId}
             />
           </FormControl>
           <FormMessage>&nbsp;</FormMessage>
