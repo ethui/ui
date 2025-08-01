@@ -62,7 +62,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.1.1",
-    "@chromatic-com/storybook": "^4.0.0-next.16",
+    "@chromatic-com/storybook": "^4.1.0",
     "@ethui/abiparse": "^0.0.4",
     "@fontsource/source-code-pro": "^5.2.5",
     "@hookform/resolvers": "^5.0.1",
