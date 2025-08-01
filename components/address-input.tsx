@@ -17,13 +17,15 @@ export interface AddressInputProps
   chainId?: number;
 }
 
-export const AddressInput = ({
+export interface AddressAutoCompleteTextInputProps extends AddressInputProps {}
+
+export const AddressAutoCompleteTextInput = ({
   fetchAddresses,
   placeholder = "Search address",
   emptyMessage = "No addresses found.",
   onChange,
   ...props
-}: AddressInputProps) => {
+}: AddressAutoCompleteTextInputProps) => {
   const fetchOptions = useCallback(
     async (query: string): Promise<AutocompleteOption[]> => {
       try {
@@ -31,6 +33,7 @@ export const AddressInput = ({
         return addresses.map((addr) => ({
           value: addr.address,
           label: addr.alias,
+          badge: addr.wallet,
         }));
       } catch (error) {
         console.error("Error fetching addresses:", error);
@@ -50,3 +53,5 @@ export const AddressInput = ({
     />
   );
 };
+
+export const AddressInput = AddressAutoCompleteTextInput;

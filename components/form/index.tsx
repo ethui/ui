@@ -42,9 +42,13 @@ interface Props<T extends FieldValues>
 import { AutoSubmitSwitch } from "./auto-submit/switch";
 import { AutoSubmitTextInput } from "./auto-submit/text-input";
 import {
-  AddressInput as AddressInputComponent,
+  AddressAutoCompleteTextInput as AddressAutoCompleteInput,
   type AddressData,
 } from "../address-input.js";
+import {
+  AutocompleteTextInput as AutoCompleteInput,
+  type AutocompleteOption,
+} from "../autocomplete-text-input.js";
 
 export const AutoSubmit = { AutoSubmitTextInput, AutoSubmitSwitch };
 
@@ -425,7 +429,13 @@ interface AddressInputFormProps<T extends FieldValues>
   chainId?: number;
 }
 
-function AddressInput<T extends FieldValues>({
+interface AutoCompleteTextInputFormProps<T extends FieldValues>
+  extends BaseInputProps<T> {
+  fetchOptions: (query: string) => Promise<AutocompleteOption[]>;
+  onOptionSelect?: (option: AutocompleteOption) => void;
+}
+
+function AddressAutoCompleteTextInput<T extends FieldValues>({
   name,
   label,
   className = "",
@@ -444,7 +454,7 @@ function AddressInput<T extends FieldValues>({
         <FormItem className={cn("w-full", className)}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <AddressInputComponent
+            <AddressAutoCompleteInput
               {...rest}
               value={field.value}
               onChange={field.onChange}
@@ -458,4 +468,41 @@ function AddressInput<T extends FieldValues>({
     />
   );
 }
-Form.AddressInput = AddressInput;
+Form.AddressAutoCompleteTextInput = AddressAutoCompleteTextInput;
+
+// Backward compatibility alias
+Form.AddressInput = AddressAutoCompleteTextInput;
+
+function AutoCompleteTextInput<T extends FieldValues>({
+  name,
+  label,
+  className = "",
+  onOptionSelect,
+  fetchOptions,
+  ...rest
+}: AutoCompleteTextInputFormProps<T>) {
+  const { control } = useFormContext();
+
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className={cn("w-full", className)}>
+          <FormLabel>{label}</FormLabel>
+          <FormControl>
+            <AutoCompleteInput
+              {...rest}
+              value={field.value}
+              onChange={field.onChange}
+              name={field.name}
+              fetchOptions={fetchOptions}
+            />
+          </FormControl>
+          <FormMessage>&nbsp;</FormMessage>
+        </FormItem>
+      )}
+    />
+  );
+}
+Form.AutoCompleteTextInput = AutoCompleteTextInput;

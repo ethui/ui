@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { cn, truncateHex } from "../lib/utils.js";
 import { Input, type InputProps } from "./shadcn/input.js";
+import { Badge } from "./shadcn/badge.js";
 import { isAddress } from "viem";
 
 export interface AutocompleteOption {
   value: string;
   label?: string;
-  description?: string;
+  badge?: string | React.ReactNode;
 }
 
 export interface AutocompleteTextInputProps
@@ -124,14 +125,21 @@ export const AutocompleteTextInput = ({
                   }}
                   className="px-4 py-1 cursor-pointer hover:bg-accent hover:text-accent-foreground border-b border-border last:border-b-0 transition-colors"
                 >
-                  <div className="flex flex-col gap-1 justify-center min-h-[48px]">
-                    <span className="font-medium text-sm leading-none">
-                      {option.label ?? displayValue(option.value)}
-                    </span>
-                    {option.label && (
-                      <span className="text-muted-foreground text-sm font-mono leading-none truncate">
-                        {displayValue(option.value)}
+                  <div className="flex items-center justify-between min-h-[50px] gap-2">
+                    <div className="flex flex-col gap-1 justify-center flex-1 min-w-0">
+                      <span className="font-medium text-sm leading-none truncate">
+                        {option.label ?? displayValue(option.value)}
                       </span>
+                      {option.label && (
+                        <span className="text-muted-foreground text-sm font-mono leading-none truncate">
+                          {displayValue(option.value)}
+                        </span>
+                      )}
+                    </div>
+                    {option.badge && (
+                      <Badge variant="secondary" className="shrink-0">
+                        {option.badge}
+                      </Badge>
                     )}
                   </div>
                 </div>
