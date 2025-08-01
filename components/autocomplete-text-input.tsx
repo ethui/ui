@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
-import { cn, truncateHex } from "../lib/utils.js";
-import { Input, type InputProps } from "./shadcn/input.js";
-import { Badge } from "./shadcn/badge.js";
 import { isAddress } from "viem";
+import { cn, truncateHex } from "../lib/utils.js";
+import { Badge } from "./shadcn/badge.js";
+import { Input, type InputProps } from "./shadcn/input.js";
 
 export interface AutocompleteOption {
   value: string;
@@ -88,7 +88,7 @@ export const AutocompleteTextInput = ({
   };
 
   return (
-    <div className="w-full relative autocomplete-container">
+    <div className="autocomplete-container relative w-full">
       <Input
         value={query}
         onChange={handleInputChange}
@@ -103,13 +103,13 @@ export const AutocompleteTextInput = ({
         {...inputProps}
       />
       {open && (
-        <div className="absolute top-full left-0 right-0 z-50 mt-1 border bg-popover shadow-md rounded-md overflow-hidden max-h-60 overflow-y-auto">
+        <div className="absolute top-full right-0 left-0 z-50 mt-1 max-h-60 overflow-hidden overflow-y-auto rounded-md border bg-popover shadow-md">
           {loading ? (
-            <div className="px-3 py-2 text-sm text-muted-foreground">
+            <div className="px-3 py-2 text-muted-foreground text-sm">
               Loading...
             </div>
           ) : options.length === 0 ? (
-            <div className="px-3 py-2 text-sm text-muted-foreground">
+            <div className="px-3 py-2 text-muted-foreground text-sm">
               {emptyMessage}
             </div>
           ) : (
@@ -123,15 +123,15 @@ export const AutocompleteTextInput = ({
                     console.log("Option selected:", option);
                     handleSelect(option);
                   }}
-                  className="px-4 py-1 cursor-pointer hover:bg-accent hover:text-accent-foreground border-b border-border last:border-b-0 transition-colors"
+                  className="cursor-pointer border-border border-b px-4 py-1 transition-colors last:border-b-0 hover:bg-accent hover:text-accent-foreground"
                 >
-                  <div className="flex items-center justify-between min-h-[50px] gap-2">
-                    <div className="flex flex-col gap-1 justify-center flex-1 min-w-0">
-                      <span className="font-medium text-sm leading-none truncate">
+                  <div className="flex min-h-[50px] items-center justify-between gap-2">
+                    <div className="flex min-w-0 flex-1 flex-col justify-center gap-1">
+                      <span className="truncate font-medium text-sm leading-none">
                         {option.label ?? displayValue(option.value)}
                       </span>
                       {option.label && (
-                        <span className="text-muted-foreground text-sm font-mono leading-none truncate">
+                        <span className="truncate font-mono text-muted-foreground text-sm leading-none">
                           {displayValue(option.value)}
                         </span>
                       )}

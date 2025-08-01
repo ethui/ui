@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import {
-  AutocompleteTextInput,
   type AutocompleteOption,
+  AutocompleteTextInput,
   type AutocompleteTextInputProps,
 } from "./autocomplete-text-input.js";
 

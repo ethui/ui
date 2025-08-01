@@ -39,8 +39,6 @@ interface Props<T extends FieldValues>
   onSubmit: SubmitHandler<T>;
 }
 
-import { AutoSubmitSwitch } from "./auto-submit/switch";
-import { AutoSubmitTextInput } from "./auto-submit/text-input";
 import {
   AddressAutoCompleteTextInput as AddressAutoCompleteInput,
   type AddressData,
@@ -49,6 +47,8 @@ import {
   AutocompleteTextInput as AutoCompleteInput,
   type AutocompleteOption,
 } from "../autocomplete-text-input.js";
+import { AutoSubmitSwitch } from "./auto-submit/switch";
+import { AutoSubmitTextInput } from "./auto-submit/text-input";
 
 export const AutoSubmit = { AutoSubmitTextInput, AutoSubmitSwitch };
 
