@@ -115,15 +115,16 @@ export const AutocompleteTextInput = ({
           ) : (
             <div>
               {options.map((option) => (
-                <div
+                <button
                   key={option.value}
+                  type="button"
                   onMouseDown={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     console.log("Option selected:", option);
                     handleSelect(option);
                   }}
-                  className="cursor-pointer border-border border-b px-4 py-1 transition-colors last:border-b-0 hover:bg-accent hover:text-accent-foreground"
+                  className="w-full cursor-pointer border-border border-b px-4 py-1 transition-colors last:border-b-0 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none"
                 >
                   <div className="flex min-h-[50px] items-center justify-between gap-2">
                     <div className="flex min-w-0 flex-1 flex-col justify-center gap-1">
@@ -142,7 +143,7 @@ export const AutocompleteTextInput = ({
                       </Badge>
                     )}
                   </div>
-                </div>
+                </button>
               ))}
             </div>
           )}
