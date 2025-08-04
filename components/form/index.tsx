@@ -468,9 +468,6 @@ function AddressAutoCompleteTextInput<T extends FieldValues>({
 }
 Form.AddressAutoCompleteTextInput = AddressAutoCompleteTextInput;
 
-// Backward compatibility alias
-Form.AddressInput = AddressAutoCompleteTextInput;
-
 function AutoCompleteTextInput<T extends FieldValues>({
   name,
   label,
