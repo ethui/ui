@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { isAddress } from "viem";
 import { cn, truncateHex } from "../lib/utils.js";
 import { Badge } from "./shadcn/badge.js";
+import { Button } from "./shadcn/button.js";
 import { Input, type InputProps } from "./shadcn/input.js";
 
 export interface AutocompleteOption {
@@ -115,19 +116,20 @@ export const AutocompleteTextInput = ({
           ) : (
             <div>
               {options.map((option) => (
-                <button
+                <Button
                   key={option.value}
-                  type="button"
+                  variant="ghost"
+                  asChild
                   onMouseDown={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     console.log("Option selected:", option);
                     handleSelect(option);
                   }}
-                  className="w-full cursor-pointer border-border border-b px-4 py-1 transition-colors last:border-b-0 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none"
+                  className="flex h-16 w-full justify-start rounded-none border-border border-b px-4 py-3 last:border-b-0"
                 >
-                  <div className="flex min-h-[50px] items-center justify-between gap-2">
-                    <div className="flex min-w-0 flex-1 flex-col justify-center gap-1">
+                  <div className="flex w-full items-center justify-between gap-2">
+                    <div className="flex min-w-0 flex-1 flex-col gap-1">
                       <span className="truncate font-medium text-sm leading-none">
                         {option.label ?? displayValue(option.value)}
                       </span>
@@ -143,7 +145,7 @@ export const AutocompleteTextInput = ({
                       </Badge>
                     )}
                   </div>
-                </button>
+                </Button>
               ))}
             </div>
           )}

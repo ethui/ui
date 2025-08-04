@@ -42,7 +42,7 @@ interface Props<T extends FieldValues>
 import {
   AddressAutoCompleteTextInput as AddressAutoCompleteInput,
   type AddressData,
-} from "../address-input.js";
+} from "../address-autocomplete-input.js";
 import {
   AutocompleteTextInput as AutoCompleteInput,
   type AutocompleteOption,
