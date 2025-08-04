@@ -38,6 +38,14 @@ interface Props<T extends FieldValues>
   onSubmit: SubmitHandler<T>;
 }
 
+import {
+  AddressAutoCompleteTextInput as AddressAutoCompleteInput,
+  type AddressData,
+} from "../address-autocomplete-input.js";
+import {
+  AutocompleteTextInput as AutoCompleteInput,
+  type AutocompleteOption,
+} from "../autocomplete-text-input.js";
 import { AutoSubmitSwitch } from "./auto-submit/switch";
 import { AutoSubmitTextInput } from "./auto-submit/text-input";
 
@@ -409,3 +417,83 @@ function SelectInput<
   );
 }
 Form.Select = SelectInput;
+
+interface AddressInputFormProps<T extends FieldValues>
+  extends BaseInputProps<T> {
+  onAddressSelect?: (addressData: AddressData) => void;
+  fetchAddresses: (query: string) => Promise<AddressData[]>;
+}
+
+interface AutoCompleteTextInputFormProps<T extends FieldValues>
+  extends BaseInputProps<T> {
+  fetchOptions: (query: string) => Promise<AutocompleteOption[]>;
+  onOptionSelect?: (option: AutocompleteOption) => void;
+}
+
+function AddressAutoCompleteTextInput<T extends FieldValues>({
+  name,
+  label,
+  className = "",
+  onAddressSelect,
+  fetchAddresses,
+  ...rest
+}: AddressInputFormProps<T>) {
+  const { control } = useFormContext();
+
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className={cn("w-full", className)}>
+          <FormLabel>{label}</FormLabel>
+          <FormControl>
+            <AddressAutoCompleteInput
+              {...rest}
+              value={field.value}
+              onChange={field.onChange}
+              name={field.name}
+              fetchAddresses={fetchAddresses}
+            />
+          </FormControl>
+          <FormMessage>&nbsp;</FormMessage>
+        </FormItem>
+      )}
+    />
+  );
+}
+Form.AddressAutoCompleteTextInput = AddressAutoCompleteTextInput;
+
+function AutoCompleteTextInput<T extends FieldValues>({
+  name,
+  label,
+  className = "",
+  onOptionSelect,
+  fetchOptions,
+  ...rest
+}: AutoCompleteTextInputFormProps<T>) {
+  const { control } = useFormContext();
+
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className={cn("w-full", className)}>
+          <FormLabel>{label}</FormLabel>
+          <FormControl>
+            <AutoCompleteInput
+              {...rest}
+              value={field.value}
+              onChange={field.onChange}
+              name={field.name}
+              fetchOptions={fetchOptions}
+            />
+          </FormControl>
+          <FormMessage>&nbsp;</FormMessage>
+        </FormItem>
+      )}
+    />
+  );
+}
+Form.AutoCompleteTextInput = AutoCompleteTextInput;
