@@ -50,9 +50,7 @@ const columns = [
   columnHelper.accessor("hash", {
     header: "Transaction Hash",
     cell: ({ getValue }) => (
-      <span className="font-mono text-sm">
-        {getValue().slice(0, 10)}...{getValue().slice(-8)}
-      </span>
+      <span className="font-mono text-sm">{getValue().slice(0, 13)}...</span>
     ),
   }),
   columnHelper.accessor("blockNumber", {
