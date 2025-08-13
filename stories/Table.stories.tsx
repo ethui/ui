@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { createColumnHelper } from "@tanstack/react-table";
-import Table from "../components/table.js";
+import { Table } from "../components/table.js";
 
 const meta: Meta<typeof Table> = {
   title: "Components/Table",
