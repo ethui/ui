@@ -13,7 +13,7 @@ interface TableProps<T> {
   showHeader?: boolean;
 }
 
-export default function Table<T>({
+export function Table<T>({
   data,
   columns,
   className,
