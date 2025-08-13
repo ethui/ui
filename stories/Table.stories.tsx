@@ -102,6 +102,7 @@ export const Secondary: Story = {
     data: mockData,
     columns: columns,
     variant: "secondary",
+    showHeader: false,
   },
   decorators: [
     (Story) => (

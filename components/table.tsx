@@ -28,30 +28,28 @@ export default function Table<T>({
 
   return (
     <table className={cn("w-full table-fixed text-sm", className)}>
-      <thead className="border-b text-xs">
-        {showHeader && (
-          <>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th
-                    key={header.id}
-                    className={cn(
-                      "p-3 text-left align-middle",
-                      variant === "secondary" && "border",
-                    )}
-                  >
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext(),
-                    )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </>
-        )}
-      </thead>
+      {showHeader && (
+        <thead className="border-b text-xs">
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <th
+                  key={header.id}
+                  className={cn(
+                    "p-3 text-left align-middle",
+                    variant === "secondary" && "border",
+                  )}
+                >
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext(),
+                  )}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+      )}
       <tbody>
         {table.getRowModel().rows.map((row, index) => (
           <tr
