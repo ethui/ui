@@ -97,6 +97,21 @@ export const Default: Story = {
   ],
 };
 
+export const Secondary: Story = {
+  args: {
+    data: mockData,
+    columns: columns,
+    variant: "secondary",
+  },
+  decorators: [
+    (Story) => (
+      <div className="w-[800px]">
+        <Story />
+      </div>
+    ),
+  ],
+};
+
 export const Empty: Story = {
   args: {
     data: [],
