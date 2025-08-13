@@ -9,9 +9,17 @@ interface TableProps<T> {
   data: T[];
   columns: any[];
   className?: string;
+  variant?: "primary" | "secondary";
+  showHeader?: boolean;
 }
 
-export default function Table<T>({ data, columns, className }: TableProps<T>) {
+export default function Table<T>({
+  data,
+  columns,
+  className,
+  variant = "primary",
+  showHeader = true,
+}: TableProps<T>) {
   const table = useReactTable({
     data: data,
     columns: columns,
@@ -20,31 +28,45 @@ export default function Table<T>({ data, columns, className }: TableProps<T>) {
 
   return (
     <table className={cn("w-full table-fixed text-sm", className)}>
-      <thead className="border-b text-xs">
-        {table.getHeaderGroups().map((headerGroup) => (
-          <tr key={headerGroup.id}>
-            {headerGroup.headers.map((header) => (
-              <th key={header.id} className="p-3 text-left align-middle">
-                {flexRender(
-                  header.column.columnDef.header,
-                  header.getContext(),
-                )}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
+      {showHeader && (
+        <thead className="border-b text-xs">
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <th
+                  key={header.id}
+                  className={cn(
+                    "p-3 text-left align-middle",
+                    variant === "secondary" && "border",
+                  )}
+                >
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext(),
+                  )}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+      )}
       <tbody>
         {table.getRowModel().rows.map((row, index) => (
           <tr
             key={row.id}
             className={cn(
-              "h-16 border-b align-middle",
+              "h-10 border-b align-middle",
               index === data.length - 1 && "border-b-0",
             )}
           >
             {row.getVisibleCells().map((cell) => (
-              <td key={cell.id} className="p-3 align-middle">
+              <td
+                key={cell.id}
+                className={cn(
+                  "px-3 align-middle",
+                  variant === "secondary" && "border",
+                )}
+              >
                 <div className="truncate">
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </div>
