@@ -9,6 +9,7 @@ interface TableProps<T> {
   data: T[];
   columns: any[];
   className?: string;
+  rowClassName?: string;
   variant?: "primary" | "secondary";
   showHeader?: boolean;
 }
@@ -17,6 +18,7 @@ export function Table<T>({
   data,
   columns,
   className,
+  rowClassName,
   variant = "primary",
   showHeader = true,
 }: TableProps<T>) {
@@ -57,6 +59,7 @@ export function Table<T>({
             className={cn(
               "h-10 border-b align-middle",
               index === data.length - 1 && "border-b-0",
+              rowClassName,
             )}
           >
             {row.getVisibleCells().map((cell) => (
