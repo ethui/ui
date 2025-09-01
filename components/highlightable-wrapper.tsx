@@ -19,7 +19,7 @@ export function HighlightableWrapper({
     hoveredKey?.toLowerCase() === highlightKey.toLowerCase();
 
   return (
-    // biome-ignore lint/a11y/useSemanticElements: This is a wrapper for hover highlighting, not a clickable button
+    // biome-ignore lint/a11y/noStaticElementInteractions: This wrapper only handles hover for visual highlighting
     <div
       onMouseEnter={() => onHover(highlightKey)}
       onMouseLeave={() => onHover(null)}
