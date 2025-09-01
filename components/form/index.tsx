@@ -46,8 +46,8 @@ import {
   AutocompleteTextInput as AutoCompleteInput,
   type AutocompleteOption,
 } from "../autocomplete-text-input.js";
-import { AutoSubmitSwitch } from "./auto-submit/switch";
-import { AutoSubmitTextInput } from "./auto-submit/text-input";
+import { AutoSubmitSwitch } from "./auto-submit/switch.js";
+import { AutoSubmitTextInput } from "./auto-submit/text-input.js";
 
 export const AutoSubmit = { AutoSubmitTextInput, AutoSubmitSwitch };
 
