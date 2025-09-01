@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { cn } from "../../../lib/utils.js";
-import { Label } from "../../shadcn/label";
-import { Switch as ShadSwitch } from "../../shadcn/switch";
+import { Label } from "../../shadcn/label.js";
+import { Switch as ShadSwitch } from "../../shadcn/switch.js";
 
 interface AutoSubmitSwitchProps
   extends Omit<React.ComponentProps<typeof ShadSwitch>, "value"> {

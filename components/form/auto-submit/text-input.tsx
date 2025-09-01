@@ -1,8 +1,8 @@
 import { Check, Loader2, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "../../../lib/utils.js";
-import { Input } from "../../shadcn/input";
-import { Label } from "../../shadcn/label";
+import { Input } from "../../shadcn/input.js";
+import { Label } from "../../shadcn/label.js";
 
 interface AutoSubmitTextInputProps extends React.ComponentProps<"input"> {
   callback: (value: string) => void | Promise<void>;
