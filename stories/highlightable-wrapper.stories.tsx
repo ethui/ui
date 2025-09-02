@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { useState } from "react";
-import { HighlightableWrapper } from "../components/highlightable-wrapper.js";
+import {
+  HighlightableWrapper,
+  HighlightProvider,
+} from "../components/highlightable-wrapper.js";
 import { Table } from "../components/table.js";
 
 const meta: Meta<typeof HighlightableWrapper> = {
@@ -16,6 +18,13 @@ const meta: Meta<typeof HighlightableWrapper> = {
     className: { control: "text" },
     children: { control: "text" },
   },
+  decorators: [
+    (Story) => (
+      <HighlightProvider>
+        <Story />
+      </HighlightProvider>
+    ),
+  ],
 };
 
 export default meta;
@@ -23,8 +32,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => {
-    const [hoveredKey, setHoveredKey] = useState<string | null>(null);
-
     const items = [
       { key: "address-1", content: "0x1234...5678" },
       { key: "address-2", content: "0xabcd...efgh" },
@@ -43,8 +50,6 @@ export const Default: Story = {
           <HighlightableWrapper
             key={`${item.key}-${index}`}
             highlightKey={item.key}
-            hoveredKey={hoveredKey}
-            onHover={setHoveredKey}
             className="rounded border p-3 font-mono"
           >
             {item.content}
@@ -55,16 +60,12 @@ export const Default: Story = {
   },
   args: {
     highlightKey: "",
-    hoveredKey: null,
-    onHover: () => {},
     children: "",
   },
 };
 
 export const TableExample: Story = {
   render: () => {
-    const [hoveredKey, setHoveredKey] = useState<string | null>(null);
-
     const transactions = [
       { id: 1, from: "0x1234...5678", to: "0xabcd...efgh", amount: "1.5 ETH" },
       { id: 2, from: "0xabcd...efgh", to: "0x9876...5432", amount: "0.8 ETH" },
@@ -78,8 +79,6 @@ export const TableExample: Story = {
         cell: ({ row }: { row: any }) => (
           <HighlightableWrapper
             highlightKey={row.original.from}
-            hoveredKey={hoveredKey}
-            onHover={setHoveredKey}
             className="font-mono"
           >
             {row.original.from}
@@ -92,8 +91,6 @@ export const TableExample: Story = {
         cell: ({ row }: { row: any }) => (
           <HighlightableWrapper
             highlightKey={row.original.to}
-            hoveredKey={hoveredKey}
-            onHover={setHoveredKey}
             className="font-mono"
           >
             {row.original.to}
@@ -118,8 +115,6 @@ export const TableExample: Story = {
   },
   args: {
     highlightKey: "",
-    hoveredKey: null,
-    onHover: () => {},
     children: "",
   },
 };
