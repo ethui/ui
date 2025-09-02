@@ -1,9 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import {
-  HighlightableWrapper,
-  HighlightProvider,
-} from "../components/highlightable-wrapper.js";
+import { HighlightableWrapper } from "../components/highlightable-wrapper.js";
+import { HighlightProvider } from "../components/providers/highlight-provider.js";
 import { Table } from "../components/table.js";
 
 const meta: Meta<typeof HighlightableWrapper> = {
