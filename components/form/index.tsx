@@ -228,10 +228,12 @@ function BigIntField<T extends FieldValues>({
               type="number"
               {...rest}
               {...field}
-              onChange={createNullIfEmptyHandler(
-                (e) => field.onChange(BigInt(e.target.value) * multiplier),
-                nullIfEmpty,
-              )}
+              onChange={createNullIfEmptyHandler((e) => {
+                const value = /^-?\d+/.test(e.target.value)
+                  ? BigInt(e.target.value) * multiplier
+                  : null;
+                field.onChange(value);
+              }, nullIfEmpty)}
               value={(BigInt(field.value) / multiplier).toString()}
               icon={icon}
             />
