@@ -112,3 +112,34 @@ export const RequiredField: Story = {
     className: "w-full",
   },
 };
+
+export const NullIfEmpty: Story = {
+  decorators: [
+    (Story) => {
+      const schema = z.object({
+        value: z.string().nullable().optional(),
+      });
+      const form = useForm({ resolver: zodResolver(schema), mode: "all" });
+      useEffect(() => {
+        form.trigger();
+      }, [form.trigger]);
+      return (
+        <Form
+          form={form}
+          onSubmit={() => console.log("submitted")}
+          className="w-full"
+        >
+          <Story />
+          <pre>result: {JSON.stringify(form.watch("value"))}</pre>
+        </Form>
+      );
+    },
+  ],
+
+  args: {
+    name: "value",
+    label: "Required field",
+    className: "w-full",
+    nullIfEmpty: true,
+  },
+};

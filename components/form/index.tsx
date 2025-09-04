@@ -51,6 +51,16 @@ import { AutoSubmitTextInput } from "./auto-submit/text-input.js";
 
 export const AutoSubmit = { AutoSubmitTextInput, AutoSubmitSwitch };
 
+function createNullIfEmptyHandler(
+  originalOnChange: (value: any) => void,
+  enabled: boolean,
+) {
+  return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    originalOnChange(enabled && value === "" ? null : value);
+  };
+}
+
 export function Form<S extends FieldValues>({
   form,
   children,
@@ -79,6 +89,7 @@ interface BaseInputProps<T extends FieldValues> extends InputProps {
   type?: string;
   className?: string;
   icon?: React.ReactNode;
+  nullIfEmpty?: boolean;
 }
 
 function Text<T extends FieldValues>({
@@ -87,6 +98,7 @@ function Text<T extends FieldValues>({
   type = "text",
   className = "",
   icon,
+  nullIfEmpty = false,
   ...rest
 }: BaseInputProps<T>) {
   const { control } = useFormContext();
@@ -99,7 +111,13 @@ function Text<T extends FieldValues>({
         <FormItem className={cn("w-full", className)}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input {...rest} {...field} type={type} icon={icon} />
+            <Input
+              {...rest}
+              {...field}
+              type={type}
+              icon={icon}
+              onChange={createNullIfEmptyHandler(field.onChange, nullIfEmpty)}
+            />
           </FormControl>
           <FormMessage>&nbsp;</FormMessage>
         </FormItem>
@@ -114,6 +132,7 @@ function Textarea<T extends FieldValues>({
   label,
   icon,
   className = "",
+  nullIfEmpty = false,
 }: BaseInputProps<T>) {
   const { control } = useFormContext();
 
@@ -125,7 +144,11 @@ function Textarea<T extends FieldValues>({
         <FormItem className={cn("w-full", className)}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <ShadTextarea {...field} icon={icon} />
+            <ShadTextarea
+              {...field}
+              icon={icon}
+              onChange={createNullIfEmptyHandler(field.onChange, nullIfEmpty)}
+            />
           </FormControl>
           <FormMessage>&nbsp;</FormMessage>
         </FormItem>
@@ -140,6 +163,7 @@ function NumberField<T extends FieldValues>({
   label,
   className = "",
   icon,
+  nullIfEmpty = false,
   ...rest
 }: BaseInputProps<T>) {
   const { register, control } = useFormContext();
@@ -157,8 +181,12 @@ function NumberField<T extends FieldValues>({
               type="number"
               {...rest}
               {...register(name, {
-                setValueAs: (value) =>
-                  value === "" ? undefined : Number.parseInt(value),
+                setValueAs: (value) => {
+                  if (value === "") {
+                    return nullIfEmpty ? null : undefined;
+                  }
+                  return Number.parseInt(value);
+                },
               })}
               icon={icon}
             />
@@ -181,6 +209,7 @@ function BigIntField<T extends FieldValues>({
   decimals = 18,
   className = "",
   icon,
+  nullIfEmpty = false,
   ...rest
 }: BigIntProps<T>) {
   const multiplier = 10n ** BigInt(decimals);
@@ -199,9 +228,12 @@ function BigIntField<T extends FieldValues>({
               type="number"
               {...rest}
               {...field}
-              onChange={(e) =>
-                field.onChange(BigInt(e.target.value) * multiplier)
-              }
+              onChange={createNullIfEmptyHandler((e) => {
+                const value = /^-?\d+/.test(e.target.value)
+                  ? BigInt(e.target.value) * multiplier
+                  : null;
+                field.onChange(value);
+              }, nullIfEmpty)}
               value={(BigInt(field.value) / multiplier).toString()}
               icon={icon}
             />
