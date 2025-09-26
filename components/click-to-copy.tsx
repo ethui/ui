@@ -7,7 +7,7 @@ import {
   TooltipTrigger,
 } from "./shadcn/tooltip.js";
 
-export interface ClickToCopyProps {
+export interface ClickToCopyProps extends React.HTMLAttributes<HTMLSpanElement> {
   text: string | bigint | number;
   children: React.ReactNode;
 }
@@ -72,5 +72,5 @@ export function ClickToCopy({ children, text, ...props }: ClickToCopyProps) {
       </Tooltip>
     </TooltipProvider>
   );
-  // biome-ignore-end lint/a11y/noStaticElementInteractions: ignore
+// biome-ignore-end lint/a11y/noStaticElementInteractions: ignore
 }
