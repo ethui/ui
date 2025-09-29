@@ -36,7 +36,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
-    <Command className="max-w-[450px] rounded-lg border shadow-md">
+    <Command className="rounded-lg border shadow-md">
       <CommandInput placeholder="Type a command or search..." />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
@@ -84,7 +84,7 @@ export const WithDialog: Story = {
     return (
       <>
         <Button onClick={() => setOpen(true)}>Open Command Menu</Button>
-        <CommandDialog open={open} onOpenChange={setOpen} className="max-w-2xl">
+        <CommandDialog position="center" open={open} onOpenChange={setOpen}>
           <CommandInput placeholder="Type a command or search..." />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
