@@ -7,7 +7,8 @@ import {
   TooltipTrigger,
 } from "./shadcn/tooltip.js";
 
-export interface ClickToCopyProps {
+export interface ClickToCopyProps
+  extends React.HTMLAttributes<HTMLSpanElement> {
   text: string | bigint | number;
   children: React.ReactNode;
 }

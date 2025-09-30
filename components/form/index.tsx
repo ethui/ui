@@ -324,7 +324,7 @@ const submitLabelKnownMappings: Record<string, SubmitLabelMapping> = {
 };
 
 interface SubmitProps extends ButtonProps {
-  label: string | SubmitLabelMapping;
+  label?: string | SubmitLabelMapping;
   skipDirtyCheck?: boolean;
   forceLoading?: boolean;
   submittingLabel?: string;
@@ -353,7 +353,7 @@ function Submit({
       : label;
 
   let computedLabel: string;
-  if (!labelMapping) {
+  if (!labelMapping || typeof labelMapping === "string") {
     // at this point it can only be a string
     computedLabel = label as string;
   } else if (isLoading) {
