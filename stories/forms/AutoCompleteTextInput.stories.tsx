@@ -2,21 +2,13 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { useForm } from "react-hook-form";
 import { Form } from "../../components/form/index.js";
 
-const fetchStatuses = async (query: string) => {
-  const statuses = [
-    { value: "draft", label: "Draft" },
-    { value: "review", label: "In Review" },
-    { value: "approved", label: "Approved" },
-    { value: "published", label: "Published" },
-    { value: "archived", label: "Archived" },
-  ];
-
-  if (!query) return statuses;
-
-  return statuses.filter((s) =>
-    s.label.toLowerCase().includes(query.toLowerCase()),
-  );
-};
+const statuses = [
+  { value: "draft", label: "Draft" },
+  { value: "review", label: "In Review" },
+  { value: "approved", label: "Approved" },
+  { value: "published", label: "Published" },
+  { value: "archived", label: "Archived" },
+];
 
 const meta = {
   title: "Components/Form/AutoCompleteTextInput",
@@ -53,7 +45,7 @@ export const Default: Story = {
     name: "status",
     label: "Document Status",
     placeholder: "Choose status...",
-    fetchOptions: fetchStatuses,
+    options: statuses,
     className: "w-full",
   },
 };

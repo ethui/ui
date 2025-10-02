@@ -453,12 +453,14 @@ Form.Select = SelectInput;
 interface AddressInputFormProps<T extends FieldValues>
   extends BaseInputProps<T> {
   onAddressSelect?: (addressData: AddressData) => void;
-  fetchAddresses: (query: string) => Promise<AddressData[]>;
+  addresses?: AddressData[];
+  loading?: boolean;
 }
 
 interface AutoCompleteTextInputFormProps<T extends FieldValues>
   extends BaseInputProps<T> {
-  fetchOptions: (query: string) => Promise<AutocompleteOption[]>;
+  options?: AutocompleteOption[];
+  loading?: boolean;
   onOptionSelect?: (option: AutocompleteOption) => void;
 }
 
@@ -467,7 +469,8 @@ function AddressAutoCompleteTextInput<T extends FieldValues>({
   label,
   className = "",
   onAddressSelect,
-  fetchAddresses,
+  addresses,
+  loading,
   ...rest
 }: AddressInputFormProps<T>) {
   const { control } = useFormContext();
@@ -485,7 +488,8 @@ function AddressAutoCompleteTextInput<T extends FieldValues>({
               value={field.value}
               onChange={field.onChange}
               name={field.name}
-              fetchAddresses={fetchAddresses}
+              addresses={addresses}
+              loading={loading}
             />
           </FormControl>
           <FormMessage>&nbsp;</FormMessage>
@@ -501,7 +505,8 @@ function AutoCompleteTextInput<T extends FieldValues>({
   label,
   className = "",
   onOptionSelect,
-  fetchOptions,
+  options,
+  loading,
   ...rest
 }: AutoCompleteTextInputFormProps<T>) {
   const { control } = useFormContext();
@@ -519,7 +524,8 @@ function AutoCompleteTextInput<T extends FieldValues>({
               value={field.value}
               onChange={field.onChange}
               name={field.name}
-              fetchOptions={fetchOptions}
+              options={options}
+              loading={loading}
             />
           </FormControl>
           <FormMessage>&nbsp;</FormMessage>

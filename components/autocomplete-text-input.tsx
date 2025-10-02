@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { isAddress } from "viem";
 import { cn, truncateHex } from "../lib/utils.js";
 import { Badge } from "./shadcn/badge.js";
@@ -15,51 +15,33 @@ export interface AutocompleteTextInputProps
   extends Omit<InputProps, "onChange" | "onSelect" | "onBlur"> {
   value?: string;
   onChange?: (value: string) => void;
-  fetchOptions: (query: string) => Promise<AutocompleteOption[]>;
+  options?: AutocompleteOption[];
+  loading?: boolean;
   placeholder?: string;
   emptyMessage?: string;
-  minQueryLength?: number;
 }
 
 export const AutocompleteTextInput = ({
   value = "",
   onChange,
-  fetchOptions,
+  options = [],
+  loading = false,
   placeholder = "Type to search...",
   emptyMessage = "No results found.",
-  minQueryLength = 0,
   className,
   ...inputProps
 }: AutocompleteTextInputProps) => {
   const [open, setOpen] = useState(false);
-  const [options, setOptions] = useState<AutocompleteOption[]>([]);
-  const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState(value);
 
-  const fetchData = useCallback(
-    async (searchQuery: string) => {
-      if (searchQuery.length < minQueryLength) {
-        setOptions([]);
-        return;
-      }
-
-      setLoading(true);
-      try {
-        const results = await fetchOptions(searchQuery);
-        setOptions(results);
-      } catch (error) {
-        console.error("Error fetching autocomplete options:", error);
-        setOptions([]);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [fetchOptions, minQueryLength],
-  );
-
-  useEffect(() => {
-    fetchData(query);
-  }, [query, fetchData]);
+  // Filter options based on query
+  const filteredOptions = options.filter((option) => {
+    if (!query.trim()) return true;
+    const searchQuery = query.toLowerCase();
+    const matchesValue = option.value.toLowerCase().includes(searchQuery);
+    const matchesLabel = option.label?.toLowerCase().includes(searchQuery);
+    return matchesValue || matchesLabel;
+  });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
@@ -70,10 +52,6 @@ export const AutocompleteTextInput = ({
 
   const handleInputClick = () => {
     setOpen(true);
-
-    if (options.length === 0 && !loading) {
-      fetchData(query);
-    }
   };
 
   const handleSelect = (option: AutocompleteOption) => {
@@ -109,13 +87,13 @@ export const AutocompleteTextInput = ({
             <div className="px-3 py-2 text-muted-foreground text-sm">
               Loading...
             </div>
-          ) : options.length === 0 ? (
+          ) : filteredOptions.length === 0 ? (
             <div className="px-3 py-2 text-muted-foreground text-sm">
               {emptyMessage}
             </div>
           ) : (
             <div>
-              {options.map((option) => (
+              {filteredOptions.map((option) => (
                 <Button
                   key={option.value}
                   variant="ghost"
@@ -123,10 +101,9 @@ export const AutocompleteTextInput = ({
                   onMouseDown={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log("Option selected:", option);
                     handleSelect(option);
                   }}
-                  className="flex h-16 w-full justify-start rounded-none border-border border-b px-4 py-3 last:border-b-0"
+                  className="flex h-16 w-full cursor-pointer items-center justify-start rounded-none border-border border-b px-4 py-3 last:border-b-0 hover:bg-accent hover:text-accent-foreground"
                 >
                   <div className="flex w-full items-center justify-between gap-2">
                     <div className="flex min-w-0 flex-1 flex-col gap-1">
