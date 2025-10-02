@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import {
   type AutocompleteOption,
   AutocompleteTextInput,
@@ -11,41 +10,28 @@ export interface AddressData {
   wallet?: string;
 }
 
-export interface AddressInputProps
-  extends Omit<AutocompleteTextInputProps, "fetchOptions" | "onOptionSelect"> {
-  fetchAddresses: (query: string) => Promise<AddressData[]>;
+export interface AddressAutoCompleteTextInputProps
+  extends AutocompleteTextInputProps {
+  addresses?: AddressData[];
   chainId?: number;
 }
 
-export interface AddressAutoCompleteTextInputProps extends AddressInputProps {}
-
 export const AddressAutoCompleteTextInput = ({
-  fetchAddresses,
+  addresses = [],
   placeholder = "Search address",
   emptyMessage = "No addresses found.",
   onChange,
   ...props
 }: AddressAutoCompleteTextInputProps) => {
-  const fetchOptions = useCallback(
-    async (query: string): Promise<AutocompleteOption[]> => {
-      try {
-        const addresses = await fetchAddresses(query);
-        return addresses.map((addr) => ({
-          value: addr.address,
-          label: addr.alias,
-          badge: addr.wallet,
-        }));
-      } catch (error) {
-        console.error("Error fetching addresses:", error);
-        return [];
-      }
-    },
-    [fetchAddresses],
-  );
+  const options: AutocompleteOption[] = addresses.map((addr) => ({
+    value: addr.address,
+    label: addr.alias,
+    badge: addr.wallet,
+  }));
 
   return (
     <AutocompleteTextInput
-      fetchOptions={fetchOptions}
+      options={options}
       onChange={onChange}
       placeholder={placeholder}
       emptyMessage={emptyMessage}

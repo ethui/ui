@@ -29,18 +29,6 @@ const mockAddresses = [
   },
 ];
 
-const mockFetchAddresses = async (query: string) => {
-  if (!query.trim()) {
-    return mockAddresses;
-  }
-
-  return mockAddresses.filter(
-    (addr) =>
-      addr.address.toLowerCase().includes(query.toLowerCase()) ||
-      addr.alias?.toLowerCase().includes(query.toLowerCase()),
-  );
-};
-
 const meta = {
   title: "Components/Form/AddressAutoCompleteTextInput",
   component: Form.AddressAutoCompleteTextInput,
@@ -76,7 +64,7 @@ export const Default: Story = {
     name: "recipient",
     label: "Recipient Address",
     placeholder: "Search addresses...",
-    fetchAddresses: mockFetchAddresses,
+    addresses: mockAddresses,
     className: "w-full",
   },
 };
@@ -114,7 +102,7 @@ export const WithForm: Story = {
     name: "recipient",
     label: "Recipient Address",
     placeholder: "Search addresses...",
-    fetchAddresses: mockFetchAddresses,
+    addresses: mockAddresses,
     className: "w-full",
   },
 };
