@@ -1,3 +1,4 @@
+import type { AddressData } from "components/address-autocomplete-input.js";
 import { Plus, X } from "lucide-react";
 import { useState } from "react";
 import { cn, Debug } from "../../lib/utils.js";
@@ -82,6 +83,7 @@ type ArrayElementsProps = Omit<InnerProps, "type" | "label"> & {
   length?: number;
   elemType: string;
   defaultValues?: any[];
+  addresses?: AddressData[];
 };
 
 function ArrayElements({
@@ -92,6 +94,7 @@ function ArrayElements({
   debug,
   onChange,
   defaultValue,
+  addresses,
 }: ArrayElementsProps) {
   const [value, setValue] = useState<any[]>(
     defaultValue || Array(length || 0).fill(undefined),
@@ -129,6 +132,7 @@ function ArrayElements({
             defaultValue={v}
             onChange={(v) => update(i, v)}
             onRemove={() => remove(i)}
+            addresses={addresses}
           />
         </div>
       ))}
@@ -156,6 +160,7 @@ type AbiArrayItemInputProps = Omit<InnerProps, "label" | "label"> & {
   depth: number;
   removable: boolean;
   onRemove: () => void;
+  addresses?: AddressData[];
 };
 
 function AbiArrayItemInput({
@@ -167,6 +172,7 @@ function AbiArrayItemInput({
   removable,
   onChange,
   onRemove,
+  addresses,
 }: AbiArrayItemInputProps) {
   const [deleteHover, setDeleteHover] = useState(false);
 
@@ -180,6 +186,7 @@ function AbiArrayItemInput({
       type={type}
       onChange={onChange}
       className={cn(deleteHover && "bg-secondary")}
+      addresses={addresses}
       headerActions={
         removable && (
           <Button

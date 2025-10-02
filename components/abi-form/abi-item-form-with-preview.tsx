@@ -1,4 +1,5 @@
 import type { AbiFunction, Address } from "abitype";
+import type { AddressData } from "components/address-autocomplete-input.js";
 import { useCallback, useMemo, useState } from "react";
 import { parseAbiItem } from "viem";
 import { cn } from "../../lib/utils.js";
@@ -11,6 +12,7 @@ interface AbiItemFormWithPreview {
   address: Address;
   sender?: Address;
   chainId: number;
+  addresses?: AddressData[];
   defaultCalldata?: `0x${string}`;
   defaultEther?: bigint;
   onChange?: (params: { value?: bigint; data?: `0x${string}` }) => void;
@@ -23,6 +25,7 @@ export function AbiItemFormWithPreview({
   address,
   sender,
   chainId,
+  addresses,
   defaultCalldata,
   defaultEther,
   onChange: parentOnChange,
@@ -73,6 +76,7 @@ export function AbiItemFormWithPreview({
           onChange={onChange}
           defaultEther={defaultEther}
           defaultCalldata={defaultCalldata}
+          addresses={addresses}
         />
       </div>
       <div className={cn("col-span-3", showForm && "md:col-span-2")}>

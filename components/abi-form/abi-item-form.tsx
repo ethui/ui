@@ -1,3 +1,4 @@
+import type { AddressData } from "components/address-autocomplete-input.js";
 import { useCallback, useEffect, useState } from "react";
 import type { AbiFunction } from "viem";
 import { encodeFunctionData } from "viem/utils";
@@ -18,6 +19,7 @@ interface AbiItemFormProps {
   submit?: boolean;
   defaultCalldata?: `0x${string}`;
   defaultEther?: bigint;
+  addresses?: AddressData[];
 }
 
 export type { AbiFunction };
@@ -30,6 +32,7 @@ export function AbiItemForm({
   onChange,
   onSubmit = () => {},
   submit = false,
+  addresses,
 }: AbiItemFormProps) {
   if (!abiItem || abiItem === "raw" || abiItem === "rawCall") {
     return (
@@ -40,6 +43,7 @@ export function AbiItemForm({
           onSubmit,
           defaultCalldata,
           defaultEther,
+          addresses,
         }}
       />
     );
@@ -55,6 +59,7 @@ export function AbiItemForm({
         onSubmit,
         defaultCalldata,
         defaultEther,
+        addresses,
       }}
     />
   );
@@ -70,6 +75,7 @@ export function RawItemForm({
   defaultCalldata,
   defaultEther,
   submit,
+  addresses,
 }: RawItemFormProps) {
   const [calldata, setCalldata] = useState<`0x${string}`>("0x");
   const [ether, setEther] = useState<bigint>(0n);
@@ -107,6 +113,7 @@ export function RawItemForm({
           onChange={(e: any) => {
             setEther(e);
           }}
+          addresses={addresses}
         />
       </div>
       {onSubmit && submit && (
@@ -127,6 +134,7 @@ type AbiFormInnerProps = Omit<AbiItemFormProps, "abiItem" | "debug"> & {
   onValueChange?: (value: bigint) => void;
   onSubmit: () => void;
   submit: boolean;
+  addresses?: AddressData[];
 };
 
 export function AbiItemFormInner({
@@ -137,6 +145,7 @@ export function AbiItemFormInner({
   defaultCalldata,
   defaultEther,
   submit,
+  addresses,
 }: AbiFormInnerProps) {
   const [calldata, setCalldata] = useState<`0x${string}` | undefined>(
     defaultCalldata,
@@ -192,6 +201,7 @@ export function AbiItemFormInner({
           onChange={(e: any) => {
             onChange(e, i);
           }}
+          addresses={addresses}
         />
       ))}
       {item.stateMutability === "payable" && (

@@ -1,3 +1,4 @@
+import type { AddressData } from "components/address-autocomplete-input.js";
 import { useCallback } from "react";
 import { cn, matchArrayType } from "../../lib/utils.js";
 import { ArrayInput } from "./array-input.js";
@@ -19,6 +20,7 @@ export type AbiInputProps = InnerProps & {
   red?: boolean;
   deleteHover?: boolean;
   className?: string;
+  addresses?: AddressData[];
 };
 
 export function AbiInput({
@@ -29,6 +31,7 @@ export function AbiInput({
   red = false,
   deleteHover = false,
   className,
+  addresses,
   ...rest
 }: AbiInputProps) {
   const arrayMatch = matchArrayType(type);
@@ -59,11 +62,12 @@ export function AbiInput({
               type,
               onChange,
               length: arrayMatch.length,
+              addresses,
               ...rest,
             }}
           />
         ) : (
-          <Basic {...{ type, onChange, ...rest }} />
+          <Basic {...{ type, onChange, addresses, ...rest }} />
         )}
       </div>
     </div>
