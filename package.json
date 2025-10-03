@@ -62,7 +62,7 @@
     "zod": "^3.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.1.1",
+    "@biomejs/biome": "^2.2.4",
     "@chromatic-com/storybook": "^4.1.0",
     "@ethui/abiparse": "^0.0.4",
     "@fontsource/source-code-pro": "^5.2.5",
