@@ -1,9 +1,9 @@
 import { parse } from "@ethui/abiparse";
+import { useCallback, useState } from "react";
 import {
   AddressAutoCompleteTextInput,
   type AddressData,
-} from "components/address-autocomplete-input.js";
-import { useCallback, useState } from "react";
+} from "../../components/address-autocomplete-input.js";
 import { Debug, stringify } from "../../lib/utils.js";
 import { Input } from "../shadcn/input.js";
 import type { InnerProps } from "./abi-input.js";
@@ -24,8 +24,6 @@ export function Basic({
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = parse(e.target.value);
-
-      console.log("value", value);
       setValue(value);
       onChange(value);
     },
