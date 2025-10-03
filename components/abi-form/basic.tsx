@@ -24,8 +24,6 @@ export function Basic({
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = parse(e.target.value);
-
-      console.log("value", value);
       setValue(value);
       onChange(value);
     },
