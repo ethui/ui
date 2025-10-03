@@ -20,7 +20,6 @@ export const AddressAutoCompleteTextInput = ({
   addresses = [],
   placeholder = "Search address",
   emptyMessage = "No addresses found.",
-  onChange,
   ...props
 }: AddressAutoCompleteTextInputProps) => {
   const options: AutocompleteOption[] = addresses.map((addr) => ({
@@ -32,7 +31,6 @@ export const AddressAutoCompleteTextInput = ({
   return (
     <AutocompleteTextInput
       options={options}
-      onChange={onChange}
       placeholder={placeholder}
       emptyMessage={emptyMessage}
       {...props}

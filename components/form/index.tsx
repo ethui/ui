@@ -452,24 +452,24 @@ Form.Select = SelectInput;
 
 interface AddressInputFormProps<T extends FieldValues>
   extends BaseInputProps<T> {
-  onAddressSelect?: (addressData: AddressData) => void;
   addresses?: AddressData[];
   loading?: boolean;
+  defaultValue?: string;
 }
 
 interface AutoCompleteTextInputFormProps<T extends FieldValues>
   extends BaseInputProps<T> {
   options?: AutocompleteOption[];
   loading?: boolean;
-  onOptionSelect?: (option: AutocompleteOption) => void;
+  defaultValue?: string;
 }
 
 function AddressAutoCompleteTextInput<T extends FieldValues>({
   name,
   label,
   className = "",
-  onAddressSelect,
   addresses,
+  defaultValue,
   loading,
   ...rest
 }: AddressInputFormProps<T>) {
@@ -485,10 +485,10 @@ function AddressAutoCompleteTextInput<T extends FieldValues>({
           <FormControl>
             <AddressAutoCompleteInput
               {...rest}
-              value={field.value}
+              {...field}
               onSelect={(val: string) => field.onChange(val)}
               onChange={field.onChange}
-              name={field.name}
+              defaultValue={defaultValue}
               addresses={addresses}
               loading={loading}
             />
@@ -505,9 +505,9 @@ function AutoCompleteTextInput<T extends FieldValues>({
   name,
   label,
   className = "",
-  onOptionSelect,
   options,
   loading,
+  defaultValue,
   ...rest
 }: AutoCompleteTextInputFormProps<T>) {
   const { control } = useFormContext();
@@ -522,10 +522,9 @@ function AutoCompleteTextInput<T extends FieldValues>({
           <FormControl>
             <AutoCompleteInput
               {...rest}
+              {...field}
               onSelect={(val: string) => field.onChange(val)}
-              value={field.value}
-              onChange={field.onChange}
-              name={field.name}
+              defaultValue={defaultValue}
               options={options}
               loading={loading}
             />
