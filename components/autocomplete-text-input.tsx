@@ -14,7 +14,8 @@ export interface AutocompleteOption {
 export interface AutocompleteTextInputProps
   extends Omit<InputProps, "onChange" | "onSelect" | "onBlur"> {
   value?: string;
-  onChange?: (value: string) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSelect?: (value: string) => void;
   options?: AutocompleteOption[];
   loading?: boolean;
   placeholder?: string;
@@ -24,6 +25,7 @@ export interface AutocompleteTextInputProps
 export const AutocompleteTextInput = ({
   value = "",
   onChange,
+  onSelect,
   options = [],
   loading = false,
   placeholder = "Type to search...",
@@ -46,7 +48,7 @@ export const AutocompleteTextInput = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setQuery(newValue);
-    onChange?.(newValue);
+    onChange?.(e);
     setOpen(true);
   };
 
@@ -56,7 +58,7 @@ export const AutocompleteTextInput = ({
 
   const handleSelect = (option: AutocompleteOption) => {
     setQuery(option.value);
-    onChange?.(option.value);
+    onSelect?.(option.value);
     setOpen(false);
   };
 
@@ -98,6 +100,9 @@ export const AutocompleteTextInput = ({
                   key={option.value}
                   variant="ghost"
                   asChild
+                  onClick={() => {
+                    handleSelect(option);
+                  }}
                   onMouseDown={(e) => {
                     e.preventDefault();
                     e.stopPropagation();

@@ -20,7 +20,7 @@ const meta: Meta<typeof AbiItemFormWithPreview> = {
   },
   decorators: [
     (Story) => (
-      <div className="w-md">
+      <div className="w-full">
         <Story />
       </div>
     ),
@@ -29,6 +29,19 @@ const meta: Meta<typeof AbiItemFormWithPreview> = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+const addresses = [
+  {
+    address: "0x0077014b4C74d9b1688847386B24Ed23Fdf14Be8",
+    alias: "Recipient 1",
+    wallet: "Wallet 1",
+  },
+  {
+    address: "0x0d21F3BCF7e003A825a8c6EE698EAFaB9d3CC82a",
+    alias: "Recipient 2",
+    wallet: "Wallet 2",
+  },
+];
 
 // Basic ABI Functions
 const transferFunction = {
@@ -87,6 +100,7 @@ export const BasicFunction: Story = {
     address: "0x1234...7890",
     sender: "0x0987...54321",
     chainId: 1,
+    addresses,
   },
 };
 
@@ -96,6 +110,7 @@ export const WithArrayInputs: Story = {
     address: "0x1234...7890",
     sender: "0x0987...54321",
     chainId: 1,
+    addresses,
   },
 };
 
@@ -105,6 +120,7 @@ export const WithMatrixInput: Story = {
     address: "0x1234...7890",
     sender: "0x0987...54321",
     chainId: 1,
+    addresses,
   },
 };
 
@@ -114,6 +130,7 @@ export const WithTupleInput: Story = {
     address: "0x1234...7890",
     sender: "0x0987...54321",
     chainId: 1,
+    addresses,
   },
 };
 
@@ -124,6 +141,7 @@ export const RawMode: Story = {
     address: "0x1234...7890",
     sender: "0x0987...54321",
     chainId: 1,
+    addresses,
   },
 };
 

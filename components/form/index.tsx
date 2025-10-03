@@ -486,6 +486,7 @@ function AddressAutoCompleteTextInput<T extends FieldValues>({
             <AddressAutoCompleteInput
               {...rest}
               value={field.value}
+              onSelect={(val: string) => field.onChange(val)}
               onChange={field.onChange}
               name={field.name}
               addresses={addresses}
@@ -521,6 +522,7 @@ function AutoCompleteTextInput<T extends FieldValues>({
           <FormControl>
             <AutoCompleteInput
               {...rest}
+              onSelect={(val: string) => field.onChange(val)}
               value={field.value}
               onChange={field.onChange}
               name={field.name}
