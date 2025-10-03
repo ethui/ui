@@ -12,7 +12,7 @@ export interface AutocompleteOption {
 }
 
 export interface AutocompleteTextInputProps
-  extends Omit<InputProps, "onChange" | "onBlur"> {
+  extends Omit<InputProps, "onChange" | "onSelect" | "onBlur"> {
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSelect?: (value: string) => void;
