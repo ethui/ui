@@ -2,7 +2,7 @@ import { parse } from "@ethui/abiparse";
 import {
   AddressAutoCompleteTextInput,
   type AddressData,
-} from "components/address-autocomplete-input.js";
+} from "../../components/address-autocomplete-input.js";
 import { useCallback, useState } from "react";
 import { Debug, stringify } from "../../lib/utils.js";
 import { Input } from "../shadcn/input.js";
