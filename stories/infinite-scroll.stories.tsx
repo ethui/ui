@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { LoaderCircle } from "lucide-react";
-// biome-ignore lint/correctness/noUnusedImports: ignore
 import React, { useRef, useState } from "react";
 import { InfiniteScroll } from "../components/infinite-scroll.js";
 

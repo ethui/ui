@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-// biome-ignore lint/correctness/noUnusedImports: ignore
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";

@@ -11,13 +11,19 @@
   "formatter": {
     "indentStyle": "space"
   },
+  "javascript": {
+    "jsxRuntime": "reactClassic"
+  },
   "linter": {
     "rules": {
       "recommended": true,
-      "correctness": { "noUnusedVariables": "error" },
+      "correctness": {
+        "noUnusedVariables": "error"
+      },
       "suspicious": {
         "noExplicitAny": "off",
-        "noArrayIndexKey": "off"
+        "noArrayIndexKey": "off",
+        "noUnknownAtRules": "off"
       },
       "style": {
         "noUselessElse": "off",
