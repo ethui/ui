@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Form } from "../../components/form/index.js";
-import { MultiTagInput } from "../../components/MultiTagInput.js";
+import { MultiTagInput } from "../../components/multi-tag-input.js";
 
 const meta = {
   title: "Components/Form/MultiTagInput",

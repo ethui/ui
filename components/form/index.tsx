@@ -10,7 +10,7 @@ import {
   useFormContext,
 } from "react-hook-form";
 import { cn } from "../../lib/utils.js";
-import { MultiTagInput as OriginalMultiTagInput } from "../MultiTagInput.js";
+import { MultiTagInput as OriginalMultiTagInput } from "../multi-tag-input.js";
 import { Button, type ButtonProps } from "../shadcn/button.js";
 import { Checkbox as ShadCheckbox } from "../shadcn/checkbox.js";
 import {
@@ -539,7 +539,7 @@ function AutoCompleteTextInput<T extends FieldValues>({
 Form.AutoCompleteTextInput = AutoCompleteTextInput;
 
 interface MultiTagInputFormProps<T extends FieldValues>
-  extends BaseInputProps<T> {}
+  extends BaseInputProps<T> { }
 
 function MultiTagInput<T extends FieldValues>({
   name,
@@ -554,7 +554,7 @@ function MultiTagInput<T extends FieldValues>({
       name={name}
       render={({ field }) => {
         return (
-          <FormItem className={cn("w-full", className)}>
+          <FormItem className={cn("w-full space-y-0", className)}>
             <FormLabel>{label}</FormLabel>
             <FormControl>
               <OriginalMultiTagInput {...field} />
