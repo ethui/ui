@@ -31,10 +31,7 @@ export function MultiTagInput({
           value={pendingDataPoint}
           onChange={(e) => setPendingDataPoint(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              addPendingDataPoint();
-            } else if (e.key === "," || e.key === " ") {
+            if (e.key === "Enter" || e.key === "," || e.key === " ") {
               e.preventDefault();
               addPendingDataPoint();
             }
