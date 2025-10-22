@@ -539,7 +539,7 @@ function AutoCompleteTextInput<T extends FieldValues>({
 Form.AutoCompleteTextInput = AutoCompleteTextInput;
 
 interface MultiTagInputFormProps<T extends FieldValues>
-  extends BaseInputProps<T> { }
+  extends BaseInputProps<T> {}
 
 function MultiTagInput<T extends FieldValues>({
   name,
