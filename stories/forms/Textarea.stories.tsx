@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Check } from "lucide-react";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Form } from "../../components/form/index.js";
@@ -73,7 +73,7 @@ export const RequiredField: Story = {
       const form = useForm({ resolver: zodResolver(schema), mode: "onBlur" });
       useEffect(() => {
         form.trigger();
-      }, [form.trigger]);
+      }, [form]);
       return (
         <Form
           form={form}

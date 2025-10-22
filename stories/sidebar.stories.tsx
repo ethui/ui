@@ -1,6 +1,5 @@
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-// biome-ignore lint/correctness/noUnusedImports: ignore
 import React from "react";
 import { EthuiLogo } from "../components/ethui-logo";
 import {

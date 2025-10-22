@@ -26,5 +26,5 @@
 
     "baseUrl": "."
   },
-  "include": []
+  "include": ["src", ".storybook/*.tsx"]
 }

@@ -46,7 +46,7 @@ export function AbiInput({
   return (
     <div className={cn("w-full transition-colors", className)}>
       <div>
-        <div className=" flex items-center justify-between">
+        <div className="flex items-center justify-between">
           <div className="flex gap-2">
             <span className="font-bold">{label}</span>
             <span className="font-mono">{type}</span>

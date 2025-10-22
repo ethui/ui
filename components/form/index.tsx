@@ -10,6 +10,7 @@ import {
   useFormContext,
 } from "react-hook-form";
 import { cn } from "../../lib/utils.js";
+import { MultiTagInput as OriginalMultiTagInput } from "../MultiTagInput.js";
 import { Button, type ButtonProps } from "../shadcn/button.js";
 import { Checkbox as ShadCheckbox } from "../shadcn/checkbox.js";
 import {
@@ -185,7 +186,7 @@ function NumberField<T extends FieldValues>({
                   if (value === "") {
                     return nullIfEmpty ? null : undefined;
                   }
-                  return Number.parseInt(value);
+                  return Number.parseInt(value, 10);
                 },
               })}
               icon={icon}
@@ -536,3 +537,33 @@ function AutoCompleteTextInput<T extends FieldValues>({
   );
 }
 Form.AutoCompleteTextInput = AutoCompleteTextInput;
+
+interface MultiTagInputFormProps<T extends FieldValues>
+  extends BaseInputProps<T> {}
+
+function MultiTagInput<T extends FieldValues>({
+  name,
+  label,
+  className = "",
+}: MultiTagInputFormProps<T>) {
+  const { control } = useFormContext();
+
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => {
+        return (
+          <FormItem className={cn("w-full", className)}>
+            <FormLabel>{label}</FormLabel>
+            <FormControl>
+              <OriginalMultiTagInput {...field} />
+            </FormControl>
+            <FormMessage>&nbsp;</FormMessage>
+          </FormItem>
+        );
+      }}
+    />
+  );
+}
+Form.MultiTagInput = MultiTagInput;

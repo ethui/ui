@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-// biome-ignore lint/correctness/noUnusedImports: ignore
 import React from "react";
 import { Button } from "../components/shadcn/button.js";
 import {

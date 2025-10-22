@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-// biome-ignore lint/correctness/noUnusedImports: ignore
 import React, { useState } from "react";
 import { AbiItemFormWithPreview } from "../components/abi-form/abi-item-form-with-preview.js";
 import { Input } from "../components/shadcn/input.js";

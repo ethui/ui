@@ -203,7 +203,7 @@ function Sidebar({
     <div
       ref={ref}
       className={cn(
-        "group peer text-sidebar-foreground ",
+        "group peer text-sidebar-foreground",
         allowMobile ? "hidden md:block" : "block",
       )}
       data-state={state}
