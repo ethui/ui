@@ -48,8 +48,8 @@ export function MultiTagInput({
         </Button>
       </div>
       <div className="flex min-h-[calc(35px)] flex-wrap items-center gap-1 overflow-y-auto pt-1">
-        {(value || []).map((item, idx) => (
-          <Badge key={idx} variant="secondary">
+        {(value || []).map((item) => (
+          <Badge key={item} variant="secondary">
             {item}
             <button
               type="button"

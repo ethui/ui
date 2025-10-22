@@ -47,10 +47,9 @@ export const InForm: Story = {
         mode: "onBlur",
         defaultValues: { tags: [] },
       });
-      console.log(form.watch("tags"));
 
       return (
-        <Form form={form} onSubmit={() => console.log("submitted")}>
+        <Form form={form} onSubmit={() => console.info("submitted")}>
           <Form.MultiTagInput name="tags" />
         </Form>
       );

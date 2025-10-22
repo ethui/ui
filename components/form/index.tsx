@@ -539,7 +539,7 @@ function AutoCompleteTextInput<T extends FieldValues>({
 Form.AutoCompleteTextInput = AutoCompleteTextInput;
 
 interface MultiTagInputFormProps<T extends FieldValues>
-  extends BaseInputProps<T> {}
+  extends BaseInputProps<T> { }
 
 function MultiTagInput<T extends FieldValues>({
   name,
@@ -553,7 +553,6 @@ function MultiTagInput<T extends FieldValues>({
       control={control}
       name={name}
       render={({ field }) => {
-        console.log(field);
         return (
           <FormItem className={cn("w-full", className)}>
             <FormLabel>{label}</FormLabel>
