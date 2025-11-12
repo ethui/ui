@@ -77,7 +77,8 @@ interface FunctionItemProps {
   addresses?: AddressData[];
   requiresConnection: boolean;
   isConnected: boolean;
-  onExecute: (params: ExecutionParams) => Promise<`0x${string}`>;
+  onQuery: (params: ExecutionParams) => Promise<`0x${string}`>;
+  onWrite: (params: ExecutionParams) => Promise<`0x${string}`>;
   onSimulate?: (params: ExecutionParams) => Promise<`0x${string}`>;
   addressRenderer?: (address: Address) => React.ReactNode;
   onHashClick?: (hash: string) => void;
@@ -93,7 +94,8 @@ export const FunctionItem = memo(
     addresses,
     requiresConnection,
     isConnected,
-    onExecute,
+    onQuery,
+    onWrite,
     onSimulate,
     addressRenderer,
     onHashClick,
@@ -173,19 +175,27 @@ export const FunctionItem = memo(
       if (!callData) return;
       setIsExecuting(true);
       try {
-        const rawResult = await onExecute({
-          abiFunction: func,
-          callData: callData as `0x${string}`,
-          msgSender: msgSender ? (msgSender as Address) : undefined,
-        });
-
         if (isWrite) {
+          // Call write function - returns transaction hash
+          const hash = await onWrite({
+            abiFunction: func,
+            callData: callData as `0x${string}`,
+            msgSender: msgSender ? (msgSender as Address) : undefined,
+          });
+
           setResult({
             type: "execution",
-            hash: rawResult,
+            hash,
             cleanResult: "Transaction submitted",
           });
         } else {
+          // Call query function - returns raw hex
+          const rawResult = await onQuery({
+            abiFunction: func,
+            callData: callData as `0x${string}`,
+            msgSender: msgSender ? (msgSender as Address) : undefined,
+          });
+
           try {
             const decoded = decodeFunctionResult({
               abi: [func],

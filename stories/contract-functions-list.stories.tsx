@@ -104,37 +104,38 @@ const mockERC20Abi: AbiFunction[] = [
 ] as AbiFunction[];
 
 // Mock execution handlers - now just return raw hex data
-const mockExecute = async (params: ExecutionParams): Promise<`0x${string}`> => {
-  console.log("Execute called with:", params);
+const mockQuery = async (params: ExecutionParams): Promise<`0x${string}`> => {
+  console.log("Query called with:", params);
 
   // Simulate async operation
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  const isWrite =
-    params.abiFunction.stateMutability !== "view" &&
-    params.abiFunction.stateMutability !== "pure";
+  // Mock encoded result for read operations (manually encoded for simplicity)
+  const mockResults: Record<string, `0x${string}`> = {
+    balanceOf:
+      "0x00000000000000000000000000000000000000000000003635c9adc5dea00000", // 1000 ETH in wei
+    totalSupply:
+      "0x0000000000000000000000000000000000000000084595161401484a000000", // 10M tokens
+    decimals:
+      "0x0000000000000000000000000000000000000000000000000000000000000012", // 18
+    symbol:
+      "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000044d4f434b00000000000000000000000000000000000000000000000000000000", // "MOCK"
+  };
 
-  if (isWrite) {
-    // Mock transaction hash for write operations
-    return "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef";
-  } else {
-    // Mock encoded result for read operations (manually encoded for simplicity)
-    const mockResults: Record<string, `0x${string}`> = {
-      balanceOf:
-        "0x00000000000000000000000000000000000000000000003635c9adc5dea00000", // 1000 ETH in wei
-      totalSupply:
-        "0x0000000000000000000000000000000000000000084595161401484a000000", // 10M tokens
-      decimals:
-        "0x0000000000000000000000000000000000000000000000000000000000000012", // 18
-      symbol:
-        "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000044d4f434b00000000000000000000000000000000000000000000000000000000", // "MOCK"
-    };
+  return (
+    mockResults[params.abiFunction.name] ||
+    "0x0000000000000000000000000000000000000000000000000000000000000000"
+  );
+};
 
-    return (
-      mockResults[params.abiFunction.name] ||
-      "0x0000000000000000000000000000000000000000000000000000000000000000"
-    );
-  }
+const mockWrite = async (params: ExecutionParams): Promise<`0x${string}`> => {
+  console.log("Write called with:", params);
+
+  // Simulate async operation
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  // Mock transaction hash for write operations
+  return "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef";
 };
 
 const mockSimulate = async (
@@ -153,8 +154,8 @@ const mockSimulate = async (
     // For write simulations, return encoded success (bool true)
     return "0x0000000000000000000000000000000000000000000000000000000000000001";
   } else {
-    // For read functions, same as execute
-    return mockExecute(params);
+    // For read functions, same as query
+    return mockQuery(params);
   }
 };
 
@@ -168,7 +169,8 @@ export const Connected: Story = {
     addresses,
     requiresConnection: true,
     isConnected: true,
-    onExecute: mockExecute,
+    onQuery: mockQuery,
+    onWrite: mockWrite,
     onSimulate: mockSimulate,
     onHashClick: (hash) => {
       console.log("Hash clicked:", hash);
@@ -187,7 +189,8 @@ export const Disconnected: Story = {
     addresses,
     requiresConnection: true,
     isConnected: false,
-    onExecute: mockExecute,
+    onQuery: mockQuery,
+    onWrite: mockWrite,
     onSimulate: mockSimulate,
   },
 };
@@ -202,7 +205,8 @@ export const WithoutSimulate: Story = {
     addresses,
     requiresConnection: false, // ethui is always "connected"
     isConnected: true,
-    onExecute: mockExecute,
+    onQuery: mockQuery,
+    onWrite: mockWrite,
     // No onSimulate provided
   },
 };
@@ -233,7 +237,8 @@ function InteractiveStory() {
         addresses={addresses}
         requiresConnection={true}
         isConnected={isConnected}
-        onExecute={mockExecute}
+        onQuery={mockQuery}
+        onWrite={mockWrite}
         onSimulate={mockSimulate}
       />
     </div>
@@ -262,14 +267,15 @@ export const CustomAddressRenderer: Story = {
     addresses,
     requiresConnection: true,
     isConnected: true,
-    onExecute: mockExecute,
+    onQuery: mockQuery,
+    onWrite: mockWrite,
     onSimulate: mockSimulate,
     addressRenderer: customAddressRenderer,
   },
 };
 
 // Story: Error handling - errors are now thrown instead of returned
-const mockExecuteWithError = async (
+const mockWriteWithError = async (
   _params: ExecutionParams,
 ): Promise<`0x${string}`> => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -285,7 +291,8 @@ export const WithError: Story = {
     addresses,
     requiresConnection: true,
     isConnected: true,
-    onExecute: mockExecuteWithError,
+    onQuery: mockQuery,
+    onWrite: mockWriteWithError,
     onSimulate: mockSimulate,
   },
 };
