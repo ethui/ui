@@ -64,8 +64,8 @@ export function RawOperations({
   onHashClick,
 }: RawOperationsProps) {
   return (
-    <div className="rounded-lg border bg-card">
-      <Accordion type="multiple" className="w-full">
+    <div className="rounded-lg bg-card">
+      <Accordion type="multiple" className="w-full rounded-lg border">
         {onRawCall && (
           <RawOperationItem
             type="call"
@@ -232,8 +232,8 @@ function RawOperationItem({
                 {isExecuting
                   ? "Executing..."
                   : type === "call"
-                    ? "Call"
-                    : "Send Transaction"}
+                  ? "Call"
+                  : "Send Transaction"}
               </Button>
             </div>
 

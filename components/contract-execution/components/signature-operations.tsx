@@ -133,7 +133,7 @@ export function SignatureOperations({
   };
 
   return (
-    <div className="rounded-lg border bg-card p-4">
+    <div className="rounded-lg bg-card p-4">
       <FormProvider {...form}>
         <div className="space-y-6">
           <div className="space-y-2">
