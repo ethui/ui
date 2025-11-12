@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-// biome-ignore lint/correctness/noUnusedImports: ignore
 import React, { useState } from "react";
 import type { AbiFunction } from "viem";
 import {

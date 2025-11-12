@@ -35,7 +35,7 @@ export function DefaultResultDisplay({
             <button
               type="button"
               onClick={() => onHashClick(result.hash!)}
-              className="group inline-flex cursor-pointer items-center gap-1 break-all text-left font-mono text-sm text-sidebar-ring hover:underline"
+              className="group inline-flex cursor-pointer items-center gap-1 break-all text-left font-mono text-sidebar-ring text-sm hover:underline"
             >
               {result.hash}
               <ExternalLink className="h-3 w-3 shrink-0 opacity-70 transition-opacity group-hover:opacity-100" />
@@ -53,8 +53,8 @@ export function DefaultResultDisplay({
             {result.type === "call"
               ? "Result"
               : result.type === "simulation"
-              ? "Simulation Result"
-              : "Result"}
+                ? "Simulation Result"
+                : "Result"}
           </div>
           <div
             className={clsx(
@@ -69,7 +69,7 @@ export function DefaultResultDisplay({
 
       {result.error && (
         <div className="space-y-2">
-          <div className="font-medium text-xs uppercase tracking-wide text-red-600">
+          <div className="font-medium text-red-600 text-xs uppercase tracking-wide">
             Error
           </div>
           <div className="rounded-md bg-red-50 p-4 font-mono text-red-900 text-sm">
