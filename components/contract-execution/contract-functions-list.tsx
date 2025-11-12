@@ -17,8 +17,8 @@ export function ContractFunctionsList({
   isConnected = false,
   onExecute,
   onSimulate,
-  resultRenderer,
   addressRenderer,
+  onHashClick,
 }: ContractFunctionsListProps) {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -100,8 +100,8 @@ export function ContractFunctionsList({
                       isConnected={isConnected}
                       onExecute={onExecute}
                       onSimulate={onSimulate}
-                      resultRenderer={resultRenderer}
                       addressRenderer={addressRenderer}
+                      onHashClick={onHashClick}
                     />
                   ))}
                 </Accordion>
@@ -132,8 +132,8 @@ export function ContractFunctionsList({
                       isConnected={isConnected}
                       onExecute={onExecute}
                       onSimulate={onSimulate}
-                      resultRenderer={resultRenderer}
                       addressRenderer={addressRenderer}
+                      onHashClick={onHashClick}
                     />
                   ))}
                 </Accordion>

@@ -69,7 +69,7 @@ export function ActionButtons({
             disabled={!isConnected || !callData || isExecuting || isSimulating}
             onClick={() => execute()}
           >
-            Execute
+            Write
           </Button>
         </>
       ) : (
@@ -78,7 +78,7 @@ export function ActionButtons({
           disabled={!callData || isExecuting}
           onClick={() => execute()}
         >
-          Call
+          Query
         </Button>
       )}
     </div>
