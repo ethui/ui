@@ -232,8 +232,8 @@ function RawOperationItem({
                 {isExecuting
                   ? "Executing..."
                   : type === "call"
-                  ? "Call"
-                  : "Send Transaction"}
+                    ? "Call"
+                    : "Send Transaction"}
               </Button>
             </div>
 
