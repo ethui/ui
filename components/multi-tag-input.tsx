@@ -1,8 +1,8 @@
 import { XIcon } from "lucide-react";
 import { type Dispatch, type SetStateAction, useState } from "react";
-import { Badge } from "./shadcn/badge";
-import { Button } from "./shadcn/button";
-import { Input, type InputProps } from "./shadcn/input";
+import { Badge } from "./shadcn/badge.js";
+import { Button } from "./shadcn/button.js";
+import { Input, type InputProps } from "./shadcn/input.js";
 
 interface MultiTagInputProps extends Omit<InputProps, "onChange"> {
   value: string[];
