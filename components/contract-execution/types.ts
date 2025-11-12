@@ -1,14 +1,6 @@
 import type { AbiFunction, Address } from "viem";
 import type { AddressData } from "../address-autocomplete-input.js";
 
-export type ExecutionResult = {
-  type: "call" | "simulation" | "execution" | "error";
-  data?: string;
-  hash?: string;
-  cleanResult?: string;
-  error?: string;
-};
-
 export interface ExecutionParams {
   abiFunction: AbiFunction;
   callData: `0x${string}`;
@@ -31,12 +23,14 @@ export interface ContractFunctionsListProps {
   requiresConnection?: boolean;
   /** Whether user is connected (for write functions) */
   isConnected?: boolean;
-  /** Execute function (write operations and view function calls) */
-  onExecute: (params: ExecutionParams) => Promise<ExecutionResult>;
-  /** Optional simulate function (for write functions) */
-  onSimulate?: (params: ExecutionParams) => Promise<ExecutionResult>;
-  /** Custom result renderer (overrides default) */
-  resultRenderer?: (result: ExecutionResult) => React.ReactNode;
+  /** Execute function - returns raw hex result from rpc_eth_call or transaction hash */
+  onExecute: (params: ExecutionParams) => Promise<`0x${string}`>;
+  /** Optional simulate function - returns raw hex result from simulation */
+  onSimulate?: (params: ExecutionParams) => Promise<`0x${string}`>;
   /** Custom address renderer for form inputs */
   addressRenderer?: (address: Address) => React.ReactNode;
+  /** Callback when transaction hash is clicked (for custom navigation) */
+  onHashClick?: (hash: string) => void;
+  /** Optional title to display above the list */
+  title?: string;
 }

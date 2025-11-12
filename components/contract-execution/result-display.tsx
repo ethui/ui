@@ -1,102 +1,114 @@
 import clsx from "clsx";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../shadcn/button.js";
-import type { ExecutionResult } from "./types.js";
 
-export function DefaultResultDisplay({ result }: { result: ExecutionResult }) {
-  const [showFullResult, setShowFullResult] = useState(false);
+type InternalResult = {
+  type: "call" | "simulation" | "execution" | "error";
+  data?: string;
+  hash?: string;
+  cleanResult?: string;
+  error?: string;
+};
 
-  const getTitle = () => {
-    switch (result.type) {
-      case "call":
-        return "Call Result";
-      case "simulation":
-        return "Simulation Result";
-      case "execution":
-        return "Transaction Receipt";
-      case "error":
-        return "Error";
-    }
-  };
+interface DefaultResultDisplayProps {
+  result: InternalResult;
+  onHashClick?: (hash: string) => void;
+}
+
+export function DefaultResultDisplay({
+  result,
+  onHashClick,
+}: DefaultResultDisplayProps) {
+  const [showRawData, setShowRawData] = useState(false);
 
   const isError = result.type === "error";
 
   return (
-    <div className="w-full rounded-lg border bg-card p-6 shadow-sm">
-      <h3 className="mb-4 font-semibold text-lg">{getTitle()}</h3>
-
+    <div className="mt-4 w-full space-y-3">
       {result.hash && (
-        <div className="mb-4 rounded bg-muted p-3">
-          <span className="font-semibold">Transaction Hash: </span>
-          <span className="break-all font-mono text-sm">{result.hash}</span>
-        </div>
-      )}
-
-      {result.cleanResult && (
-        <div className="mb-4">
-          <div className="mb-2 flex items-center justify-between">
-            <span className={clsx("font-semibold", isError && "text-red-600")}>
-              Result:
-            </span>
-            {result.data && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowFullResult(!showFullResult)}
-                className="h-6 px-2"
-              >
-                {showFullResult ? (
-                  <>
-                    <ChevronUp className="mr-1 h-4 w-4" />
-                    Hide Details
-                  </>
-                ) : (
-                  <>
-                    <ChevronDown className="mr-1 h-4 w-4" />
-                    Show Details
-                  </>
-                )}
-              </Button>
-            )}
+        <div className="space-y-1">
+          <div className="font-medium text-muted-foreground text-xs uppercase tracking-wide">
+            Transaction Hash
           </div>
-          <div
-            className={clsx(
-              "max-w-4xl rounded border p-3",
-              isError
-                ? "border-red-200 bg-red-50"
-                : "border-green-200 bg-green-50",
-            )}
-          >
-            <span
-              className={clsx(
-                "font-mono text-red-700 text-sm",
-                isError && "text-red-700",
-              )}
+          {onHashClick ? (
+            <button
+              type="button"
+              onClick={() => onHashClick(result.hash!)}
+              className="group inline-flex cursor-pointer items-center gap-1 break-all text-left font-mono text-sidebar-ring text-sm hover:underline"
             >
-              {result.cleanResult}
-            </span>
-          </div>
-
-          {showFullResult && result.data && (
-            <div className="mt-4">
-              <span className="font-semibold">Full Response:</span>
-              <pre className="mt-2 w-full max-w-4xl whitespace-pre-wrap break-all rounded bg-muted p-4">
-                {result.data}
-              </pre>
-            </div>
+              {result.hash}
+              <ExternalLink className="h-3 w-3 shrink-0 opacity-70 transition-opacity group-hover:opacity-100" />
+            </button>
+          ) : (
+            <div className="break-all font-mono text-sm">{result.hash}</div>
           )}
         </div>
       )}
 
+      {/* Main Result */}
+      {result.cleanResult && (
+        <div className="space-y-2">
+          <div className="font-medium text-muted-foreground text-xs uppercase tracking-wide">
+            {result.type === "call"
+              ? "Result"
+              : result.type === "simulation"
+                ? "Simulation Result"
+                : "Result"}
+          </div>
+          <div
+            className={clsx(
+              "rounded-md p-4 font-mono text-base",
+              isError ? "bg-red-50 text-red-900" : "bg-muted",
+            )}
+          >
+            {result.cleanResult}
+          </div>
+        </div>
+      )}
+
       {result.error && (
-        <div className="rounded border border-red-200 bg-red-50 p-3">
-          <span className="font-mono text-red-700 text-sm">{result.error}</span>
+        <div className="space-y-2">
+          <div className="font-medium text-red-600 text-xs uppercase tracking-wide">
+            Error
+          </div>
+          <div className="rounded-md bg-red-50 p-4 font-mono text-red-900 text-sm">
+            {result.error}
+          </div>
+        </div>
+      )}
+
+      {result.data && (
+        <div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowRawData(!showRawData)}
+            className="h-8 px-2 text-muted-foreground text-xs"
+          >
+            {showRawData ? (
+              <>
+                <ChevronUp className="mr-1 h-3 w-3" />
+                Hide raw data
+              </>
+            ) : (
+              <>
+                <ChevronDown className="mr-1 h-3 w-3" />
+                Show raw data
+              </>
+            )}
+          </Button>
+
+          {showRawData && (
+            <pre className="mt-2 overflow-x-auto whitespace-pre-wrap break-all rounded-md bg-muted p-4 font-mono text-xs">
+              {result.data}
+            </pre>
+          )}
         </div>
       )}
 
       {!result.cleanResult && !result.error && result.data && (
-        <pre className="w-full whitespace-pre-wrap break-all rounded bg-muted p-4">
+        <pre className="overflow-x-auto whitespace-pre-wrap break-all rounded-md bg-muted p-4 font-mono text-sm">
           {result.data}
         </pre>
       )}

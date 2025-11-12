@@ -7,8 +7,4 @@ export {
   ConnectWalletAlert,
   MsgSenderInput,
 } from "./shared-components.js";
-export type {
-  ContractFunctionsListProps,
-  ExecutionParams,
-  ExecutionResult,
-} from "./types.js";
+export type { ContractFunctionsListProps, ExecutionParams } from "./types.js";

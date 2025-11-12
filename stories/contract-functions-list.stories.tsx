@@ -1,11 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-// biome-ignore lint/correctness/noUnusedImports: ignore
 import React, { useState } from "react";
-import type { Abi } from "viem";
+import type { AbiFunction } from "viem";
 import {
   ContractFunctionsList,
   type ExecutionParams,
-  type ExecutionResult,
 } from "../components/contract-execution/index.js";
 import { Button } from "../components/shadcn/button.js";
 
@@ -43,7 +41,7 @@ const addresses = [
 ];
 
 // Mock ERC20-like ABI with read and write functions
-const mockERC20Abi: Abi = [
+const mockERC20Abi: AbiFunction[] = [
   {
     type: "function",
     name: "balanceOf",
@@ -103,12 +101,10 @@ const mockERC20Abi: Abi = [
     outputs: [{ name: "success", type: "bool" }],
     stateMutability: "nonpayable",
   },
-] as Abi;
+] as AbiFunction[];
 
-// Mock execution handlers
-const mockExecute = async (
-  params: ExecutionParams,
-): Promise<ExecutionResult> => {
+// Mock execution handlers - now just return raw hex data
+const mockExecute = async (params: ExecutionParams): Promise<`0x${string}`> => {
   console.log("Execute called with:", params);
 
   // Simulate async operation
@@ -120,62 +116,46 @@ const mockExecute = async (
 
   if (isWrite) {
     // Mock transaction hash for write operations
-    return {
-      type: "execution",
-      hash: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
-      data: JSON.stringify(
-        {
-          transactionHash:
-            "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
-          blockNumber: "0x123456",
-          gasUsed: "0x5208",
-          status: "0x1",
-        },
-        null,
-        2,
-      ),
-    };
+    return "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef";
   } else {
-    // Mock result for read operations
-    const mockResults: Record<string, string> = {
-      balanceOf: "1000000000000000000000",
-      totalSupply: "10000000000000000000000000",
-      decimals: "18",
-      symbol: "MOCK",
+    // Mock encoded result for read operations (manually encoded for simplicity)
+    const mockResults: Record<string, `0x${string}`> = {
+      balanceOf:
+        "0x00000000000000000000000000000000000000000000003635c9adc5dea00000", // 1000 ETH in wei
+      totalSupply:
+        "0x0000000000000000000000000000000000000000084595161401484a000000", // 10M tokens
+      decimals:
+        "0x0000000000000000000000000000000000000000000000000000000000000012", // 18
+      symbol:
+        "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000044d4f434b00000000000000000000000000000000000000000000000000000000", // "MOCK"
     };
 
-    const result = mockResults[params.abiFunction.name] || "0";
-
-    return {
-      type: "call",
-      cleanResult: result,
-      data: JSON.stringify({ result }, null, 2),
-    };
+    return (
+      mockResults[params.abiFunction.name] ||
+      "0x0000000000000000000000000000000000000000000000000000000000000000"
+    );
   }
 };
 
 const mockSimulate = async (
   params: ExecutionParams,
-): Promise<ExecutionResult> => {
+): Promise<`0x${string}`> => {
   console.log("Simulate called with:", params);
 
   // Simulate async operation
   await new Promise((resolve) => setTimeout(resolve, 800));
 
-  return {
-    type: "simulation",
-    cleanResult: "Simulation successful",
-    data: JSON.stringify(
-      {
-        success: true,
-        gasEstimate: "21000",
-        returnData:
-          "0x0000000000000000000000000000000000000000000000000000000000000001",
-      },
-      null,
-      2,
-    ),
-  };
+  const isWrite =
+    params.abiFunction.stateMutability !== "view" &&
+    params.abiFunction.stateMutability !== "pure";
+
+  if (isWrite) {
+    // For write simulations, return encoded success (bool true)
+    return "0x0000000000000000000000000000000000000000000000000000000000000001";
+  } else {
+    // For read functions, same as execute
+    return mockExecute(params);
+  }
 };
 
 // Story: Connected wallet with simulate
@@ -190,6 +170,11 @@ export const Connected: Story = {
     isConnected: true,
     onExecute: mockExecute,
     onSimulate: mockSimulate,
+    onHashClick: (hash) => {
+      console.log("Hash clicked:", hash);
+      window.open(`https://etherscan.io/tx/${hash}`, "_blank");
+    },
+    title: "Contract Functions",
   },
 };
 
@@ -259,36 +244,6 @@ export const Interactive: Story = {
   render: () => <InteractiveStory />,
 };
 
-// Story: Custom result renderer
-const customResultRenderer = (result: ExecutionResult) => {
-  return (
-    <div className="w-full rounded-lg border-2 border-purple-500 bg-purple-50 p-6">
-      <h3 className="mb-2 font-bold text-purple-900">Custom Result Display</h3>
-      <p className="text-purple-700">Type: {result.type}</p>
-      {result.cleanResult && (
-        <p className="text-purple-700">Result: {result.cleanResult}</p>
-      )}
-      {result.hash && <p className="text-purple-700">Hash: {result.hash}</p>}
-      {result.error && <p className="text-red-700">Error: {result.error}</p>}
-    </div>
-  );
-};
-
-export const CustomResultRenderer: Story = {
-  args: {
-    abi: mockERC20Abi,
-    address: "0x1234567890123456789012345678901234567890",
-    chainId: 1,
-    sender: "0x0077014b4C74d9b1688847386B24Ed23Fdf14Be8",
-    addresses,
-    requiresConnection: true,
-    isConnected: true,
-    onExecute: mockExecute,
-    onSimulate: mockSimulate,
-    resultRenderer: customResultRenderer,
-  },
-};
-
 // Story: With custom address renderer
 const customAddressRenderer = (address: string) => {
   return (
@@ -313,16 +268,12 @@ export const CustomAddressRenderer: Story = {
   },
 };
 
-// Story: Error handling
+// Story: Error handling - errors are now thrown instead of returned
 const mockExecuteWithError = async (
   _params: ExecutionParams,
-): Promise<ExecutionResult> => {
+): Promise<`0x${string}`> => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
-
-  return {
-    type: "error",
-    error: "Execution reverted: insufficient balance",
-  };
+  throw new Error("Execution reverted: insufficient balance");
 };
 
 export const WithError: Story = {

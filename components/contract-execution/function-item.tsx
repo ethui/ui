@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { memo, useCallback, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import type { AbiFunction, Address } from "viem";
-import { isAddress } from "viem";
+import { decodeFunctionResult, isAddress } from "viem";
 import { z } from "zod";
 import { AbiItemFormWithPreview } from "../abi-form/abi-item-form-with-preview.js";
 import type { AddressData } from "../address-autocomplete-input.js";
@@ -17,7 +17,43 @@ import {
   ConnectWalletAlert,
   MsgSenderInput,
 } from "./shared-components.js";
-import type { ExecutionParams, ExecutionResult } from "./types.js";
+import type { ExecutionParams } from "./types.js";
+
+type InternalResult = {
+  type: "call" | "simulation" | "execution" | "error";
+  data?: string;
+  hash?: string;
+  cleanResult?: string;
+  error?: string;
+};
+
+function formatDecodedResult(result: unknown): string {
+  if (typeof result === "bigint") {
+    return result.toString();
+  }
+  if (
+    typeof result === "string" ||
+    typeof result === "number" ||
+    typeof result === "boolean"
+  ) {
+    return String(result);
+  }
+  if (Array.isArray(result)) {
+    return JSON.stringify(
+      result,
+      (_, v) => (typeof v === "bigint" ? v.toString() : v),
+      2,
+    );
+  }
+  if (typeof result === "object" && result !== null) {
+    return JSON.stringify(
+      result,
+      (_, v) => (typeof v === "bigint" ? v.toString() : v),
+      2,
+    );
+  }
+  return String(result);
+}
 
 const executionFormSchema = z.object({
   msgSender: z
@@ -41,10 +77,10 @@ interface FunctionItemProps {
   addresses?: AddressData[];
   requiresConnection: boolean;
   isConnected: boolean;
-  onExecute: (params: ExecutionParams) => Promise<ExecutionResult>;
-  onSimulate?: (params: ExecutionParams) => Promise<ExecutionResult>;
-  resultRenderer?: (result: ExecutionResult) => React.ReactNode;
+  onExecute: (params: ExecutionParams) => Promise<`0x${string}`>;
+  onSimulate?: (params: ExecutionParams) => Promise<`0x${string}`>;
   addressRenderer?: (address: Address) => React.ReactNode;
+  onHashClick?: (hash: string) => void;
 }
 
 export const FunctionItem = memo(
@@ -59,11 +95,11 @@ export const FunctionItem = memo(
     isConnected,
     onExecute,
     onSimulate,
-    resultRenderer,
     addressRenderer,
+    onHashClick,
   }: FunctionItemProps) => {
     const [callData, setCallData] = useState<string>("");
-    const [result, setResult] = useState<ExecutionResult | null>(null);
+    const [result, setResult] = useState<InternalResult | null>(null);
     const [isSimulating, setIsSimulating] = useState(false);
     const [isExecuting, setIsExecuting] = useState(false);
 
@@ -91,12 +127,38 @@ export const FunctionItem = memo(
       if (!callData || !onSimulate) return;
       setIsSimulating(true);
       try {
-        const result = await onSimulate({
+        const rawResult = await onSimulate({
           abiFunction: func,
           callData: callData as `0x${string}`,
           msgSender: msgSender ? (msgSender as Address) : undefined,
         });
-        setResult(result);
+
+        if (isWrite) {
+          setResult({
+            type: "simulation",
+            cleanResult: "Simulation successful",
+            data: rawResult,
+          });
+        } else {
+          try {
+            const decoded = decodeFunctionResult({
+              abi: [func],
+              functionName: func.name,
+              data: rawResult,
+            });
+
+            setResult({
+              type: "simulation",
+              cleanResult: formatDecodedResult(decoded),
+              data: rawResult,
+            });
+          } catch {
+            setResult({
+              type: "simulation",
+              data: rawResult,
+            });
+          }
+        }
       } catch (error) {
         setResult({
           type: "error",
@@ -111,12 +173,38 @@ export const FunctionItem = memo(
       if (!callData) return;
       setIsExecuting(true);
       try {
-        const result = await onExecute({
+        const rawResult = await onExecute({
           abiFunction: func,
           callData: callData as `0x${string}`,
           msgSender: msgSender ? (msgSender as Address) : undefined,
         });
-        setResult(result);
+
+        if (isWrite) {
+          setResult({
+            type: "execution",
+            hash: rawResult,
+            cleanResult: "Transaction submitted",
+          });
+        } else {
+          try {
+            const decoded = decodeFunctionResult({
+              abi: [func],
+              functionName: func.name,
+              data: rawResult,
+            });
+
+            setResult({
+              type: "call",
+              cleanResult: formatDecodedResult(decoded),
+              data: rawResult,
+            });
+          } catch {
+            setResult({
+              type: "call",
+              data: rawResult,
+            });
+          }
+        }
       } catch (error) {
         setResult({
           type: "error",
@@ -180,15 +268,13 @@ export const FunctionItem = memo(
                 execute={handleExecute}
               />
 
-              {result &&
-                (resultRenderer ? (
-                  resultRenderer(result)
-                ) : (
-                  <DefaultResultDisplay
-                    key={`${result.type}-${result.data}`}
-                    result={result}
-                  />
-                ))}
+              {result && (
+                <DefaultResultDisplay
+                  key={`${result.type}-${result.data}`}
+                  result={result}
+                  onHashClick={onHashClick}
+                />
+              )}
             </div>
           </FormProvider>
         </AccordionContent>

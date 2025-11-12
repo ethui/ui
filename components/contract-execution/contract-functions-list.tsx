@@ -17,8 +17,9 @@ export function ContractFunctionsList({
   isConnected = false,
   onExecute,
   onSimulate,
-  resultRenderer,
   addressRenderer,
+  onHashClick,
+  title,
 }: ContractFunctionsListProps) {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -47,9 +48,9 @@ export function ContractFunctionsList({
   return (
     <div className="pb-7">
       <div className="mb-4">
-        <span className="mb-3 block font-bold text-base">
-          Contract Functions
-        </span>
+        {title && (
+          <span className="mb-3 block font-bold text-base">{title}</span>
+        )}
 
         <div className="relative mb-4">
           <Search className="-translate-y-1/2 absolute top-1/2 left-3 h-4 w-4 transform text-muted-foreground" />
@@ -100,8 +101,8 @@ export function ContractFunctionsList({
                       isConnected={isConnected}
                       onExecute={onExecute}
                       onSimulate={onSimulate}
-                      resultRenderer={resultRenderer}
                       addressRenderer={addressRenderer}
+                      onHashClick={onHashClick}
                     />
                   ))}
                 </Accordion>
@@ -132,8 +133,8 @@ export function ContractFunctionsList({
                       isConnected={isConnected}
                       onExecute={onExecute}
                       onSimulate={onSimulate}
-                      resultRenderer={resultRenderer}
                       addressRenderer={addressRenderer}
+                      onHashClick={onHashClick}
                     />
                   ))}
                 </Accordion>
