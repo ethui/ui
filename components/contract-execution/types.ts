@@ -31,4 +31,6 @@ export interface ContractFunctionsListProps {
   addressRenderer?: (address: Address) => React.ReactNode;
   /** Callback when transaction hash is clicked (for custom navigation) */
   onHashClick?: (hash: string) => void;
+  /** Optional title to display above the list */
+  title?: string;
 }

@@ -174,6 +174,7 @@ export const Connected: Story = {
       console.log("Hash clicked:", hash);
       window.open(`https://etherscan.io/tx/${hash}`, "_blank");
     },
+    title: "Contract Functions",
   },
 };
 
