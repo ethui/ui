@@ -119,7 +119,11 @@ export function ContractFunctionsList({
             )}
           </TabsList>
 
-          <TabsContent value="read" className="mt-4">
+          <TabsContent
+            forceMount
+            value="read"
+            className="mt-4 data-[state=inactive]:hidden"
+          >
             <div className="rounded-lg border bg-card">
               {readFunctions.length > 0 ? (
                 <Accordion type="multiple" className="w-full">
@@ -156,7 +160,11 @@ export function ContractFunctionsList({
             </div>
           </TabsContent>
 
-          <TabsContent value="write" className="mt-4">
+          <TabsContent
+            forceMount
+            value="write"
+            className="mt-4 data-[state=inactive]:hidden"
+          >
             <div className="rounded-lg border bg-card">
               {writeFunctions.length > 0 ? (
                 <Accordion type="multiple" className="w-full">
@@ -194,7 +202,11 @@ export function ContractFunctionsList({
           </TabsContent>
 
           {hasRawOperations && (
-            <TabsContent value="raw" className="mt-4">
+            <TabsContent
+              forceMount
+              value="raw"
+              className="mt-4 data-[state=inactive]:hidden"
+            >
               <RawOperations
                 address={address}
                 chainId={chainId}
@@ -211,7 +223,11 @@ export function ContractFunctionsList({
           )}
 
           {hasSignature && (
-            <TabsContent value="signature" className="mt-4">
+            <TabsContent
+              forceMount
+              value="signature"
+              className="mt-4 data-[state=inactive]:hidden"
+            >
               <SignatureOperations
                 address={address}
                 chainId={chainId}
