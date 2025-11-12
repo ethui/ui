@@ -229,8 +229,8 @@ function parseCall(data: `0x${string}`, abi: Abi | string[] | undefined) {
   const parsedAbi = !abi
     ? []
     : typeof abi[0] === "string"
-      ? parseAbi(abi as string[])
-      : (abi as Abi);
+    ? parseAbi(abi as string[])
+    : (abi as Abi);
 
   let label = data.slice(0, 10);
   let args = [

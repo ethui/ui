@@ -79,7 +79,12 @@ export function AbiItemFormWithPreview({
           addresses={addresses}
         />
       </div>
-      <div className={cn("col-span-3", showForm && "md:col-span-2")}>
+      <div
+        className={cn(
+          "col-span-3 min-w-0 overflow-x-auto",
+          showForm && "md:col-span-2",
+        )}
+      >
         {data && sender && (
           <SolidityCall
             {...{

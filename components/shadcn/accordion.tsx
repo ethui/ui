@@ -42,7 +42,7 @@ function AccordionContent({
 }: React.ComponentProps<typeof AccordionPrimitive.Content>) {
   return (
     <AccordionPrimitive.Content
-      className="overflow-visible text-sm data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
+      className="overflow-visible text-sm data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down data-[state=closed]:overflow-hidden "
       {...props}
     >
       <div className={cn("p-4", className)}>{children}</div>

@@ -1,10 +1,12 @@
 import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { AbiFunction } from "viem";
+import { cn } from "../../lib/utils.js";
 import { Accordion } from "../shadcn/accordion.js";
 import { Input } from "../shadcn/input.js";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../shadcn/tabs.js";
 import { FunctionItem } from "./function-item.js";
+import { RawOperations } from "./raw-operations.js";
 import type { ContractFunctionsListProps } from "./types.js";
 
 export function ContractFunctionsList({
@@ -18,6 +20,8 @@ export function ContractFunctionsList({
   onQuery,
   onWrite,
   onSimulate,
+  onRawCall,
+  onRawTransaction,
   addressRenderer,
   onHashClick,
   title,
@@ -25,7 +29,7 @@ export function ContractFunctionsList({
   const [searchTerm, setSearchTerm] = useState("");
 
   const contractFunctions = useMemo(() => {
-    if (!abi) return [];
+    if (!abi || !Array.isArray(abi)) return [];
     return abi.filter((item) => item.type === "function") as AbiFunction[];
   }, [abi]);
 
@@ -46,6 +50,9 @@ export function ContractFunctionsList({
     };
   }, [contractFunctions, searchTerm]);
 
+  const hasRawOperations = onRawCall || onRawTransaction;
+  const tabCount = hasRawOperations ? 3 : 2;
+
   return (
     <div className="pb-7">
       <div className="mb-4">
@@ -64,7 +71,13 @@ export function ContractFunctionsList({
         </div>
 
         <Tabs defaultValue="read" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList
+            className={cn(
+              "grid w-full",
+              tabCount === 2 && "grid-cols-2",
+              tabCount === 3 && "grid-cols-3",
+            )}
+          >
             <TabsTrigger
               value="read"
               className="flex cursor-pointer items-center gap-2"
@@ -83,6 +96,14 @@ export function ContractFunctionsList({
                 {writeFunctions.length}
               </span>
             </TabsTrigger>
+            {hasRawOperations && (
+              <TabsTrigger
+                value="raw"
+                className="flex cursor-pointer items-center gap-2"
+              >
+                Raw
+              </TabsTrigger>
+            )}
           </TabsList>
 
           <TabsContent value="read" className="mt-4">
@@ -150,6 +171,23 @@ export function ContractFunctionsList({
               )}
             </div>
           </TabsContent>
+
+          {hasRawOperations && (
+            <TabsContent value="raw" className="mt-4">
+              <RawOperations
+                address={address}
+                chainId={chainId}
+                sender={sender}
+                addresses={addresses}
+                requiresConnection={requiresConnection}
+                isConnected={isConnected}
+                onRawCall={onRawCall}
+                onRawTransaction={onRawTransaction}
+                addressRenderer={addressRenderer}
+                onHashClick={onHashClick}
+              />
+            </TabsContent>
+          )}
         </Tabs>
       </div>
     </div>

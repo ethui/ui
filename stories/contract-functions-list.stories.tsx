@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import React, { useState } from "react";
-import type { AbiFunction } from "viem";
+import type { Abi } from "viem";
 import {
   ContractFunctionsList,
   type ExecutionParams,
+  type RawCallParams,
 } from "../components/contract-execution/index.js";
 import { Button } from "../components/shadcn/button.js";
 
@@ -41,7 +42,7 @@ const addresses = [
 ];
 
 // Mock ERC20-like ABI with read and write functions
-const mockERC20Abi: AbiFunction[] = [
+const mockERC20Abi = [
   {
     type: "function",
     name: "balanceOf",
@@ -101,7 +102,7 @@ const mockERC20Abi: AbiFunction[] = [
     outputs: [{ name: "success", type: "bool" }],
     stateMutability: "nonpayable",
   },
-] as AbiFunction[];
+] as const satisfies Abi;
 
 // Mock execution handlers - now just return raw hex data
 const mockQuery = async (params: ExecutionParams): Promise<`0x${string}`> => {
@@ -294,5 +295,77 @@ export const WithError: Story = {
     onQuery: mockQuery,
     onWrite: mockWriteWithError,
     onSimulate: mockSimulate,
+  },
+};
+
+// Mock raw operation handlers
+const mockRawCall = async (params: RawCallParams): Promise<`0x${string}`> => {
+  console.log("Raw call with:", params);
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  // Return mock raw hex result
+  return "0x0000000000000000000000000000000000000000000000000000000000000001";
+};
+
+const mockRawTransaction = async (
+  params: RawCallParams,
+): Promise<`0x${string}`> => {
+  console.log("Raw transaction with:", params);
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  // Return mock transaction hash
+  return "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890";
+};
+
+// Story: With Raw Operations (both call and transaction)
+export const WithRawOperations: Story = {
+  args: {
+    abi: mockERC20Abi,
+    address: "0x1234567890123456789012345678901234567890",
+    chainId: 1,
+    sender: "0x0077014b4C74d9b1688847386B24Ed23Fdf14Be8",
+    addresses,
+    requiresConnection: true,
+    isConnected: true,
+    onQuery: mockQuery,
+    onWrite: mockWrite,
+    onSimulate: mockSimulate,
+    onRawCall: mockRawCall,
+    onRawTransaction: mockRawTransaction,
+    title: "Contract with Raw Operations",
+  },
+};
+
+// Story: Only Raw Call (no raw transaction)
+export const OnlyRawCall: Story = {
+  args: {
+    abi: mockERC20Abi,
+    address: "0x1234567890123456789012345678901234567890",
+    chainId: 1,
+    sender: "0x0077014b4C74d9b1688847386B24Ed23Fdf14Be8",
+    addresses,
+    requiresConnection: true,
+    isConnected: true,
+    onQuery: mockQuery,
+    onWrite: mockWrite,
+    onSimulate: mockSimulate,
+    onRawCall: mockRawCall,
+    // No onRawTransaction - only raw call available
+  },
+};
+
+// Story: Only Raw Transaction (no raw call)
+export const OnlyRawTransaction: Story = {
+  args: {
+    abi: mockERC20Abi,
+    address: "0x1234567890123456789012345678901234567890",
+    chainId: 1,
+    sender: "0x0077014b4C74d9b1688847386B24Ed23Fdf14Be8",
+    addresses,
+    requiresConnection: true,
+    isConnected: true,
+    onQuery: mockQuery,
+    onWrite: mockWrite,
+    onSimulate: mockSimulate,
+    // No onRawCall - only raw transaction available
+    onRawTransaction: mockRawTransaction,
   },
 };
