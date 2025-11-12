@@ -52,7 +52,7 @@ export function ContractFunctionsList({
           <span className="mb-3 block font-bold text-base">{title}</span>
         )}
 
-        <div className={title ? "relative mb-4" : "relative"}>
+        <div className="relative mb-4">
           <Search className="-translate-y-1/2 absolute top-1/2 left-3 h-4 w-4 transform text-muted-foreground" />
           <Input
             placeholder="Search functions..."
