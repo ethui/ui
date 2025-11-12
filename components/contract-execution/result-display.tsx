@@ -16,14 +16,16 @@ interface DefaultResultDisplayProps {
   onHashClick?: (hash: string) => void;
 }
 
-export function DefaultResultDisplay({ result, onHashClick }: DefaultResultDisplayProps) {
+export function DefaultResultDisplay({
+  result,
+  onHashClick,
+}: DefaultResultDisplayProps) {
   const [showRawData, setShowRawData] = useState(false);
 
   const isError = result.type === "error";
 
   return (
     <div className="mt-4 w-full space-y-3">
-      {/* Transaction Hash */}
       {result.hash && (
         <div className="space-y-1">
           <div className="font-medium text-muted-foreground text-xs uppercase tracking-wide">
@@ -48,14 +50,16 @@ export function DefaultResultDisplay({ result, onHashClick }: DefaultResultDispl
       {result.cleanResult && (
         <div className="space-y-2">
           <div className="font-medium text-muted-foreground text-xs uppercase tracking-wide">
-            {result.type === "call" ? "Result" : result.type === "simulation" ? "Simulation Result" : "Result"}
+            {result.type === "call"
+              ? "Result"
+              : result.type === "simulation"
+              ? "Simulation Result"
+              : "Result"}
           </div>
           <div
             className={clsx(
               "rounded-md p-4 font-mono text-base",
-              isError
-                ? "bg-red-50 text-red-900"
-                : "bg-muted",
+              isError ? "bg-red-50 text-red-900" : "bg-muted",
             )}
           >
             {result.cleanResult}
@@ -63,7 +67,6 @@ export function DefaultResultDisplay({ result, onHashClick }: DefaultResultDispl
         </div>
       )}
 
-      {/* Error */}
       {result.error && (
         <div className="space-y-2">
           <div className="font-medium text-xs uppercase tracking-wide text-red-600">
@@ -75,7 +78,6 @@ export function DefaultResultDisplay({ result, onHashClick }: DefaultResultDispl
         </div>
       )}
 
-      {/* Raw Data Expandable */}
       {result.data && (
         <div>
           <Button
@@ -105,7 +107,6 @@ export function DefaultResultDisplay({ result, onHashClick }: DefaultResultDispl
         </div>
       )}
 
-      {/* Fallback for data without cleanResult */}
       {!result.cleanResult && !result.error && result.data && (
         <pre className="overflow-x-auto whitespace-pre-wrap break-all rounded-md bg-muted p-4 font-mono text-sm">
           {result.data}
@@ -114,4 +115,3 @@ export function DefaultResultDisplay({ result, onHashClick }: DefaultResultDispl
     </div>
   );
 }
-

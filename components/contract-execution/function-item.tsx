@@ -133,7 +133,13 @@ export const FunctionItem = memo(
           msgSender: msgSender ? (msgSender as Address) : undefined,
         });
 
-        if (!isWrite) {
+        if (isWrite) {
+          setResult({
+            type: "simulation",
+            cleanResult: "Simulation successful",
+            data: rawResult,
+          });
+        } else {
           try {
             const decoded = decodeFunctionResult({
               abi: [func],
@@ -152,12 +158,6 @@ export const FunctionItem = memo(
               data: rawResult,
             });
           }
-        } else {
-          setResult({
-            type: "simulation",
-            cleanResult: "Simulation successful",
-            data: rawResult,
-          });
         }
       } catch (error) {
         setResult({
