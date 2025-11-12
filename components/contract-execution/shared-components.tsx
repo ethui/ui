@@ -12,7 +12,7 @@ export function MsgSenderInput() {
           <span className="font-bold text-base">Msg Sender (Optional)</span>
         }
         placeholder="0x..."
-        className="w-4xl"
+        className="w-full"
       />
     </div>
   );
