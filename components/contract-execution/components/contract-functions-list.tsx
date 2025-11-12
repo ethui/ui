@@ -124,9 +124,9 @@ export function ContractFunctionsList({
             value="read"
             className="mt-4 data-[state=inactive]:hidden"
           >
-            <div className="rounded-lg border bg-card">
+            <div className="rounded-lg bg-card">
               {readFunctions.length > 0 ? (
-                <Accordion type="multiple" className="w-full">
+                <Accordion type="multiple" className="w-full rounded-lg border">
                   {readFunctions.map((func, index) => (
                     <FunctionItem
                       key={`read-${func.name}-${index}`}
@@ -165,9 +165,9 @@ export function ContractFunctionsList({
             value="write"
             className="mt-4 data-[state=inactive]:hidden"
           >
-            <div className="rounded-lg border bg-card">
+            <div className="rounded-lg bg-card">
               {writeFunctions.length > 0 ? (
-                <Accordion type="multiple" className="w-full">
+                <Accordion type="multiple" className="w-full rounded-lg border">
                   {writeFunctions.map((func, index) => (
                     <FunctionItem
                       key={`write-${func.name}-${index}`}
