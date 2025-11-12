@@ -23,9 +23,11 @@ export interface ContractFunctionsListProps {
   requiresConnection?: boolean;
   /** Whether user is connected (for write functions) */
   isConnected?: boolean;
-  /** Execute function - returns raw hex result from rpc_eth_call or transaction hash */
-  onExecute: (params: ExecutionParams) => Promise<`0x${string}`>;
-  /** Optional simulate function - returns raw hex result from simulation */
+  /** Query function for read-only calls - returns raw hex result */
+  onQuery: (params: ExecutionParams) => Promise<`0x${string}`>;
+  /** Write function for state-changing transactions - returns transaction hash */
+  onWrite: (params: ExecutionParams) => Promise<`0x${string}`>;
+  /** Optional simulate function for write functions - returns raw hex result from simulation */
   onSimulate?: (params: ExecutionParams) => Promise<`0x${string}`>;
   /** Custom address renderer for form inputs */
   addressRenderer?: (address: Address) => React.ReactNode;

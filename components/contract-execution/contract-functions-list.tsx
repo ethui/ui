@@ -15,7 +15,8 @@ export function ContractFunctionsList({
   addresses,
   requiresConnection = true,
   isConnected = false,
-  onExecute,
+  onQuery,
+  onWrite,
   onSimulate,
   addressRenderer,
   onHashClick,
@@ -99,7 +100,8 @@ export function ContractFunctionsList({
                       addresses={addresses}
                       requiresConnection={requiresConnection}
                       isConnected={isConnected}
-                      onExecute={onExecute}
+                      onQuery={onQuery}
+                      onWrite={onWrite}
                       onSimulate={onSimulate}
                       addressRenderer={addressRenderer}
                       onHashClick={onHashClick}
@@ -131,7 +133,8 @@ export function ContractFunctionsList({
                       addresses={addresses}
                       requiresConnection={requiresConnection}
                       isConnected={isConnected}
-                      onExecute={onExecute}
+                      onQuery={onQuery}
+                      onWrite={onWrite}
                       onSimulate={onSimulate}
                       addressRenderer={addressRenderer}
                       onHashClick={onHashClick}
