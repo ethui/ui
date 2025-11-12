@@ -177,8 +177,8 @@ const mockRawTransaction = async (
   return "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890";
 };
 
-// Story: Connected wallet with all features (including raw operations)
-export const Connected: Story = {
+// Story: Basic usage with all features
+export const Default: Story = {
   args: {
     abi: mockERC20Abi,
     address: "0x1234567890123456789012345678901234567890",
@@ -192,28 +192,7 @@ export const Connected: Story = {
     onSimulate: mockSimulate,
     onRawCall: mockRawCall,
     onRawTransaction: mockRawTransaction,
-    onHashClick: (hash) => {
-      console.log("Hash clicked:", hash);
-      window.open(`https://etherscan.io/tx/${hash}`, "_blank");
-    },
-    title: "Contract Functions",
-  },
-};
-
-// Story: Disconnected wallet (shows connection alert for write functions and raw transaction)
-export const Disconnected: Story = {
-  args: {
-    abi: mockERC20Abi,
-    address: "0x1234567890123456789012345678901234567890",
-    chainId: 1,
-    addresses,
-    requiresConnection: true,
-    isConnected: false,
-    onQuery: mockQuery,
-    onWrite: mockWrite,
-    onSimulate: mockSimulate,
-    onRawCall: mockRawCall,
-    onRawTransaction: mockRawTransaction,
+    enableSignature: true,
   },
 };
 
@@ -273,33 +252,6 @@ export const Interactive: Story = {
   render: () => <InteractiveStory />,
 };
 
-// Story: With custom address renderer
-const customAddressRenderer = (address: string) => {
-  return (
-    <span className="rounded bg-blue-100 px-2 py-1 font-mono text-blue-800 text-xs">
-      📍 {address.slice(0, 6)}...{address.slice(-4)}
-    </span>
-  );
-};
-
-export const CustomAddressRenderer: Story = {
-  args: {
-    abi: mockERC20Abi,
-    address: "0x1234567890123456789012345678901234567890",
-    chainId: 1,
-    sender: "0x0077014b4C74d9b1688847386B24Ed23Fdf14Be8",
-    addresses,
-    requiresConnection: true,
-    isConnected: true,
-    onQuery: mockQuery,
-    onWrite: mockWrite,
-    onSimulate: mockSimulate,
-    onRawCall: mockRawCall,
-    onRawTransaction: mockRawTransaction,
-    addressRenderer: customAddressRenderer,
-  },
-};
-
 // Story: Error handling - errors are now thrown instead of returned
 const mockWriteWithError = async (
   _params: ExecutionParams,
@@ -322,5 +274,59 @@ export const WithError: Story = {
     onSimulate: mockSimulate,
     onRawCall: mockRawCall,
     onRawTransaction: mockRawTransaction,
+  },
+};
+
+// Story: Empty ABI (shows only signature and raw operations)
+export const EmptyAbi: Story = {
+  args: {
+    abi: [] as Abi,
+    address: "0x1234567890123456789012345678901234567890",
+    chainId: 1,
+    sender: "0x0077014b4C74d9b1688847386B24Ed23Fdf14Be8",
+    addresses,
+    requiresConnection: true,
+    isConnected: true,
+    onQuery: mockQuery,
+    onWrite: mockWrite,
+    onSimulate: mockSimulate,
+    onRawCall: mockRawCall,
+    onRawTransaction: mockRawTransaction,
+    enableSignature: true,
+  },
+};
+
+// Custom component to render when there's no ABI
+function CustomNoAbi() {
+  return (
+    <div className="space-y-4 p-8 text-center">
+      <div>
+        <h3 className="mb-2 font-semibold text-lg">No ABI Available</h3>
+        <p className="mx-auto max-w-md text-muted-foreground text-sm">
+          This contract doesn't have a verified ABI. You can still interact with
+          it using the Raw or Signature tabs.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// Story: Empty ABI with custom no ABI component
+export const EmptyAbiWithCustomComponent: Story = {
+  args: {
+    abi: [] as Abi,
+    address: "0x1234567890123456789012345678901234567890",
+    chainId: 1,
+    sender: "0x0077014b4C74d9b1688847386B24Ed23Fdf14Be8",
+    addresses,
+    requiresConnection: true,
+    isConnected: true,
+    onQuery: mockQuery,
+    onWrite: mockWrite,
+    onSimulate: mockSimulate,
+    onRawCall: mockRawCall,
+    onRawTransaction: mockRawTransaction,
+    enableSignature: true,
+    NoAbiComponent: CustomNoAbi,
   },
 };

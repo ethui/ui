@@ -1,7 +1,7 @@
 import { Info } from "lucide-react";
-import { Form } from "../form/index.js";
-import { Alert, AlertDescription, AlertTitle } from "../shadcn/alert.js";
-import { Button } from "../shadcn/button.js";
+import { Form } from "../../form/index.js";
+import { Alert, AlertDescription, AlertTitle } from "../../shadcn/alert.js";
+import { Button } from "../../shadcn/button.js";
 
 export function MsgSenderInput() {
   return (

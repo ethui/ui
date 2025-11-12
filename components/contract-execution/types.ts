@@ -39,10 +39,14 @@ export interface ContractFunctionsListProps {
   onRawCall?: (params: RawCallParams) => Promise<`0x${string}`>;
   /** Optional raw transaction function (send transaction with arbitrary data) - returns transaction hash */
   onRawTransaction?: (params: RawCallParams) => Promise<`0x${string}`>;
+  /** Enable signature-based interaction tab */
+  enableSignature?: boolean;
   /** Custom address renderer for form inputs */
   addressRenderer?: (address: Address) => React.ReactNode;
   /** Callback when transaction hash is clicked (for custom navigation) */
   onHashClick?: (hash: string) => void;
   /** Optional title to display above the list */
   title?: string;
+  /** Optional component to render when there are no functions in the ABI */
+  NoAbiComponent?: React.ComponentType;
 }
