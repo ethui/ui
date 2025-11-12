@@ -160,7 +160,24 @@ const mockSimulate = async (
   }
 };
 
-// Story: Connected wallet with simulate
+// Mock raw operation handlers
+const mockRawCall = async (params: RawCallParams): Promise<`0x${string}`> => {
+  console.log("Raw call with:", params);
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  // Return mock raw hex result
+  return "0x0000000000000000000000000000000000000000000000000000000000000001";
+};
+
+const mockRawTransaction = async (
+  params: RawCallParams,
+): Promise<`0x${string}`> => {
+  console.log("Raw transaction with:", params);
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  // Return mock transaction hash
+  return "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890";
+};
+
+// Story: Connected wallet with all features (including raw operations)
 export const Connected: Story = {
   args: {
     abi: mockERC20Abi,
@@ -173,6 +190,8 @@ export const Connected: Story = {
     onQuery: mockQuery,
     onWrite: mockWrite,
     onSimulate: mockSimulate,
+    onRawCall: mockRawCall,
+    onRawTransaction: mockRawTransaction,
     onHashClick: (hash) => {
       console.log("Hash clicked:", hash);
       window.open(`https://etherscan.io/tx/${hash}`, "_blank");
@@ -181,7 +200,7 @@ export const Connected: Story = {
   },
 };
 
-// Story: Disconnected wallet (shows connection alert for write functions)
+// Story: Disconnected wallet (shows connection alert for write functions and raw transaction)
 export const Disconnected: Story = {
   args: {
     abi: mockERC20Abi,
@@ -193,22 +212,24 @@ export const Disconnected: Story = {
     onQuery: mockQuery,
     onWrite: mockWrite,
     onSimulate: mockSimulate,
+    onRawCall: mockRawCall,
+    onRawTransaction: mockRawTransaction,
   },
 };
 
-// Story: Without simulate (like ethui)
-export const WithoutSimulate: Story = {
+// Story: Without simulate and raw operations (minimal setup)
+export const WithoutSimulateAndRaw: Story = {
   args: {
     abi: mockERC20Abi,
     address: "0x1234567890123456789012345678901234567890",
     chainId: 1,
     sender: "0x0077014b4C74d9b1688847386B24Ed23Fdf14Be8",
     addresses,
-    requiresConnection: false, // ethui is always "connected"
+    requiresConnection: false,
     isConnected: true,
     onQuery: mockQuery,
     onWrite: mockWrite,
-    // No onSimulate provided
+    // No onSimulate, onRawCall, or onRawTransaction - shows only Read/Write tabs
   },
 };
 
@@ -241,6 +262,8 @@ function InteractiveStory() {
         onQuery={mockQuery}
         onWrite={mockWrite}
         onSimulate={mockSimulate}
+        onRawCall={mockRawCall}
+        onRawTransaction={mockRawTransaction}
       />
     </div>
   );
@@ -271,6 +294,8 @@ export const CustomAddressRenderer: Story = {
     onQuery: mockQuery,
     onWrite: mockWrite,
     onSimulate: mockSimulate,
+    onRawCall: mockRawCall,
+    onRawTransaction: mockRawTransaction,
     addressRenderer: customAddressRenderer,
   },
 };
@@ -295,77 +320,7 @@ export const WithError: Story = {
     onQuery: mockQuery,
     onWrite: mockWriteWithError,
     onSimulate: mockSimulate,
-  },
-};
-
-// Mock raw operation handlers
-const mockRawCall = async (params: RawCallParams): Promise<`0x${string}`> => {
-  console.log("Raw call with:", params);
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  // Return mock raw hex result
-  return "0x0000000000000000000000000000000000000000000000000000000000000001";
-};
-
-const mockRawTransaction = async (
-  params: RawCallParams,
-): Promise<`0x${string}`> => {
-  console.log("Raw transaction with:", params);
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  // Return mock transaction hash
-  return "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890";
-};
-
-// Story: With Raw Operations (both call and transaction)
-export const WithRawOperations: Story = {
-  args: {
-    abi: mockERC20Abi,
-    address: "0x1234567890123456789012345678901234567890",
-    chainId: 1,
-    sender: "0x0077014b4C74d9b1688847386B24Ed23Fdf14Be8",
-    addresses,
-    requiresConnection: true,
-    isConnected: true,
-    onQuery: mockQuery,
-    onWrite: mockWrite,
-    onSimulate: mockSimulate,
     onRawCall: mockRawCall,
-    onRawTransaction: mockRawTransaction,
-    title: "Contract with Raw Operations",
-  },
-};
-
-// Story: Only Raw Call (no raw transaction)
-export const OnlyRawCall: Story = {
-  args: {
-    abi: mockERC20Abi,
-    address: "0x1234567890123456789012345678901234567890",
-    chainId: 1,
-    sender: "0x0077014b4C74d9b1688847386B24Ed23Fdf14Be8",
-    addresses,
-    requiresConnection: true,
-    isConnected: true,
-    onQuery: mockQuery,
-    onWrite: mockWrite,
-    onSimulate: mockSimulate,
-    onRawCall: mockRawCall,
-    // No onRawTransaction - only raw call available
-  },
-};
-
-// Story: Only Raw Transaction (no raw call)
-export const OnlyRawTransaction: Story = {
-  args: {
-    abi: mockERC20Abi,
-    address: "0x1234567890123456789012345678901234567890",
-    chainId: 1,
-    sender: "0x0077014b4C74d9b1688847386B24Ed23Fdf14Be8",
-    addresses,
-    requiresConnection: true,
-    isConnected: true,
-    onQuery: mockQuery,
-    onWrite: mockWrite,
-    onSimulate: mockSimulate,
-    // No onRawCall - only raw transaction available
     onRawTransaction: mockRawTransaction,
   },
 };

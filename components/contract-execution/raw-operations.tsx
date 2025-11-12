@@ -6,8 +6,8 @@ import { isAddress } from "viem";
 import { z } from "zod";
 import { AbiItemFormWithPreview } from "../abi-form/abi-item-form-with-preview.js";
 import type { AddressData } from "../address-autocomplete-input.js";
-import { Accordion } from "../shadcn/accordion.js";
 import {
+  Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
@@ -223,7 +223,7 @@ function RawOperationItem({
               }
             />
 
-            <div className="flex gap-2 flex-row items-center justify-center">
+            <div className="flex flex-row items-center justify-center gap-2">
               <Button
                 onClick={handleExecute}
                 disabled={!callData || isExecuting || (isWrite && !isConnected)}
@@ -232,8 +232,8 @@ function RawOperationItem({
                 {isExecuting
                   ? "Executing..."
                   : type === "call"
-                  ? "Call"
-                  : "Send Transaction"}
+                    ? "Call"
+                    : "Send Transaction"}
               </Button>
             </div>
 
