@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import React, { useState } from "react";
-import type { AbiFunction } from "viem";
+import type { Abi } from "viem";
 import {
   ContractFunctionsList,
   type ExecutionParams,
+  type RawCallParams,
 } from "../components/contract-execution/index.js";
 import { Button } from "../components/shadcn/button.js";
 
@@ -41,7 +42,7 @@ const addresses = [
 ];
 
 // Mock ERC20-like ABI with read and write functions
-const mockERC20Abi: AbiFunction[] = [
+const mockERC20Abi = [
   {
     type: "function",
     name: "balanceOf",
@@ -101,7 +102,7 @@ const mockERC20Abi: AbiFunction[] = [
     outputs: [{ name: "success", type: "bool" }],
     stateMutability: "nonpayable",
   },
-] as AbiFunction[];
+] as const satisfies Abi;
 
 // Mock execution handlers - now just return raw hex data
 const mockQuery = async (params: ExecutionParams): Promise<`0x${string}`> => {
@@ -159,7 +160,24 @@ const mockSimulate = async (
   }
 };
 
-// Story: Connected wallet with simulate
+// Mock raw operation handlers
+const mockRawCall = async (params: RawCallParams): Promise<`0x${string}`> => {
+  console.log("Raw call with:", params);
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  // Return mock raw hex result
+  return "0x0000000000000000000000000000000000000000000000000000000000000001";
+};
+
+const mockRawTransaction = async (
+  params: RawCallParams,
+): Promise<`0x${string}`> => {
+  console.log("Raw transaction with:", params);
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  // Return mock transaction hash
+  return "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890";
+};
+
+// Story: Connected wallet with all features (including raw operations)
 export const Connected: Story = {
   args: {
     abi: mockERC20Abi,
@@ -172,6 +190,8 @@ export const Connected: Story = {
     onQuery: mockQuery,
     onWrite: mockWrite,
     onSimulate: mockSimulate,
+    onRawCall: mockRawCall,
+    onRawTransaction: mockRawTransaction,
     onHashClick: (hash) => {
       console.log("Hash clicked:", hash);
       window.open(`https://etherscan.io/tx/${hash}`, "_blank");
@@ -180,7 +200,7 @@ export const Connected: Story = {
   },
 };
 
-// Story: Disconnected wallet (shows connection alert for write functions)
+// Story: Disconnected wallet (shows connection alert for write functions and raw transaction)
 export const Disconnected: Story = {
   args: {
     abi: mockERC20Abi,
@@ -192,22 +212,24 @@ export const Disconnected: Story = {
     onQuery: mockQuery,
     onWrite: mockWrite,
     onSimulate: mockSimulate,
+    onRawCall: mockRawCall,
+    onRawTransaction: mockRawTransaction,
   },
 };
 
-// Story: Without simulate (like ethui)
-export const WithoutSimulate: Story = {
+// Story: Without simulate and raw operations (minimal setup)
+export const WithoutSimulateAndRaw: Story = {
   args: {
     abi: mockERC20Abi,
     address: "0x1234567890123456789012345678901234567890",
     chainId: 1,
     sender: "0x0077014b4C74d9b1688847386B24Ed23Fdf14Be8",
     addresses,
-    requiresConnection: false, // ethui is always "connected"
+    requiresConnection: false,
     isConnected: true,
     onQuery: mockQuery,
     onWrite: mockWrite,
-    // No onSimulate provided
+    // No onSimulate, onRawCall, or onRawTransaction - shows only Read/Write tabs
   },
 };
 
@@ -240,6 +262,8 @@ function InteractiveStory() {
         onQuery={mockQuery}
         onWrite={mockWrite}
         onSimulate={mockSimulate}
+        onRawCall={mockRawCall}
+        onRawTransaction={mockRawTransaction}
       />
     </div>
   );
@@ -270,6 +294,8 @@ export const CustomAddressRenderer: Story = {
     onQuery: mockQuery,
     onWrite: mockWrite,
     onSimulate: mockSimulate,
+    onRawCall: mockRawCall,
+    onRawTransaction: mockRawTransaction,
     addressRenderer: customAddressRenderer,
   },
 };
@@ -294,5 +320,7 @@ export const WithError: Story = {
     onQuery: mockQuery,
     onWrite: mockWriteWithError,
     onSimulate: mockSimulate,
+    onRawCall: mockRawCall,
+    onRawTransaction: mockRawTransaction,
   },
 };

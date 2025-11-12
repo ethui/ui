@@ -62,7 +62,7 @@ export function DefaultResultDisplay({
               isError ? "bg-red-50 text-red-900" : "bg-muted",
             )}
           >
-            {result.cleanResult}
+            <span className="w-fit break-all">{result.cleanResult}</span>
           </div>
         </div>
       )}

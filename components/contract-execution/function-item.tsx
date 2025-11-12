@@ -31,13 +31,6 @@ function formatDecodedResult(result: unknown): string {
   if (typeof result === "bigint") {
     return result.toString();
   }
-  if (
-    typeof result === "string" ||
-    typeof result === "number" ||
-    typeof result === "boolean"
-  ) {
-    return String(result);
-  }
   if (Array.isArray(result)) {
     return JSON.stringify(
       result,

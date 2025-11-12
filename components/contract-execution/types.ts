@@ -1,4 +1,4 @@
-import type { AbiFunction, Address } from "viem";
+import type { Abi, AbiFunction, Address } from "viem";
 import type { AddressData } from "../address-autocomplete-input.js";
 
 export interface ExecutionParams {
@@ -8,9 +8,15 @@ export interface ExecutionParams {
   value?: bigint;
 }
 
+export interface RawCallParams {
+  data: `0x${string}`;
+  value?: bigint;
+  msgSender?: Address;
+}
+
 export interface ContractFunctionsListProps {
-  /** Full contract ABI (will be filtered internally) */
-  abi: AbiFunction[];
+  /** Full contract ABI (will be filtered internally for functions) */
+  abi: Abi;
   /** Contract address */
   address: Address;
   /** Chain ID */
@@ -29,6 +35,10 @@ export interface ContractFunctionsListProps {
   onWrite: (params: ExecutionParams) => Promise<`0x${string}`>;
   /** Optional simulate function for write functions - returns raw hex result from simulation */
   onSimulate?: (params: ExecutionParams) => Promise<`0x${string}`>;
+  /** Optional raw call function (eth_call with arbitrary data) - returns raw hex result */
+  onRawCall?: (params: RawCallParams) => Promise<`0x${string}`>;
+  /** Optional raw transaction function (send transaction with arbitrary data) - returns transaction hash */
+  onRawTransaction?: (params: RawCallParams) => Promise<`0x${string}`>;
   /** Custom address renderer for form inputs */
   addressRenderer?: (address: Address) => React.ReactNode;
   /** Callback when transaction hash is clicked (for custom navigation) */
