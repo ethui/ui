@@ -53,16 +53,16 @@ export function DefaultResultDisplay({
             {result.type === "call"
               ? "Result"
               : result.type === "simulation"
-                ? "Simulation Result"
-                : "Result"}
+              ? "Simulation Result"
+              : "Result"}
           </div>
           <div
             className={clsx(
-              "rounded-md p-4 font-mono text-base",
+              "rounded-md p-4 font-mono text-base ",
               isError ? "bg-red-50 text-red-900" : "bg-muted",
             )}
           >
-            {result.cleanResult}
+            <span className="break-all w-fit">{result.cleanResult}</span>
           </div>
         </div>
       )}
