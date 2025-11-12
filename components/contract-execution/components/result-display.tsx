@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 import { useState } from "react";
-import { Button } from "../shadcn/button.js";
+import { Button } from "../../shadcn/button.js";
 
 type InternalResult = {
   type: "call" | "simulation" | "execution" | "error";

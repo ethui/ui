@@ -4,18 +4,18 @@ import { FormProvider, useForm } from "react-hook-form";
 import type { Address } from "viem";
 import { isAddress } from "viem";
 import { z } from "zod";
-import { AbiItemFormWithPreview } from "../abi-form/abi-item-form-with-preview.js";
-import type { AddressData } from "../address-autocomplete-input.js";
+import { AbiItemFormWithPreview } from "../../abi-form/abi-item-form-with-preview.js";
+import type { AddressData } from "../../address-autocomplete-input.js";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "../shadcn/accordion.js";
-import { Button } from "../shadcn/button.js";
+} from "../../shadcn/accordion.js";
+import { Button } from "../../shadcn/button.js";
+import type { RawCallParams } from "../types.js";
 import { DefaultResultDisplay } from "./result-display.js";
 import { ConnectWalletAlert, MsgSenderInput } from "./shared-components.js";
-import type { RawCallParams } from "./types.js";
 
 type InternalResult = {
   type: "call" | "execution" | "error";

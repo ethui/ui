@@ -2,51 +2,23 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { memo, useCallback, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import type { AbiFunction, Address } from "viem";
-import { decodeFunctionResult, isAddress } from "viem";
+import { isAddress } from "viem";
 import { z } from "zod";
-import { AbiItemFormWithPreview } from "../abi-form/abi-item-form-with-preview.js";
-import type { AddressData } from "../address-autocomplete-input.js";
+import { AbiItemFormWithPreview } from "../../abi-form/abi-item-form-with-preview.js";
+import type { AddressData } from "../../address-autocomplete-input.js";
 import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "../shadcn/accordion.js";
+} from "../../shadcn/accordion.js";
+import type { ExecutionParams } from "../types.js";
+import { useFunctionExecution } from "../use-function-execution.js";
 import { DefaultResultDisplay } from "./result-display.js";
 import {
   ActionButtons,
   ConnectWalletAlert,
   MsgSenderInput,
 } from "./shared-components.js";
-import type { ExecutionParams } from "./types.js";
-
-type InternalResult = {
-  type: "call" | "simulation" | "execution" | "error";
-  data?: string;
-  hash?: string;
-  cleanResult?: string;
-  error?: string;
-};
-
-function formatDecodedResult(result: unknown): string {
-  if (typeof result === "bigint") {
-    return result.toString();
-  }
-  if (Array.isArray(result)) {
-    return JSON.stringify(
-      result,
-      (_, v) => (typeof v === "bigint" ? v.toString() : v),
-      2,
-    );
-  }
-  if (typeof result === "object" && result !== null) {
-    return JSON.stringify(
-      result,
-      (_, v) => (typeof v === "bigint" ? v.toString() : v),
-      2,
-    );
-  }
-  return String(result);
-}
 
 const executionFormSchema = z.object({
   msgSender: z
@@ -94,9 +66,8 @@ export const FunctionItem = memo(
     onHashClick,
   }: FunctionItemProps) => {
     const [callData, setCallData] = useState<string>("");
-    const [result, setResult] = useState<InternalResult | null>(null);
-    const [isSimulating, setIsSimulating] = useState(false);
-    const [isExecuting, setIsExecuting] = useState(false);
+    const { result, isSimulating, isExecuting, simulate, execute } =
+      useFunctionExecution();
 
     const form = useForm({
       mode: "onChange",
@@ -118,104 +89,26 @@ export const FunctionItem = memo(
       [],
     );
 
-    const handleSimulate = async () => {
-      if (!callData || !onSimulate) return;
-      setIsSimulating(true);
-      try {
-        const rawResult = await onSimulate({
-          abiFunction: func,
-          callData: callData as `0x${string}`,
-          msgSender: msgSender ? (msgSender as Address) : undefined,
-        });
-
-        if (isWrite) {
-          setResult({
-            type: "simulation",
-            cleanResult: "Simulation successful",
-            data: rawResult,
-          });
-        } else {
-          try {
-            const decoded = decodeFunctionResult({
-              abi: [func],
-              functionName: func.name,
-              data: rawResult,
-            });
-
-            setResult({
-              type: "simulation",
-              cleanResult: formatDecodedResult(decoded),
-              data: rawResult,
-            });
-          } catch {
-            setResult({
-              type: "simulation",
-              data: rawResult,
-            });
-          }
-        }
-      } catch (error) {
-        setResult({
-          type: "error",
-          error: error instanceof Error ? error.message : "Unknown error",
-        });
-      } finally {
-        setIsSimulating(false);
-      }
+    const handleSimulate = () => {
+      simulate({
+        abiFunction: func,
+        callData,
+        msgSender: msgSender ? (msgSender as Address) : undefined,
+        onQuery,
+        onWrite,
+        onSimulate,
+      });
     };
 
-    const handleExecute = async () => {
-      if (!callData) return;
-      setIsExecuting(true);
-      try {
-        if (isWrite) {
-          // Call write function - returns transaction hash
-          const hash = await onWrite({
-            abiFunction: func,
-            callData: callData as `0x${string}`,
-            msgSender: msgSender ? (msgSender as Address) : undefined,
-          });
-
-          setResult({
-            type: "execution",
-            hash,
-            cleanResult: "Transaction submitted",
-          });
-        } else {
-          // Call query function - returns raw hex
-          const rawResult = await onQuery({
-            abiFunction: func,
-            callData: callData as `0x${string}`,
-            msgSender: msgSender ? (msgSender as Address) : undefined,
-          });
-
-          try {
-            const decoded = decodeFunctionResult({
-              abi: [func],
-              functionName: func.name,
-              data: rawResult,
-            });
-
-            setResult({
-              type: "call",
-              cleanResult: formatDecodedResult(decoded),
-              data: rawResult,
-            });
-          } catch {
-            setResult({
-              type: "call",
-              data: rawResult,
-            });
-          }
-        }
-      } catch (error) {
-        setResult({
-          type: "error",
-          error: error instanceof Error ? error.message : "Unknown error",
-        });
-      } finally {
-        setIsExecuting(false);
-      }
+    const handleExecute = () => {
+      execute({
+        abiFunction: func,
+        callData,
+        msgSender: msgSender ? (msgSender as Address) : undefined,
+        onQuery,
+        onWrite,
+        onSimulate,
+      });
     };
 
     const functionKey = `${func.name}-${index}`;

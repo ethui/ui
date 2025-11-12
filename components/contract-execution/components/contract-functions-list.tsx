@@ -1,13 +1,14 @@
 import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { AbiFunction } from "viem";
-import { cn } from "../../lib/utils.js";
-import { Accordion } from "../shadcn/accordion.js";
-import { Input } from "../shadcn/input.js";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../shadcn/tabs.js";
+import { cn } from "../../../lib/utils.js";
+import { Accordion } from "../../shadcn/accordion.js";
+import { Input } from "../../shadcn/input.js";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../shadcn/tabs.js";
+import type { ContractFunctionsListProps } from "../types.js";
 import { FunctionItem } from "./function-item.js";
 import { RawOperations } from "./raw-operations.js";
-import type { ContractFunctionsListProps } from "./types.js";
+import { SignatureOperations } from "./signature-operations.js";
 
 export function ContractFunctionsList({
   abi,
@@ -22,9 +23,11 @@ export function ContractFunctionsList({
   onSimulate,
   onRawCall,
   onRawTransaction,
+  enableSignature,
   addressRenderer,
   onHashClick,
   title,
+  NoAbiComponent,
 }: ContractFunctionsListProps) {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -51,7 +54,8 @@ export function ContractFunctionsList({
   }, [contractFunctions, searchTerm]);
 
   const hasRawOperations = onRawCall || onRawTransaction;
-  const tabCount = hasRawOperations ? 3 : 2;
+  const hasSignature = !!enableSignature;
+  const tabCount = 2 + (hasRawOperations ? 1 : 0) + (hasSignature ? 1 : 0);
 
   return (
     <div className="pb-7">
@@ -76,6 +80,7 @@ export function ContractFunctionsList({
               "grid w-full",
               tabCount === 2 && "grid-cols-2",
               tabCount === 3 && "grid-cols-3",
+              tabCount === 4 && "grid-cols-4",
             )}
           >
             <TabsTrigger
@@ -104,6 +109,14 @@ export function ContractFunctionsList({
                 Raw
               </TabsTrigger>
             )}
+            {hasSignature && (
+              <TabsTrigger
+                value="signature"
+                className="flex cursor-pointer items-center gap-2"
+              >
+                Signature
+              </TabsTrigger>
+            )}
           </TabsList>
 
           <TabsContent value="read" className="mt-4">
@@ -129,6 +142,10 @@ export function ContractFunctionsList({
                     />
                   ))}
                 </Accordion>
+              ) : NoAbiComponent &&
+                !searchTerm &&
+                contractFunctions.length === 0 ? (
+                <NoAbiComponent />
               ) : (
                 <div className="p-6 text-center text-muted-foreground">
                   {searchTerm
@@ -162,6 +179,10 @@ export function ContractFunctionsList({
                     />
                   ))}
                 </Accordion>
+              ) : NoAbiComponent &&
+                !searchTerm &&
+                contractFunctions.length === 0 ? (
+                <NoAbiComponent />
               ) : (
                 <div className="p-6 text-center text-muted-foreground">
                   {searchTerm
@@ -183,6 +204,24 @@ export function ContractFunctionsList({
                 isConnected={isConnected}
                 onRawCall={onRawCall}
                 onRawTransaction={onRawTransaction}
+                addressRenderer={addressRenderer}
+                onHashClick={onHashClick}
+              />
+            </TabsContent>
+          )}
+
+          {hasSignature && (
+            <TabsContent value="signature" className="mt-4">
+              <SignatureOperations
+                address={address}
+                chainId={chainId}
+                sender={sender}
+                addresses={addresses}
+                requiresConnection={requiresConnection}
+                isConnected={isConnected}
+                onQuery={onQuery}
+                onWrite={onWrite}
+                onSimulate={onSimulate}
                 addressRenderer={addressRenderer}
                 onHashClick={onHashClick}
               />
