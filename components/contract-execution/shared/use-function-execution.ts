@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import type { AbiFunction, Address } from "viem";
+import type { AbiFunction, Address, Hex } from "viem";
 import { decodeFunctionResult } from "viem";
 import type { ExecutionParams } from "./types.js";
 import { formatDecodedResult } from "./utils.js";
@@ -7,7 +7,7 @@ import { formatDecodedResult } from "./utils.js";
 export type InternalResult = {
   type: "call" | "simulation" | "execution" | "error";
   data?: string;
-  hash?: string;
+  hash?: Hex;
   cleanResult?: string;
   error?: string;
 };
@@ -16,9 +16,9 @@ interface UseFunctionExecutionParams {
   abiFunction: AbiFunction;
   callData: string;
   msgSender?: Address;
-  onQuery: (params: ExecutionParams) => Promise<`0x${string}`>;
-  onWrite: (params: ExecutionParams) => Promise<`0x${string}`>;
-  onSimulate?: (params: ExecutionParams) => Promise<`0x${string}`>;
+  onQuery: (params: ExecutionParams) => Promise<Hex>;
+  onWrite: (params: ExecutionParams) => Promise<Hex>;
+  onSimulate?: (params: ExecutionParams) => Promise<Hex>;
 }
 
 export function useFunctionExecution() {
@@ -43,7 +43,7 @@ export function useFunctionExecution() {
       try {
         const rawResult = await onSimulate({
           abiFunction,
-          callData: callData as `0x${string}`,
+          callData: callData as Hex,
           msgSender,
         });
 
@@ -104,7 +104,7 @@ export function useFunctionExecution() {
         if (isWrite) {
           const hash = await onWrite({
             abiFunction,
-            callData: callData as `0x${string}`,
+            callData: callData as Hex,
             msgSender,
           });
 
@@ -116,7 +116,7 @@ export function useFunctionExecution() {
         } else {
           const rawResult = await onQuery({
             abiFunction,
-            callData: callData as `0x${string}`,
+            callData: callData as Hex,
             msgSender,
           });
 

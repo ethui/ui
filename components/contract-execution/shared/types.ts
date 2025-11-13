@@ -1,15 +1,26 @@
-import type { Abi, AbiFunction, Address } from "viem";
-import type { AddressData } from "../address-autocomplete-input.js";
+import type { Abi, AbiFunction, Address, Hex } from "viem";
+import type { AddressData } from "../../address-autocomplete-input.js";
+
+export interface BaseExecutionProps {
+  address: Address;
+  chainId: number;
+  sender?: Address;
+  addresses?: AddressData[];
+  requiresConnection: boolean;
+  isConnected: boolean;
+  addressRenderer?: (address: Address) => React.ReactNode;
+  onHashClick?: (hash: string) => void;
+}
 
 export interface ExecutionParams {
   abiFunction: AbiFunction;
-  callData: `0x${string}`;
+  callData: Hex;
   msgSender?: Address;
   value?: bigint;
 }
 
 export interface RawCallParams {
-  data: `0x${string}`;
+  data: Hex;
   value?: bigint;
   msgSender?: Address;
 }

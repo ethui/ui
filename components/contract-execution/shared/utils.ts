@@ -1,3 +1,5 @@
+import type { AbiFunction } from "viem";
+
 export function formatDecodedResult(result: unknown): string {
   if (typeof result === "bigint") {
     return result.toString();
@@ -17,4 +19,9 @@ export function formatDecodedResult(result: unknown): string {
     );
   }
   return String(result);
+}
+
+export function isWriteFunction(func: AbiFunction | null | undefined): boolean {
+  if (!func) return true;
+  return func.stateMutability !== "view" && func.stateMutability !== "pure";
 }
