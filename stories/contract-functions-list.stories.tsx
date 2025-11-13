@@ -1,16 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import React, { useState } from "react";
 import type { Abi } from "viem";
-import { ContractFunctionsList } from "../components/contract-execution/contract-execution-tabs/index.js";
-import type {
-  ExecutionParams,
-  RawCallParams,
-} from "../components/contract-execution/shared/types.js";
+import { ContractExecutionTabs } from "../components/contract-execution/contract-execution-tabs/index.js";
+import type { ExecutionParams } from "../components/contract-execution/shared/types.js";
 import { Button } from "../components/shadcn/button.js";
 
-const meta: Meta<typeof ContractFunctionsList> = {
-  title: "ethui/ContractFunctionsList",
-  component: ContractFunctionsList,
+const meta: Meta<typeof ContractExecutionTabs> = {
+  title: "ethui/ContractExecutionTabs",
+  component: ContractExecutionTabs,
   parameters: {
     layout: "padded",
   },
@@ -111,6 +108,11 @@ const mockQuery = async (params: ExecutionParams): Promise<`0x${string}`> => {
   // Simulate async operation
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
+  // If no abiFunction (raw call), return generic result
+  if (!params.abiFunction) {
+    return "0x0000000000000000000000000000000000000000000000000000000000000001";
+  }
+
   // Mock encoded result for read operations (manually encoded for simplicity)
   const mockResults: Record<string, `0x${string}`> = {
     balanceOf:
@@ -147,6 +149,11 @@ const mockSimulate = async (
   // Simulate async operation
   await new Promise((resolve) => setTimeout(resolve, 800));
 
+  // If no abiFunction, can't simulate
+  if (!params.abiFunction) {
+    return "0x0000000000000000000000000000000000000000000000000000000000000001";
+  }
+
   const isWrite =
     params.abiFunction.stateMutability !== "view" &&
     params.abiFunction.stateMutability !== "pure";
@@ -158,23 +165,6 @@ const mockSimulate = async (
     // For read functions, same as query
     return mockQuery(params);
   }
-};
-
-// Mock raw operation handlers
-const mockRawCall = async (params: RawCallParams): Promise<`0x${string}`> => {
-  console.log("Raw call with:", params);
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  // Return mock raw hex result
-  return "0x0000000000000000000000000000000000000000000000000000000000000001";
-};
-
-const mockRawTransaction = async (
-  params: RawCallParams,
-): Promise<`0x${string}`> => {
-  console.log("Raw transaction with:", params);
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  // Return mock transaction hash
-  return "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890";
 };
 
 // Story: Basic usage with all features
@@ -190,8 +180,7 @@ export const Default: Story = {
     onQuery: mockQuery,
     onWrite: mockWrite,
     onSimulate: mockSimulate,
-    onRawCall: mockRawCall,
-    onRawTransaction: mockRawTransaction,
+    enableRaw: true,
     enableSignature: true,
   },
 };
@@ -208,7 +197,9 @@ export const WithoutSimulateAndRaw: Story = {
     isConnected: true,
     onQuery: mockQuery,
     onWrite: mockWrite,
-    // No onSimulate, onRawCall, or onRawTransaction - shows only Read/Write tabs
+    // No onSimulate or raw tabs
+    enableRaw: false,
+    enableSignature: false,
   },
 };
 
@@ -228,7 +219,7 @@ function InteractiveStory() {
         </Button>
       </div>
 
-      <ContractFunctionsList
+      <ContractExecutionTabs
         abi={mockERC20Abi}
         address="0x1234567890123456789012345678901234567890"
         chainId={1}
@@ -241,8 +232,8 @@ function InteractiveStory() {
         onQuery={mockQuery}
         onWrite={mockWrite}
         onSimulate={mockSimulate}
-        onRawCall={mockRawCall}
-        onRawTransaction={mockRawTransaction}
+        enableRaw={true}
+        enableSignature={true}
       />
     </div>
   );
@@ -272,8 +263,8 @@ export const WithError: Story = {
     onQuery: mockQuery,
     onWrite: mockWriteWithError,
     onSimulate: mockSimulate,
-    onRawCall: mockRawCall,
-    onRawTransaction: mockRawTransaction,
+    enableRaw: true,
+    enableSignature: true,
   },
 };
 
@@ -290,8 +281,7 @@ export const EmptyAbi: Story = {
     onQuery: mockQuery,
     onWrite: mockWrite,
     onSimulate: mockSimulate,
-    onRawCall: mockRawCall,
-    onRawTransaction: mockRawTransaction,
+    enableRaw: true,
     enableSignature: true,
   },
 };
@@ -324,8 +314,7 @@ export const EmptyAbiWithCustomComponent: Story = {
     onQuery: mockQuery,
     onWrite: mockWrite,
     onSimulate: mockSimulate,
-    onRawCall: mockRawCall,
-    onRawTransaction: mockRawTransaction,
+    enableRaw: true,
     enableSignature: true,
     NoAbiComponent: CustomNoAbi,
   },

@@ -10,7 +10,7 @@ import {
   MsgSenderInput,
 } from "../shared/components.js";
 import { useMsgSenderForm } from "../shared/form-utils.js";
-import type { ExecutionParams, RawCallParams } from "../shared/types.js";
+import type { ExecutionParams } from "../shared/types.js";
 import { useFunctionExecution } from "../shared/use-function-execution.js";
 import { useRawExecution } from "../shared/use-raw-execution.js";
 import { isWriteFunction } from "../shared/utils.js";
@@ -28,7 +28,6 @@ export interface ResendTransactionProps {
   onQuery: (params: ExecutionParams) => Promise<Hex>;
   onWrite: (params: ExecutionParams) => Promise<Hex>;
   onSimulate?: (params: ExecutionParams) => Promise<Hex>;
-  onRawTransaction?: (params: RawCallParams) => Promise<Hex>;
   addressRenderer?: (address: Address) => React.ReactNode;
   onHashClick?: (hash: string) => void;
 }
@@ -46,7 +45,6 @@ export function ResendTransaction({
   onQuery,
   onWrite,
   onSimulate,
-  onRawTransaction,
   addressRenderer,
   onHashClick,
 }: ResendTransactionProps) {
@@ -73,7 +71,7 @@ export function ResendTransaction({
   const functionExecution = useFunctionExecution();
   const rawExecution = useRawExecution({
     isWrite: true,
-    onExecute: onRawTransaction || (async () => "0x" as Hex),
+    onExecute: onWrite,
   });
 
   const handleSimulate = () => {
