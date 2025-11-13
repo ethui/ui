@@ -38,4 +38,3 @@ export function useMsgSenderForm(defaultSender?: Address) {
     msgSender,
   };
 }
-

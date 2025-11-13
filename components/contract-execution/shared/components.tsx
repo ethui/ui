@@ -130,8 +130,8 @@ export function DefaultResultDisplay({
             {result.type === "call"
               ? "Result"
               : result.type === "simulation"
-              ? "Simulation Result"
-              : "Result"}
+                ? "Simulation Result"
+                : "Result"}
           </div>
           <div
             className={clsx(

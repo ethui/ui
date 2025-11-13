@@ -9,13 +9,13 @@ import {
   AccordionTrigger,
 } from "../../shadcn/accordion.js";
 import { Button } from "../../shadcn/button.js";
-import type { BaseExecutionProps, RawCallParams } from "../shared/types.js";
 import {
   ConnectWalletAlert,
   DefaultResultDisplay,
   MsgSenderInput,
 } from "../shared/components.js";
 import { useMsgSenderForm } from "../shared/form-utils.js";
+import type { BaseExecutionProps, RawCallParams } from "../shared/types.js";
 import { useRawExecution } from "../shared/use-raw-execution.js";
 
 interface RawOperationsProps extends BaseExecutionProps {
@@ -164,8 +164,8 @@ function RawOperationItem({
                 {isExecuting
                   ? "Executing..."
                   : type === "call"
-                  ? "Call"
-                  : "Send Transaction"}
+                    ? "Call"
+                    : "Send Transaction"}
               </Button>
             </div>
 

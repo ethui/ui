@@ -7,8 +7,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../../shadcn/accordion.js";
-import type { BaseExecutionProps, ExecutionParams } from "../shared/types.js";
-import { useFunctionExecution } from "../shared/use-function-execution.js";
 import {
   ActionButtons,
   ConnectWalletAlert,
@@ -16,6 +14,8 @@ import {
   MsgSenderInput,
 } from "../shared/components.js";
 import { useMsgSenderForm } from "../shared/form-utils.js";
+import type { BaseExecutionProps, ExecutionParams } from "../shared/types.js";
+import { useFunctionExecution } from "../shared/use-function-execution.js";
 import { isWriteFunction } from "../shared/utils.js";
 
 interface FunctionItemProps extends BaseExecutionProps {
