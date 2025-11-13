@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { Abi } from "viem";
+import { ResendTransaction } from "../components/contract-execution/resend-transaction/index.js";
 import type {
   ExecutionParams,
   RawCallParams,
 } from "../components/contract-execution/shared/types.js";
-import { ResendTransaction } from "../components/contract-execution/resend-transaction/index.js";
 
 const meta: Meta<typeof ResendTransaction> = {
   title: "ethui/ResendTransaction",
