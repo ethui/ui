@@ -3,8 +3,8 @@ import type { Abi } from "viem";
 import type {
   ExecutionParams,
   RawCallParams,
-} from "../components/contract-execution/index.js";
-import { ResendTransaction } from "../components/contract-execution/index.js";
+} from "../components/contract-execution/shared/types.js";
+import { ResendTransaction } from "../components/contract-execution/resend-transaction/index.js";
 
 const meta: Meta<typeof ResendTransaction> = {
   title: "ethui/ResendTransaction",

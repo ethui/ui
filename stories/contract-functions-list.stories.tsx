@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import React, { useState } from "react";
 import type { Abi } from "viem";
-import {
-  ContractFunctionsList,
-  type ExecutionParams,
-  type RawCallParams,
-} from "../components/contract-execution/index.js";
+import { ContractFunctionsList } from "../components/contract-execution/contract-execution-tabs/index.js";
+import type {
+  ExecutionParams,
+  RawCallParams,
+} from "../components/contract-execution/shared/types.js";
 import { Button } from "../components/shadcn/button.js";
 
 const meta: Meta<typeof ContractFunctionsList> = {
