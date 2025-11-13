@@ -1,59 +1,44 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import type { AbiFunction, Address } from "viem";
-import { isAddress, parseAbiItem } from "viem";
+import type { AbiFunction, Address, Hex } from "viem";
+import { parseAbiItem } from "viem";
 import { z } from "zod";
 import { AbiItemFormWithPreview } from "../../abi-form/abi-item-form-with-preview.js";
-import type { AddressData } from "../../address-autocomplete-input.js";
 import { Input } from "../../shadcn/input.js";
 import { Label } from "../../shadcn/label.js";
-import type { ExecutionParams } from "../types.js";
-import { useFunctionExecution } from "../use-function-execution.js";
-import { DefaultResultDisplay } from "./result-display.js";
+import type { BaseExecutionProps, ExecutionParams } from "../shared/types.js";
+import { useFunctionExecution } from "../shared/use-function-execution.js";
 import {
   ActionButtons,
   ConnectWalletAlert,
+  DefaultResultDisplay,
   MsgSenderInput,
-} from "./shared-components.js";
+} from "../shared/components.js";
+import { msgSenderSchema } from "../shared/form-utils.js";
+import { isWriteFunction } from "../shared/utils.js";
 
-const signatureFormSchema = z.object({
-  signature: z.string().refine(
-    (val) => {
-      if (!val) return false;
-      try {
-        parseAbiItem(val);
-        return true;
-      } catch {
-        return false;
-      }
-    },
-    { message: "Invalid function signature" },
-  ),
-  msgSender: z
-    .string()
-    .refine(
+const signatureFormSchema = z
+  .object({
+    signature: z.string().refine(
       (val) => {
-        if (!val) return true;
-        return isAddress(val);
+        if (!val) return false;
+        try {
+          parseAbiItem(val);
+          return true;
+        } catch {
+          return false;
+        }
       },
-      { message: "Invalid address format" },
-    )
-    .optional(),
-});
+      { message: "Invalid function signature" },
+    ),
+  })
+  .merge(msgSenderSchema);
 
-interface SignatureOperationsProps {
-  address: Address;
-  chainId: number;
-  sender?: Address;
-  addresses?: AddressData[];
-  requiresConnection: boolean;
-  isConnected: boolean;
-  onQuery: (params: ExecutionParams) => Promise<`0x${string}`>;
-  onWrite: (params: ExecutionParams) => Promise<`0x${string}`>;
-  onSimulate?: (params: ExecutionParams) => Promise<`0x${string}`>;
-  addressRenderer?: (address: Address) => React.ReactNode;
-  onHashClick?: (hash: string) => void;
+interface SignatureOperationsProps extends BaseExecutionProps {
+  onQuery: (params: ExecutionParams) => Promise<Hex>;
+  onWrite: (params: ExecutionParams) => Promise<Hex>;
+  onSimulate?: (params: ExecutionParams) => Promise<Hex>;
 }
 
 export function SignatureOperations({
@@ -69,7 +54,7 @@ export function SignatureOperations({
   addressRenderer,
   onHashClick,
 }: SignatureOperationsProps) {
-  const [callData, setCallData] = useState<string>("");
+  const [callData, setCallData] = useState("");
   const { result, isSimulating, isExecuting, simulate, execute } =
     useFunctionExecution();
 
@@ -83,7 +68,10 @@ export function SignatureOperations({
   });
 
   const signature = form.watch("signature");
-  const msgSender = form.watch("msgSender") || "";
+  const msgSenderValue = form.watch("msgSender");
+  const msgSender: Address | undefined = msgSenderValue
+    ? (msgSenderValue as Address)
+    : undefined;
 
   const isValidSignature =
     form.getFieldState("signature").invalid === false && signature.length > 0;
@@ -97,23 +85,21 @@ export function SignatureOperations({
     }
   }, [isValidSignature, signature]);
 
-  const isWrite =
-    parsedAbiFunction?.stateMutability !== "view" &&
-    parsedAbiFunction?.stateMutability !== "pure";
+  const isWrite = isWriteFunction(parsedAbiFunction);
 
   const handleCallDataChange = useCallback(
-    ({ data }: { data?: `0x${string}`; value?: bigint }) => {
+    ({ data }: { data?: Hex; value?: bigint }) => {
       setCallData(data || "");
     },
     [],
   );
 
   const handleSimulate = () => {
-    if (!parsedAbiFunction) return;
+    if (!parsedAbiFunction || !callData) return;
     simulate({
       abiFunction: parsedAbiFunction,
       callData,
-      msgSender: msgSender ? (msgSender as Address) : undefined,
+      msgSender,
       onQuery,
       onWrite,
       onSimulate,
@@ -121,11 +107,11 @@ export function SignatureOperations({
   };
 
   const handleExecute = () => {
-    if (!parsedAbiFunction) return;
+    if (!parsedAbiFunction || !callData) return;
     execute({
       abiFunction: parsedAbiFunction,
       callData,
-      msgSender: msgSender ? (msgSender as Address) : undefined,
+      msgSender,
       onQuery,
       onWrite,
       onSimulate,
@@ -156,10 +142,6 @@ export function SignatureOperations({
             <>
               {isWrite && <MsgSenderInput />}
 
-              {isWrite && requiresConnection && !isConnected && (
-                <ConnectWalletAlert />
-              )}
-
               <AbiItemFormWithPreview
                 addresses={addresses}
                 onChange={handleCallDataChange}
@@ -176,6 +158,10 @@ export function SignatureOperations({
                     : undefined
                 }
               />
+
+              {isWrite && requiresConnection && !isConnected && (
+                <ConnectWalletAlert />
+              )}
 
               <ActionButtons
                 isWrite={isWrite}

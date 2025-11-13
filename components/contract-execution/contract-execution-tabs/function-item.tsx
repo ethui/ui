@@ -1,52 +1,29 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { memo, useCallback, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import type { AbiFunction, Address } from "viem";
-import { isAddress } from "viem";
-import { z } from "zod";
+import { FormProvider } from "react-hook-form";
+import type { AbiFunction } from "viem";
 import { AbiItemFormWithPreview } from "../../abi-form/abi-item-form-with-preview.js";
-import type { AddressData } from "../../address-autocomplete-input.js";
 import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "../../shadcn/accordion.js";
-import type { ExecutionParams } from "../types.js";
-import { useFunctionExecution } from "../use-function-execution.js";
-import { DefaultResultDisplay } from "./result-display.js";
+import type { BaseExecutionProps, ExecutionParams } from "../shared/types.js";
+import { useFunctionExecution } from "../shared/use-function-execution.js";
 import {
   ActionButtons,
   ConnectWalletAlert,
+  DefaultResultDisplay,
   MsgSenderInput,
-} from "./shared-components.js";
+} from "../shared/components.js";
+import { useMsgSenderForm } from "../shared/form-utils.js";
+import { isWriteFunction } from "../shared/utils.js";
 
-const executionFormSchema = z.object({
-  msgSender: z
-    .string()
-    .refine(
-      (val) => {
-        if (!val) return true;
-        return isAddress(val);
-      },
-      { message: "Invalid address format" },
-    )
-    .optional(),
-});
-
-interface FunctionItemProps {
+interface FunctionItemProps extends BaseExecutionProps {
   func: AbiFunction;
   index: number;
-  address: Address;
-  chainId: number;
-  sender?: Address;
-  addresses?: AddressData[];
-  requiresConnection: boolean;
-  isConnected: boolean;
   onQuery: (params: ExecutionParams) => Promise<`0x${string}`>;
   onWrite: (params: ExecutionParams) => Promise<`0x${string}`>;
   onSimulate?: (params: ExecutionParams) => Promise<`0x${string}`>;
-  addressRenderer?: (address: Address) => React.ReactNode;
-  onHashClick?: (hash: string) => void;
 }
 
 export const FunctionItem = memo(
@@ -68,19 +45,9 @@ export const FunctionItem = memo(
     const [callData, setCallData] = useState<string>("");
     const { result, isSimulating, isExecuting, simulate, execute } =
       useFunctionExecution();
+    const { form, msgSender } = useMsgSenderForm(sender);
 
-    const form = useForm({
-      mode: "onChange",
-      resolver: zodResolver(executionFormSchema),
-      defaultValues: {
-        msgSender: "",
-      },
-    });
-
-    const msgSender = form.watch().msgSender || "";
-
-    const isWrite =
-      func.stateMutability !== "view" && func.stateMutability !== "pure";
+    const isWrite = isWriteFunction(func);
 
     const handleCallDataChange = useCallback(
       (newCallData: string | undefined) => {
@@ -93,7 +60,7 @@ export const FunctionItem = memo(
       simulate({
         abiFunction: func,
         callData,
-        msgSender: msgSender ? (msgSender as Address) : undefined,
+        msgSender,
         onQuery,
         onWrite,
         onSimulate,
@@ -104,7 +71,7 @@ export const FunctionItem = memo(
       execute({
         abiFunction: func,
         callData,
-        msgSender: msgSender ? (msgSender as Address) : undefined,
+        msgSender,
         onQuery,
         onWrite,
         onSimulate,
@@ -128,10 +95,6 @@ export const FunctionItem = memo(
             <div className="mt-4 space-y-6">
               {isWrite && <MsgSenderInput />}
 
-              {isWrite && requiresConnection && !isConnected && (
-                <ConnectWalletAlert />
-              )}
-
               <AbiItemFormWithPreview
                 addresses={addresses}
                 key={func.name}
@@ -152,6 +115,10 @@ export const FunctionItem = memo(
                     : undefined
                 }
               />
+
+              {isWrite && requiresConnection && !isConnected && (
+                <ConnectWalletAlert />
+              )}
 
               <ActionButtons
                 isWrite={isWrite}

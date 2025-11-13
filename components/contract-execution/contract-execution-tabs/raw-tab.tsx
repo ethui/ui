@@ -1,11 +1,7 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import type { Address } from "viem";
-import { isAddress } from "viem";
-import { z } from "zod";
+import { FormProvider } from "react-hook-form";
+import type { Hex } from "viem";
 import { AbiItemFormWithPreview } from "../../abi-form/abi-item-form-with-preview.js";
-import type { AddressData } from "../../address-autocomplete-input.js";
 import {
   Accordion,
   AccordionContent,
@@ -13,42 +9,18 @@ import {
   AccordionTrigger,
 } from "../../shadcn/accordion.js";
 import { Button } from "../../shadcn/button.js";
-import type { RawCallParams } from "../types.js";
-import { DefaultResultDisplay } from "./result-display.js";
-import { ConnectWalletAlert, MsgSenderInput } from "./shared-components.js";
+import type { BaseExecutionProps, RawCallParams } from "../shared/types.js";
+import {
+  ConnectWalletAlert,
+  DefaultResultDisplay,
+  MsgSenderInput,
+} from "../shared/components.js";
+import { useMsgSenderForm } from "../shared/form-utils.js";
+import { useRawExecution } from "../shared/use-raw-execution.js";
 
-type InternalResult = {
-  type: "call" | "execution" | "error";
-  data?: string;
-  hash?: string;
-  cleanResult?: string;
-  error?: string;
-};
-
-const executionFormSchema = z.object({
-  msgSender: z
-    .string()
-    .refine(
-      (val) => {
-        if (!val) return true;
-        return isAddress(val);
-      },
-      { message: "Invalid address format" },
-    )
-    .optional(),
-});
-
-interface RawOperationsProps {
-  address: Address;
-  chainId: number;
-  sender?: Address;
-  addresses?: AddressData[];
-  requiresConnection: boolean;
-  isConnected: boolean;
+interface RawOperationsProps extends BaseExecutionProps {
   onRawCall?: (params: RawCallParams) => Promise<`0x${string}`>;
   onRawTransaction?: (params: RawCallParams) => Promise<`0x${string}`>;
-  addressRenderer?: (address: Address) => React.ReactNode;
-  onHashClick?: (hash: string) => void;
 }
 
 export function RawOperations({
@@ -99,17 +71,9 @@ export function RawOperations({
   );
 }
 
-interface RawOperationItemProps {
+interface RawOperationItemProps extends BaseExecutionProps {
   type: "call" | "transaction";
-  address: Address;
-  chainId: number;
-  sender?: Address;
-  addresses?: AddressData[];
-  requiresConnection: boolean;
-  isConnected: boolean;
   onExecute: (params: RawCallParams) => Promise<`0x${string}`>;
-  addressRenderer?: (address: Address) => React.ReactNode;
-  onHashClick?: (hash: string) => void;
 }
 
 function RawOperationItem({
@@ -126,20 +90,17 @@ function RawOperationItem({
 }: RawOperationItemProps) {
   const [callData, setCallData] = useState<string>("");
   const [value, setValue] = useState<bigint | undefined>();
-  const [result, setResult] = useState<InternalResult | null>(null);
-  const [isExecuting, setIsExecuting] = useState(false);
-
-  const form = useForm({
-    mode: "onChange",
-    resolver: zodResolver(executionFormSchema),
-    defaultValues: {
-      msgSender: "",
-    },
-  });
-
-  const msgSender = form.watch().msgSender || "";
+  const { form, msgSender } = useMsgSenderForm(sender);
 
   const isWrite = type === "transaction";
+  const {
+    result,
+    isExecuting,
+    execute: executeRaw,
+  } = useRawExecution({
+    isWrite,
+    onExecute,
+  });
   const title = type === "call" ? "Raw Call" : "Raw Transaction";
   const description =
     type === "call"
@@ -147,44 +108,15 @@ function RawOperationItem({
       : "Send transaction with arbitrary calldata";
 
   const handleCallDataChange = useCallback(
-    ({ data, value: newValue }: { data?: `0x${string}`; value?: bigint }) => {
+    ({ data, value: newValue }: { data?: Hex; value?: bigint }) => {
       setCallData(data || "");
       setValue(newValue);
     },
     [],
   );
 
-  const handleExecute = async () => {
-    if (!callData) return;
-    setIsExecuting(true);
-    try {
-      const result = await onExecute({
-        data: callData as `0x${string}`,
-        value,
-        msgSender: msgSender ? (msgSender as Address) : undefined,
-      });
-
-      if (isWrite) {
-        setResult({
-          type: "execution",
-          hash: result,
-          cleanResult: "Transaction submitted",
-        });
-      } else {
-        setResult({
-          type: "call",
-          data: result,
-          cleanResult: result,
-        });
-      }
-    } catch (error) {
-      setResult({
-        type: "error",
-        error: error instanceof Error ? error.message : "Unknown error",
-      });
-    } finally {
-      setIsExecuting(false);
-    }
+  const handleExecute = () => {
+    executeRaw({ callData, value, msgSender });
   };
 
   return (
@@ -203,10 +135,6 @@ function RawOperationItem({
           <div className="mt-4 space-y-6">
             {isWrite && <MsgSenderInput />}
 
-            {isWrite && requiresConnection && !isConnected && (
-              <ConnectWalletAlert />
-            )}
-
             <AbiItemFormWithPreview
               addresses={addresses}
               onChange={handleCallDataChange}
@@ -223,6 +151,10 @@ function RawOperationItem({
               }
             />
 
+            {isWrite && requiresConnection && !isConnected && (
+              <ConnectWalletAlert />
+            )}
+
             <div className="flex flex-row items-center justify-center gap-2">
               <Button
                 onClick={handleExecute}
@@ -232,8 +164,8 @@ function RawOperationItem({
                 {isExecuting
                   ? "Executing..."
                   : type === "call"
-                    ? "Call"
-                    : "Send Transaction"}
+                  ? "Call"
+                  : "Send Transaction"}
               </Button>
             </div>
 

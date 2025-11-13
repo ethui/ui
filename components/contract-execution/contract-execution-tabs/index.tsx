@@ -5,10 +5,10 @@ import { cn } from "../../../lib/utils.js";
 import { Accordion } from "../../shadcn/accordion.js";
 import { Input } from "../../shadcn/input.js";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../shadcn/tabs.js";
-import type { ContractFunctionsListProps } from "../types.js";
+import type { ContractFunctionsListProps } from "../shared/types.js";
 import { FunctionItem } from "./function-item.js";
-import { RawOperations } from "./raw-operations.js";
-import { SignatureOperations } from "./signature-operations.js";
+import { RawOperations } from "./raw-tab.js";
+import { SignatureOperations } from "./signature-tab.js";
 
 export function ContractFunctionsList({
   abi,
