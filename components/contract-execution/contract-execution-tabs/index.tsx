@@ -5,12 +5,12 @@ import { cn } from "../../../lib/utils.js";
 import { Accordion } from "../../shadcn/accordion.js";
 import { Input } from "../../shadcn/input.js";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../shadcn/tabs.js";
-import type { ContractFunctionsListProps } from "../shared/types.js";
+import type { ContractExecutionTabsProps } from "../shared/types.js";
 import { FunctionItem } from "./function-item.js";
 import { RawOperations } from "./raw-tab.js";
 import { SignatureOperations } from "./signature-tab.js";
 
-export function ContractFunctionsList({
+export function ContractExecutionTabs({
   abi,
   address,
   chainId,
@@ -21,14 +21,13 @@ export function ContractFunctionsList({
   onQuery,
   onWrite,
   onSimulate,
-  onRawCall,
-  onRawTransaction,
-  enableSignature,
+  enableRaw = true,
+  enableSignature = true,
   addressRenderer,
   onHashClick,
   title,
   NoAbiComponent,
-}: ContractFunctionsListProps) {
+}: ContractExecutionTabsProps) {
   const [searchTerm, setSearchTerm] = useState("");
 
   const contractFunctions = useMemo(() => {
@@ -53,9 +52,7 @@ export function ContractFunctionsList({
     };
   }, [contractFunctions, searchTerm]);
 
-  const hasRawOperations = onRawCall || onRawTransaction;
-  const hasSignature = !!enableSignature;
-  const tabCount = 2 + (hasRawOperations ? 1 : 0) + (hasSignature ? 1 : 0);
+  const tabCount = 2 + (enableRaw ? 1 : 0) + (enableSignature ? 1 : 0);
 
   return (
     <div className="pb-7">
@@ -101,7 +98,7 @@ export function ContractFunctionsList({
                 {writeFunctions.length}
               </span>
             </TabsTrigger>
-            {hasRawOperations && (
+            {enableRaw && (
               <TabsTrigger
                 value="raw"
                 className="flex cursor-pointer items-center gap-2"
@@ -109,7 +106,7 @@ export function ContractFunctionsList({
                 Raw
               </TabsTrigger>
             )}
-            {hasSignature && (
+            {enableSignature && (
               <TabsTrigger
                 value="signature"
                 className="flex cursor-pointer items-center gap-2"
@@ -201,7 +198,7 @@ export function ContractFunctionsList({
             </div>
           </TabsContent>
 
-          {hasRawOperations && (
+          {enableRaw && (
             <TabsContent
               forceMount
               value="raw"
@@ -214,15 +211,15 @@ export function ContractFunctionsList({
                 addresses={addresses}
                 requiresConnection={requiresConnection}
                 isConnected={isConnected}
-                onRawCall={onRawCall}
-                onRawTransaction={onRawTransaction}
+                onQuery={onQuery}
+                onWrite={onWrite}
                 addressRenderer={addressRenderer}
                 onHashClick={onHashClick}
               />
             </TabsContent>
           )}
 
-          {hasSignature && (
+          {enableSignature && (
             <TabsContent
               forceMount
               value="signature"

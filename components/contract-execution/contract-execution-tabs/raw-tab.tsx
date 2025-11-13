@@ -15,12 +15,12 @@ import {
   MsgSenderInput,
 } from "../shared/components.js";
 import { useMsgSenderForm } from "../shared/form-utils.js";
-import type { BaseExecutionProps, RawCallParams } from "../shared/types.js";
+import type { BaseExecutionProps, ExecutionParams } from "../shared/types.js";
 import { useRawExecution } from "../shared/use-raw-execution.js";
 
 interface RawOperationsProps extends BaseExecutionProps {
-  onRawCall?: (params: RawCallParams) => Promise<`0x${string}`>;
-  onRawTransaction?: (params: RawCallParams) => Promise<`0x${string}`>;
+  onQuery: (params: ExecutionParams) => Promise<`0x${string}`>;
+  onWrite: (params: ExecutionParams) => Promise<`0x${string}`>;
 }
 
 export function RawOperations({
@@ -30,42 +30,38 @@ export function RawOperations({
   addresses,
   requiresConnection,
   isConnected,
-  onRawCall,
-  onRawTransaction,
+  onQuery,
+  onWrite,
   addressRenderer,
   onHashClick,
 }: RawOperationsProps) {
   return (
     <div className="rounded-lg bg-card">
       <Accordion type="multiple" className="w-full rounded-lg border">
-        {onRawCall && (
-          <RawOperationItem
-            type="call"
-            address={address}
-            chainId={chainId}
-            sender={sender}
-            addresses={addresses}
-            requiresConnection={requiresConnection}
-            isConnected={isConnected}
-            onExecute={onRawCall}
-            addressRenderer={addressRenderer}
-            onHashClick={onHashClick}
-          />
-        )}
-        {onRawTransaction && (
-          <RawOperationItem
-            type="transaction"
-            address={address}
-            chainId={chainId}
-            sender={sender}
-            addresses={addresses}
-            requiresConnection={requiresConnection}
-            isConnected={isConnected}
-            onExecute={onRawTransaction}
-            addressRenderer={addressRenderer}
-            onHashClick={onHashClick}
-          />
-        )}
+        <RawOperationItem
+          type="call"
+          address={address}
+          chainId={chainId}
+          sender={sender}
+          addresses={addresses}
+          requiresConnection={requiresConnection}
+          isConnected={isConnected}
+          onExecute={onQuery}
+          addressRenderer={addressRenderer}
+          onHashClick={onHashClick}
+        />
+        <RawOperationItem
+          type="transaction"
+          address={address}
+          chainId={chainId}
+          sender={sender}
+          addresses={addresses}
+          requiresConnection={requiresConnection}
+          isConnected={isConnected}
+          onExecute={onWrite}
+          addressRenderer={addressRenderer}
+          onHashClick={onHashClick}
+        />
       </Accordion>
     </div>
   );
@@ -73,7 +69,7 @@ export function RawOperations({
 
 interface RawOperationItemProps extends BaseExecutionProps {
   type: "call" | "transaction";
-  onExecute: (params: RawCallParams) => Promise<`0x${string}`>;
+  onExecute: (params: ExecutionParams) => Promise<`0x${string}`>;
 }
 
 function RawOperationItem({

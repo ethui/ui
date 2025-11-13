@@ -13,19 +13,13 @@ export interface BaseExecutionProps {
 }
 
 export interface ExecutionParams {
-  abiFunction: AbiFunction;
+  abiFunction?: AbiFunction;
   callData: Hex;
   msgSender?: Address;
   value?: bigint;
 }
 
-export interface RawCallParams {
-  data: Hex;
-  value?: bigint;
-  msgSender?: Address;
-}
-
-export interface ContractFunctionsListProps {
+export interface ContractExecutionTabsProps {
   /** Full contract ABI (will be filtered internally for functions) */
   abi: Abi;
   /** Contract address */
@@ -46,11 +40,9 @@ export interface ContractFunctionsListProps {
   onWrite: (params: ExecutionParams) => Promise<`0x${string}`>;
   /** Optional simulate function for write functions - returns raw hex result from simulation */
   onSimulate?: (params: ExecutionParams) => Promise<`0x${string}`>;
-  /** Optional raw call function (eth_call with arbitrary data) - returns raw hex result */
-  onRawCall?: (params: RawCallParams) => Promise<`0x${string}`>;
-  /** Optional raw transaction function (send transaction with arbitrary data) - returns transaction hash */
-  onRawTransaction?: (params: RawCallParams) => Promise<`0x${string}`>;
-  /** Enable signature-based interaction tab */
+  /** Enable raw call/transaction tab (default: true) */
+  enableRaw?: boolean;
+  /** Enable signature-based interaction tab (default: true) */
   enableSignature?: boolean;
   /** Custom address renderer for form inputs */
   addressRenderer?: (address: Address) => React.ReactNode;

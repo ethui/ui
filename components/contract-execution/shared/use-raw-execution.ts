@@ -1,11 +1,11 @@
 import { useState } from "react";
 import type { Address, Hex } from "viem";
-import type { RawCallParams } from "./types.js";
+import type { ExecutionParams } from "./types.js";
 import type { InternalResult } from "./use-function-execution.js";
 
 interface UseRawExecutionParams {
   isWrite: boolean;
-  onExecute: (params: RawCallParams) => Promise<Hex>;
+  onExecute: (params: ExecutionParams) => Promise<Hex>;
 }
 
 export function useRawExecution({ isWrite, onExecute }: UseRawExecutionParams) {
@@ -22,7 +22,7 @@ export function useRawExecution({ isWrite, onExecute }: UseRawExecutionParams) {
     setIsExecuting(true);
     try {
       const response = await onExecute({
-        data: params.callData as Hex,
+        callData: params.callData as Hex,
         value: params.value,
         msgSender: params.msgSender,
       });
