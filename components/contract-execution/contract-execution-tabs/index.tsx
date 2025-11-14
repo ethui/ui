@@ -84,7 +84,7 @@ export function ContractExecutionTabs({
               value="read"
               className="flex cursor-pointer items-center gap-2"
             >
-              Read Contract
+              Read
               <span className="rounded bg-muted px-2 py-0.5 text-xs">
                 {readFunctions.length}
               </span>
@@ -93,7 +93,7 @@ export function ContractExecutionTabs({
               value="write"
               className="flex cursor-pointer items-center gap-2"
             >
-              Write Contract
+              Write
               <span className="rounded bg-muted px-2 py-0.5 text-xs">
                 {writeFunctions.length}
               </span>
