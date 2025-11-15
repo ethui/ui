@@ -213,6 +213,7 @@ export function ContractExecutionTabs({
                 isConnected={isConnected}
                 onQuery={onQuery}
                 onWrite={onWrite}
+                onSimulate={onSimulate}
                 addressRenderer={addressRenderer}
                 onHashClick={onHashClick}
               />

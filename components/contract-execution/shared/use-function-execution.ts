@@ -1,161 +1,148 @@
-import { useCallback, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 import type { AbiFunction, Address, Hex } from "viem";
 import { decodeFunctionResult } from "viem";
 import type { ExecutionParams } from "./types.js";
 import { formatDecodedResult } from "./utils.js";
 
 export type InternalResult = {
-  type: "call" | "simulation" | "execution" | "error";
+  type: "read" | "simulate" | "write" | "error";
   data?: string;
   hash?: Hex;
   cleanResult?: string;
   error?: string;
 };
 
-interface UseFunctionExecutionParams {
-  abiFunction: AbiFunction;
-  callData: string;
-  msgSender?: Address;
+function decodeResult(
+  abiFunction: AbiFunction | undefined,
+  rawResult: Hex,
+): string | undefined {
+  if (!abiFunction) return undefined;
+  try {
+    const decoded = decodeFunctionResult({
+      abi: [abiFunction],
+      functionName: abiFunction.name,
+      data: rawResult,
+    });
+    return formatDecodedResult(decoded);
+  } catch {
+    return undefined;
+  }
+}
+
+interface BaseExecutionParams {
+  abiFunction?: AbiFunction;
+  callData: Hex;
+  value?: bigint;
+  msgSender: Address | undefined;
+}
+
+interface ReadParams extends BaseExecutionParams {
   onQuery: (params: ExecutionParams) => Promise<Hex>;
+}
+
+interface SimulateParams extends BaseExecutionParams {
+  onSimulate: (params: ExecutionParams) => Promise<Hex>;
+}
+
+interface WriteParams extends BaseExecutionParams {
   onWrite: (params: ExecutionParams) => Promise<Hex>;
-  onSimulate?: (params: ExecutionParams) => Promise<Hex>;
 }
 
 export function useFunctionExecution() {
   const [result, setResult] = useState<InternalResult | null>(null);
-  const [isSimulating, setIsSimulating] = useState(false);
-  const [isExecuting, setIsExecuting] = useState(false);
 
-  const simulate = useCallback(
-    async ({
+  const readMutation = useMutation({
+    mutationFn: async ({
       abiFunction,
       callData,
-      msgSender,
-      onSimulate,
-    }: UseFunctionExecutionParams) => {
-      if (!callData || !onSimulate) return;
-
-      const isWrite =
-        abiFunction.stateMutability !== "view" &&
-        abiFunction.stateMutability !== "pure";
-
-      setIsSimulating(true);
-      try {
-        const rawResult = await onSimulate({
-          abiFunction,
-          callData: callData as Hex,
-          msgSender,
-        });
-
-        if (isWrite) {
-          setResult({
-            type: "simulation",
-            cleanResult: "Simulation successful",
-            data: rawResult,
-          });
-        } else {
-          try {
-            const decoded = decodeFunctionResult({
-              abi: [abiFunction],
-              functionName: abiFunction.name,
-              data: rawResult,
-            });
-
-            setResult({
-              type: "simulation",
-              cleanResult: formatDecodedResult(decoded),
-              data: rawResult,
-            });
-          } catch {
-            setResult({
-              type: "simulation",
-              data: rawResult,
-            });
-          }
-        }
-      } catch (error) {
-        setResult({
-          type: "error",
-          error: error instanceof Error ? error.message : "Unknown error",
-        });
-      } finally {
-        setIsSimulating(false);
-      }
-    },
-    [],
-  );
-
-  const execute = useCallback(
-    async ({
-      abiFunction,
-      callData,
+      value,
       msgSender,
       onQuery,
-      onWrite,
-    }: UseFunctionExecutionParams) => {
-      if (!callData) return;
-
-      const isWrite =
-        abiFunction.stateMutability !== "view" &&
-        abiFunction.stateMutability !== "pure";
-
-      setIsExecuting(true);
-      try {
-        if (isWrite) {
-          const hash = await onWrite({
-            abiFunction,
-            callData: callData as Hex,
-            msgSender,
-          });
-
-          setResult({
-            type: "execution",
-            hash,
-            cleanResult: "Transaction submitted",
-          });
-        } else {
-          const rawResult = await onQuery({
-            abiFunction,
-            callData: callData as Hex,
-            msgSender,
-          });
-
-          try {
-            const decoded = decodeFunctionResult({
-              abi: [abiFunction],
-              functionName: abiFunction.name,
-              data: rawResult,
-            });
-
-            setResult({
-              type: "call",
-              cleanResult: formatDecodedResult(decoded),
-              data: rawResult,
-            });
-          } catch {
-            setResult({
-              type: "call",
-              data: rawResult,
-            });
-          }
-        }
-      } catch (error) {
-        setResult({
-          type: "error",
-          error: error instanceof Error ? error.message : "Unknown error",
-        });
-      } finally {
-        setIsExecuting(false);
-      }
+    }: ReadParams) => {
+      const rawResult = await onQuery({
+        abiFunction,
+        callData,
+        value,
+        msgSender,
+      });
+      const cleanResult = decodeResult(abiFunction, rawResult);
+      return {
+        type: "read" as const,
+        data: rawResult,
+        cleanResult: cleanResult || rawResult,
+      };
     },
-    [],
-  );
+    onSuccess: (data) => setResult(data),
+    onError: (error) =>
+      setResult({
+        type: "error",
+        error: error instanceof Error ? error.message : "Unknown error",
+      }),
+  });
+
+  const simulateMutation = useMutation({
+    mutationFn: async ({
+      abiFunction,
+      callData,
+      value,
+      msgSender,
+      onSimulate,
+    }: SimulateParams) => {
+      const rawResult = await onSimulate({
+        abiFunction,
+        callData,
+        value,
+        msgSender,
+      });
+      const cleanResult = decodeResult(abiFunction, rawResult);
+      return {
+        type: "simulate" as const,
+        data: rawResult,
+        cleanResult: cleanResult || "Simulation successful",
+      };
+    },
+    onSuccess: (data) => setResult(data),
+    onError: (error) =>
+      setResult({
+        type: "error",
+        error: error instanceof Error ? error.message : "Unknown error",
+      }),
+  });
+
+  const writeMutation = useMutation({
+    mutationFn: async ({
+      abiFunction,
+      callData,
+      value,
+      msgSender,
+      onWrite,
+    }: WriteParams) => {
+      const hash = await onWrite({ abiFunction, callData, value, msgSender });
+      return {
+        type: "write" as const,
+        hash,
+        cleanResult: "Transaction submitted",
+      };
+    },
+    onSuccess: (data) => setResult(data),
+    onError: (error) =>
+      setResult({
+        type: "error",
+        error: error instanceof Error ? error.message : "Unknown error",
+      }),
+  });
+
+  const isLoading =
+    readMutation.isPending ||
+    simulateMutation.isPending ||
+    writeMutation.isPending;
 
   return {
     result,
-    isSimulating,
-    isExecuting,
-    simulate,
-    execute,
+    isLoading,
+    read: readMutation.mutate,
+    simulate: simulateMutation.mutate,
+    write: writeMutation.mutate,
   };
 }

@@ -11,7 +11,7 @@ import {
   ActionButtons,
   ConnectWalletAlert,
   DefaultResultDisplay,
-  MsgSenderInput,
+  OptionalInputs,
 } from "../shared/components.js";
 import { useMsgSenderForm } from "../shared/form-utils.js";
 import type { BaseExecutionProps, ExecutionParams } from "../shared/types.js";
@@ -43,8 +43,7 @@ export const FunctionItem = memo(
     onHashClick,
   }: FunctionItemProps) => {
     const [callData, setCallData] = useState<string>("");
-    const { result, isSimulating, isExecuting, simulate, execute } =
-      useFunctionExecution();
+    const { result, isLoading, read, simulate, write } = useFunctionExecution();
     const { form, msgSender } = useMsgSenderForm(sender);
 
     const isWrite = isWriteFunction(func);
@@ -57,24 +56,32 @@ export const FunctionItem = memo(
     );
 
     const handleSimulate = () => {
+      if (!onSimulate || !callData) return;
       simulate({
         abiFunction: func,
-        callData,
+        callData: callData as `0x${string}`,
         msgSender,
-        onQuery,
-        onWrite,
         onSimulate,
       });
     };
 
-    const handleExecute = () => {
-      execute({
+    const handleQuery = () => {
+      if (!callData) return;
+      read({
         abiFunction: func,
-        callData,
+        callData: callData as `0x${string}`,
         msgSender,
         onQuery,
+      });
+    };
+
+    const handleWrite = () => {
+      if (!callData) return;
+      write({
+        abiFunction: func,
+        callData: callData as `0x${string}`,
+        msgSender,
         onWrite,
-        onSimulate,
       });
     };
 
@@ -92,9 +99,7 @@ export const FunctionItem = memo(
         </AccordionTrigger>
         <AccordionContent className="px-3 pb-3">
           <FormProvider {...form}>
-            <div className="mt-4 space-y-6">
-              {isWrite && <MsgSenderInput />}
-
+            <div className="space-y-4">
               <AbiItemFormWithPreview
                 addresses={addresses}
                 key={func.name}
@@ -120,15 +125,16 @@ export const FunctionItem = memo(
                 <ConnectWalletAlert />
               )}
 
+              <OptionalInputs />
+
               <ActionButtons
                 isWrite={isWrite}
                 callData={callData}
-                isSimulating={isSimulating}
-                isExecuting={isExecuting}
+                isLoading={isLoading}
                 isConnected={isConnected}
-                hasSimulate={!!onSimulate}
                 simulate={handleSimulate}
-                execute={handleExecute}
+                query={handleQuery}
+                write={handleWrite}
               />
 
               {result && (

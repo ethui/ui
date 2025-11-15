@@ -7,12 +7,11 @@ import {
   ActionButtons,
   ConnectWalletAlert,
   DefaultResultDisplay,
-  MsgSenderInput,
+  OptionalInputs,
 } from "../shared/components.js";
 import { useMsgSenderForm } from "../shared/form-utils.js";
 import type { ExecutionParams } from "../shared/types.js";
 import { useFunctionExecution } from "../shared/use-function-execution.js";
-import { useRawExecution } from "../shared/use-raw-execution.js";
 import { isWriteFunction } from "../shared/utils.js";
 
 export interface ResendTransactionProps {
@@ -25,7 +24,6 @@ export interface ResendTransactionProps {
   addresses?: any[];
   requiresConnection?: boolean;
   isConnected?: boolean;
-  onQuery: (params: ExecutionParams) => Promise<Hex>;
   onWrite: (params: ExecutionParams) => Promise<Hex>;
   onSimulate?: (params: ExecutionParams) => Promise<Hex>;
   addressRenderer?: (address: Address) => React.ReactNode;
@@ -42,7 +40,6 @@ export function ResendTransaction({
   addresses,
   requiresConnection = true,
   isConnected = false,
-  onQuery,
   onWrite,
   onSimulate,
   addressRenderer,
@@ -51,7 +48,7 @@ export function ResendTransaction({
   const { form, msgSender } = useMsgSenderForm(sender);
 
   const decodedFunction = useMemo(() => {
-    if (!abi || input === "0x") return null;
+    if (!abi || input === "0x") return undefined;
 
     try {
       const decoded = decodeFunctionData({ abi, data: input });
@@ -60,56 +57,39 @@ export function ResendTransaction({
           item.type === "function" && item.name === decoded.functionName,
       ) as AbiFunction | undefined;
 
-      return abiFunction || null;
+      return abiFunction;
     } catch {
-      return null;
+      return undefined;
     }
   }, [abi, input]);
 
   const isWrite = isWriteFunction(decodedFunction);
 
   const functionExecution = useFunctionExecution();
-  const rawExecution = useRawExecution({
-    isWrite: true,
-    onExecute: onWrite,
-  });
 
   const handleSimulate = () => {
-    if (decodedFunction && onSimulate) {
+    if (onSimulate)
       functionExecution.simulate({
         abiFunction: decodedFunction,
         callData: input,
         msgSender,
-        onQuery,
-        onWrite,
         onSimulate,
       });
-    }
   };
 
-  const handleExecute = () => {
-    if (decodedFunction) {
-      functionExecution.execute({
-        abiFunction: decodedFunction,
-        callData: input,
-        msgSender,
-        onQuery,
-        onWrite,
-      });
-    } else {
-      rawExecution.execute({
-        callData: input,
-        value,
-        msgSender,
-      });
-    }
+  const handleWrite = () => {
+    functionExecution.write({
+      abiFunction: decodedFunction,
+      callData: input,
+      value,
+      msgSender,
+      onWrite,
+    });
   };
 
   return (
     <FormProvider {...form}>
       <div className="space-y-4">
-        <MsgSenderInput />
-
         <AbiItemFormWithPreview
           abiFunction={decodedFunction || "raw"}
           address={to}
@@ -125,29 +105,20 @@ export function ResendTransaction({
 
         {requiresConnection && !isConnected && <ConnectWalletAlert />}
 
+        <OptionalInputs />
+
         <ActionButtons
           isWrite={isWrite}
           callData={input}
-          isSimulating={functionExecution.isSimulating}
-          isExecuting={
-            functionExecution.isExecuting || rawExecution.isExecuting
-          }
+          isLoading={functionExecution.isLoading}
           isConnected={isConnected}
-          hasSimulate={!!onSimulate && !!decodedFunction}
           simulate={handleSimulate}
-          execute={handleExecute}
+          write={handleWrite}
         />
 
-        {decodedFunction && functionExecution.result && (
+        {functionExecution.result && (
           <DefaultResultDisplay
             result={functionExecution.result}
-            onHashClick={onHashClick}
-          />
-        )}
-
-        {!decodedFunction && rawExecution.result && (
-          <DefaultResultDisplay
-            result={rawExecution.result}
             onHashClick={onHashClick}
           />
         )}

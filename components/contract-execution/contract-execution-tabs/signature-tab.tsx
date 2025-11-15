@@ -11,7 +11,7 @@ import {
   ActionButtons,
   ConnectWalletAlert,
   DefaultResultDisplay,
-  MsgSenderInput,
+  OptionalInputs,
 } from "../shared/components.js";
 import { msgSenderSchema } from "../shared/form-utils.js";
 import type { BaseExecutionProps, ExecutionParams } from "../shared/types.js";
@@ -55,8 +55,7 @@ export function SignatureOperations({
   onHashClick,
 }: SignatureOperationsProps) {
   const [callData, setCallData] = useState("");
-  const { result, isSimulating, isExecuting, simulate, execute } =
-    useFunctionExecution();
+  const { result, isLoading, read, simulate, write } = useFunctionExecution();
 
   const form = useForm({
     mode: "onChange",
@@ -95,31 +94,37 @@ export function SignatureOperations({
   );
 
   const handleSimulate = () => {
-    if (!parsedAbiFunction || !callData) return;
+    if (!parsedAbiFunction || !callData || !onSimulate) return;
     simulate({
       abiFunction: parsedAbiFunction,
-      callData,
+      callData: callData as Hex,
       msgSender,
-      onQuery,
-      onWrite,
       onSimulate,
     });
   };
 
-  const handleExecute = () => {
+  const handleQuery = () => {
     if (!parsedAbiFunction || !callData) return;
-    execute({
+    read({
       abiFunction: parsedAbiFunction,
-      callData,
+      callData: callData as Hex,
       msgSender,
       onQuery,
+    });
+  };
+
+  const handleWrite = () => {
+    if (!parsedAbiFunction || !callData) return;
+    write({
+      abiFunction: parsedAbiFunction,
+      callData: callData as Hex,
+      msgSender,
       onWrite,
-      onSimulate,
     });
   };
 
   return (
-    <div className="rounded-lg bg-card p-4">
+    <div className="rounded-lg bg-card py-4">
       <FormProvider {...form}>
         <div className="space-y-6">
           <div className="space-y-2">
@@ -140,8 +145,6 @@ export function SignatureOperations({
 
           {isValidSignature && parsedAbiFunction && (
             <>
-              {isWrite && <MsgSenderInput />}
-
               <AbiItemFormWithPreview
                 addresses={addresses}
                 onChange={handleCallDataChange}
@@ -163,15 +166,16 @@ export function SignatureOperations({
                 <ConnectWalletAlert />
               )}
 
+              <OptionalInputs />
+
               <ActionButtons
                 isWrite={isWrite}
                 callData={callData}
-                isSimulating={isSimulating}
-                isExecuting={isExecuting}
+                isLoading={isLoading}
                 isConnected={isConnected}
-                hasSimulate={!!onSimulate}
                 simulate={handleSimulate}
-                execute={handleExecute}
+                query={handleQuery}
+                write={handleWrite}
               />
 
               {result && (

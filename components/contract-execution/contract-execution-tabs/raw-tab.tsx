@@ -8,19 +8,20 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../../shadcn/accordion.js";
-import { Button } from "../../shadcn/button.js";
 import {
+  ActionButtons,
   ConnectWalletAlert,
   DefaultResultDisplay,
-  MsgSenderInput,
+  OptionalInputs,
 } from "../shared/components.js";
 import { useMsgSenderForm } from "../shared/form-utils.js";
 import type { BaseExecutionProps, ExecutionParams } from "../shared/types.js";
-import { useRawExecution } from "../shared/use-raw-execution.js";
+import { useFunctionExecution } from "../shared/use-function-execution.js";
 
 interface RawOperationsProps extends BaseExecutionProps {
   onQuery: (params: ExecutionParams) => Promise<`0x${string}`>;
   onWrite: (params: ExecutionParams) => Promise<`0x${string}`>;
+  onSimulate?: (params: ExecutionParams) => Promise<`0x${string}`>;
 }
 
 export function RawOperations({
@@ -32,6 +33,7 @@ export function RawOperations({
   isConnected,
   onQuery,
   onWrite,
+  onSimulate,
   addressRenderer,
   onHashClick,
 }: RawOperationsProps) {
@@ -46,7 +48,7 @@ export function RawOperations({
           addresses={addresses}
           requiresConnection={requiresConnection}
           isConnected={isConnected}
-          onExecute={onQuery}
+          onQuery={onQuery}
           addressRenderer={addressRenderer}
           onHashClick={onHashClick}
         />
@@ -58,7 +60,8 @@ export function RawOperations({
           addresses={addresses}
           requiresConnection={requiresConnection}
           isConnected={isConnected}
-          onExecute={onWrite}
+          onWrite={onWrite}
+          onSimulate={onSimulate}
           addressRenderer={addressRenderer}
           onHashClick={onHashClick}
         />
@@ -69,7 +72,9 @@ export function RawOperations({
 
 interface RawOperationItemProps extends BaseExecutionProps {
   type: "call" | "transaction";
-  onExecute: (params: ExecutionParams) => Promise<`0x${string}`>;
+  onQuery?: (params: ExecutionParams) => Promise<`0x${string}`>;
+  onWrite?: (params: ExecutionParams) => Promise<`0x${string}`>;
+  onSimulate?: (params: ExecutionParams) => Promise<`0x${string}`>;
 }
 
 function RawOperationItem({
@@ -80,7 +85,9 @@ function RawOperationItem({
   addresses,
   requiresConnection,
   isConnected,
-  onExecute,
+  onQuery,
+  onWrite,
+  onSimulate,
   addressRenderer,
   onHashClick,
 }: RawOperationItemProps) {
@@ -89,14 +96,7 @@ function RawOperationItem({
   const { form, msgSender } = useMsgSenderForm(sender);
 
   const isWrite = type === "transaction";
-  const {
-    result,
-    isExecuting,
-    execute: executeRaw,
-  } = useRawExecution({
-    isWrite,
-    onExecute,
-  });
+  const { result, isLoading, read, simulate, write } = useFunctionExecution();
   const title = type === "call" ? "Raw Call" : "Raw Transaction";
   const description =
     type === "call"
@@ -111,8 +111,37 @@ function RawOperationItem({
     [],
   );
 
-  const handleExecute = () => {
-    executeRaw({ callData, value, msgSender });
+  const handleSimulate = () => {
+    if (!callData || !onSimulate) return;
+    simulate({
+      abiFunction: undefined,
+      callData: callData as Hex,
+      value,
+      msgSender,
+      onSimulate,
+    });
+  };
+
+  const handleQuery = () => {
+    if (!callData || !onQuery) return;
+    read({
+      abiFunction: undefined,
+      callData: callData as Hex,
+      value,
+      msgSender,
+      onQuery,
+    });
+  };
+
+  const handleWrite = () => {
+    if (!callData || !onWrite) return;
+    write({
+      abiFunction: undefined,
+      callData: callData as Hex,
+      value,
+      msgSender,
+      onWrite,
+    });
   };
 
   return (
@@ -128,9 +157,7 @@ function RawOperationItem({
       </AccordionTrigger>
       <AccordionContent className="px-3 pb-3">
         <FormProvider {...form}>
-          <div className="mt-4 space-y-6">
-            {isWrite && <MsgSenderInput />}
-
+          <div className="mt-4 space-y-4">
             <AbiItemFormWithPreview
               addresses={addresses}
               onChange={handleCallDataChange}
@@ -151,19 +178,17 @@ function RawOperationItem({
               <ConnectWalletAlert />
             )}
 
-            <div className="flex flex-row items-center justify-center gap-2">
-              <Button
-                onClick={handleExecute}
-                disabled={!callData || isExecuting || (isWrite && !isConnected)}
-                className="w-fit"
-              >
-                {isExecuting
-                  ? "Executing..."
-                  : type === "call"
-                    ? "Call"
-                    : "Send Transaction"}
-              </Button>
-            </div>
+            <OptionalInputs />
+
+            <ActionButtons
+              isWrite={isWrite}
+              callData={callData}
+              isLoading={isLoading}
+              isConnected={isConnected}
+              simulate={handleSimulate}
+              query={handleQuery}
+              write={handleWrite}
+            />
 
             {result && (
               <DefaultResultDisplay
