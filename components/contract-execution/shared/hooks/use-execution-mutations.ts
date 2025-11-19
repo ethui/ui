@@ -2,8 +2,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import type { AbiFunction, Address, Hex } from "viem";
 import { decodeFunctionResult } from "viem";
-import type { ExecutionParams } from "./types.js";
-import { formatDecodedResult } from "./utils.js";
+import type { ExecutionParams } from "../../types.js";
+import { formatDecodedResult } from "../utils/utils.js";
 
 export type InternalResult = {
   type: "read" | "simulate" | "write" | "error";
@@ -49,7 +49,7 @@ interface WriteParams extends BaseExecutionParams {
   onWrite: (params: ExecutionParams) => Promise<Hex>;
 }
 
-export function useFunctionExecution() {
+export function useExecutionMutations() {
   const [result, setResult] = useState<InternalResult | null>(null);
 
   const readMutation = useMutation({

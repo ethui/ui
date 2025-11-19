@@ -1,22 +1,12 @@
-import { memo, useCallback, useState } from "react";
-import { FormProvider } from "react-hook-form";
+import { memo } from "react";
 import type { AbiFunction } from "viem";
-import { AbiItemFormWithPreview } from "../../abi-form/abi-item-form-with-preview.js";
 import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "../../shadcn/accordion.js";
-import {
-  ActionButtons,
-  ConnectWalletAlert,
-  DefaultResultDisplay,
-  OptionalInputs,
-} from "../shared/components.js";
-import { useMsgSenderForm } from "../shared/form-utils.js";
-import type { BaseExecutionProps, ExecutionParams } from "../shared/types.js";
-import { useFunctionExecution } from "../shared/use-function-execution.js";
-import { isWriteFunction } from "../shared/utils.js";
+import { ExecutionForm } from "../shared/components/execution-form.js";
+import type { BaseExecutionProps, ExecutionParams } from "../types.js";
 
 interface FunctionItemProps extends BaseExecutionProps {
   func: AbiFunction;
@@ -42,49 +32,6 @@ export const FunctionItem = memo(
     addressRenderer,
     onHashClick,
   }: FunctionItemProps) => {
-    const [callData, setCallData] = useState<string>("");
-    const { result, isLoading, read, simulate, write } = useFunctionExecution();
-    const { form, msgSender } = useMsgSenderForm(sender);
-
-    const isWrite = isWriteFunction(func);
-
-    const handleCallDataChange = useCallback(
-      (newCallData: string | undefined) => {
-        setCallData(newCallData || "");
-      },
-      [],
-    );
-
-    const handleSimulate = () => {
-      if (!onSimulate || !callData) return;
-      simulate({
-        abiFunction: func,
-        callData: callData as `0x${string}`,
-        msgSender,
-        onSimulate,
-      });
-    };
-
-    const handleQuery = () => {
-      if (!callData) return;
-      read({
-        abiFunction: func,
-        callData: callData as `0x${string}`,
-        msgSender,
-        onQuery,
-      });
-    };
-
-    const handleWrite = () => {
-      if (!callData) return;
-      write({
-        abiFunction: func,
-        callData: callData as `0x${string}`,
-        msgSender,
-        onWrite,
-      });
-    };
-
     const functionKey = `${func.name}-${index}`;
 
     return (
@@ -98,54 +45,23 @@ export const FunctionItem = memo(
           </span>
         </AccordionTrigger>
         <AccordionContent className="px-3 pb-3">
-          <FormProvider {...form}>
-            <div className="space-y-4">
-              <AbiItemFormWithPreview
-                addresses={addresses}
-                key={func.name}
-                onChange={(data) => {
-                  const callData = data.data?.toString() ?? undefined;
-                  handleCallDataChange(callData);
-                }}
-                abiFunction={func}
-                address={address}
-                sender={sender || address}
-                chainId={chainId}
-                defaultCalldata={callData as `0x${string}` | undefined}
-                ArgProps={
-                  addressRenderer
-                    ? {
-                        addressRenderer,
-                      }
-                    : undefined
-                }
-              />
-
-              {isWrite && requiresConnection && !isConnected && (
-                <ConnectWalletAlert />
-              )}
-
-              <OptionalInputs />
-
-              <ActionButtons
-                isWrite={isWrite}
-                callData={callData}
-                isLoading={isLoading}
-                isConnected={isConnected}
-                simulate={handleSimulate}
-                query={handleQuery}
-                write={handleWrite}
-              />
-
-              {result && (
-                <DefaultResultDisplay
-                  key={`${result.type}-${result.data}`}
-                  result={result}
-                  onHashClick={onHashClick}
-                />
-              )}
-            </div>
-          </FormProvider>
+          <ExecutionForm
+            abiFunction={func}
+            address={address}
+            chainId={chainId}
+            sender={sender}
+            addresses={addresses}
+            requiresConnection={requiresConnection}
+            isConnected={isConnected}
+            addressRenderer={addressRenderer}
+            onHashClick={onHashClick}
+            executionParams={{
+              onQuery,
+              onWrite,
+              onSimulate,
+            }}
+            className="space-y-4"
+          />
         </AccordionContent>
       </AccordionItem>
     );

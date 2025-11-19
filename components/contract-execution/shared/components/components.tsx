@@ -1,15 +1,15 @@
 import clsx from "clsx";
 import { ChevronDown, ChevronUp, ExternalLink, Info } from "lucide-react";
 import { useState } from "react";
-import { Form } from "../../form/index.js";
-import { Alert, AlertDescription, AlertTitle } from "../../shadcn/alert.js";
-import { Button } from "../../shadcn/button.js";
+import { Form } from "../../../form/index.js";
+import { Alert, AlertDescription, AlertTitle } from "../../../shadcn/alert.js";
+import { Button } from "../../../shadcn/button.js";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "../../shadcn/collapsible.js";
-import type { InternalResult } from "./use-function-execution.js";
+} from "../../../shadcn/collapsible.js";
+import type { InternalResult } from "../hooks/use-execution-mutations.js";
 
 export function OptionalInputs() {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,18 +17,18 @@ export function OptionalInputs() {
   return (
     <div className="mt-2">
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-        <CollapsibleTrigger className="cursor-pointer flex w-full items-center justify-between rounded-md border border-dashed border-muted-foreground/40 bg-muted/20 p-3 text-left hover:bg-muted/40 transition-colors group data-[state=open]:rounded-b-none data-[state=open]:border-b-0">
-          <span className="text-sm font-medium text-muted-foreground group-hover:text-foreground">
+        <CollapsibleTrigger className="group flex w-full cursor-pointer items-center justify-between rounded-md border border-muted-foreground/40 border-dashed bg-muted/20 p-3 text-left transition-colors hover:bg-muted/40 data-[state=open]:rounded-b-none data-[state=open]:border-b-0">
+          <span className="font-medium text-muted-foreground text-sm group-hover:text-foreground">
             Advanced Options
           </span>
           {isOpen ? (
-            <ChevronUp className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+            <ChevronUp className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-foreground" />
           ) : (
-            <ChevronDown className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+            <ChevronDown className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-foreground" />
           )}
         </CollapsibleTrigger>
-        <CollapsibleContent className="border border-dashed border-muted-foreground/40 border-t-0 rounded-b-md bg-muted/10">
-          <div className="p-3 space-y-3">
+        <CollapsibleContent className="rounded-b-md border border-muted-foreground/40 border-t-0 border-dashed bg-muted/10">
+          <div className="space-y-3 p-3">
             <Form.Text
               name="msgSender"
               label={
@@ -60,7 +60,7 @@ export function ConnectWalletAlert() {
 
 interface ActionButtonsProps {
   isWrite: boolean;
-  callData: string | undefined;
+  callData: `0x${string}` | undefined;
   isLoading: boolean;
   isConnected: boolean;
   simulate?: () => void;
@@ -201,12 +201,6 @@ export function DefaultResultDisplay({
             </pre>
           )}
         </div>
-      )}
-
-      {!result.cleanResult && !result.error && result.data && (
-        <pre className="overflow-x-auto whitespace-pre-wrap break-all rounded-md bg-muted p-4 font-mono text-sm">
-          {result.data}
-        </pre>
       )}
     </div>
   );

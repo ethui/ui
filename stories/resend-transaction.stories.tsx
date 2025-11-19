@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { Abi } from "viem";
 import { ResendTransaction } from "../components/contract-execution/resend-transaction/index.js";
-import type { ExecutionParams } from "../components/contract-execution/shared/types.js";
+import type { ExecutionParams } from "../components/contract-execution/types.js";
 
 const meta: Meta<typeof ResendTransaction> = {
   title: "ethui/ResendTransaction",
@@ -53,13 +53,6 @@ const addresses = [
     wallet: "Coinbase",
   },
 ];
-
-// Mock execution handlers
-const mockQuery = async (params: ExecutionParams): Promise<`0x${string}`> => {
-  console.log("Query called with:", params);
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  return "0x0000000000000000000000000000000000000000000000003635c9adc5dea00000";
-};
 
 const mockWrite = async (params: ExecutionParams): Promise<`0x${string}`> => {
   console.log("Write called with:", params);

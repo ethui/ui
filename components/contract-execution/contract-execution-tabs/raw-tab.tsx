@@ -1,22 +1,11 @@
-import { useCallback, useState } from "react";
-import { FormProvider } from "react-hook-form";
-import type { Hex } from "viem";
-import { AbiItemFormWithPreview } from "../../abi-form/abi-item-form-with-preview.js";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "../../shadcn/accordion.js";
-import {
-  ActionButtons,
-  ConnectWalletAlert,
-  DefaultResultDisplay,
-  OptionalInputs,
-} from "../shared/components.js";
-import { useMsgSenderForm } from "../shared/form-utils.js";
-import type { BaseExecutionProps, ExecutionParams } from "../shared/types.js";
-import { useFunctionExecution } from "../shared/use-function-execution.js";
+import { ExecutionForm } from "../shared/components/execution-form.js";
+import type { BaseExecutionProps, ExecutionParams } from "../types.js";
 
 interface RawOperationsProps extends BaseExecutionProps {
   onQuery: (params: ExecutionParams) => Promise<`0x${string}`>;
@@ -91,58 +80,11 @@ function RawOperationItem({
   addressRenderer,
   onHashClick,
 }: RawOperationItemProps) {
-  const [callData, setCallData] = useState<string>("");
-  const [value, setValue] = useState<bigint | undefined>();
-  const { form, msgSender } = useMsgSenderForm(sender);
-
-  const isWrite = type === "transaction";
-  const { result, isLoading, read, simulate, write } = useFunctionExecution();
   const title = type === "call" ? "Raw Call" : "Raw Transaction";
   const description =
     type === "call"
       ? "Execute eth_call with arbitrary calldata"
       : "Send transaction with arbitrary calldata";
-
-  const handleCallDataChange = useCallback(
-    ({ data, value: newValue }: { data?: Hex; value?: bigint }) => {
-      setCallData(data || "");
-      setValue(newValue);
-    },
-    [],
-  );
-
-  const handleSimulate = () => {
-    if (!callData || !onSimulate) return;
-    simulate({
-      abiFunction: undefined,
-      callData: callData as Hex,
-      value,
-      msgSender,
-      onSimulate,
-    });
-  };
-
-  const handleQuery = () => {
-    if (!callData || !onQuery) return;
-    read({
-      abiFunction: undefined,
-      callData: callData as Hex,
-      value,
-      msgSender,
-      onQuery,
-    });
-  };
-
-  const handleWrite = () => {
-    if (!callData || !onWrite) return;
-    write({
-      abiFunction: undefined,
-      callData: callData as Hex,
-      value,
-      msgSender,
-      onWrite,
-    });
-  };
 
   return (
     <AccordionItem
@@ -156,49 +98,23 @@ function RawOperationItem({
         </div>
       </AccordionTrigger>
       <AccordionContent className="px-3 pb-3">
-        <FormProvider {...form}>
-          <div className="mt-4 space-y-4">
-            <AbiItemFormWithPreview
-              addresses={addresses}
-              onChange={handleCallDataChange}
-              abiFunction={type === "call" ? "rawCall" : "raw"}
-              address={address}
-              sender={sender || address}
-              chainId={chainId}
-              ArgProps={
-                addressRenderer
-                  ? {
-                      addressRenderer,
-                    }
-                  : undefined
-              }
-            />
-
-            {isWrite && requiresConnection && !isConnected && (
-              <ConnectWalletAlert />
-            )}
-
-            <OptionalInputs />
-
-            <ActionButtons
-              isWrite={isWrite}
-              callData={callData}
-              isLoading={isLoading}
-              isConnected={isConnected}
-              simulate={handleSimulate}
-              query={handleQuery}
-              write={handleWrite}
-            />
-
-            {result && (
-              <DefaultResultDisplay
-                key={`${result.type}-${result.data}`}
-                result={result}
-                onHashClick={onHashClick}
-              />
-            )}
-          </div>
-        </FormProvider>
+        <ExecutionForm
+          abiFunction={type === "call" ? "rawCall" : "raw"}
+          address={address}
+          chainId={chainId}
+          sender={sender}
+          addresses={addresses}
+          requiresConnection={requiresConnection}
+          isConnected={isConnected}
+          addressRenderer={addressRenderer}
+          onHashClick={onHashClick}
+          executionParams={{
+            onQuery,
+            onWrite,
+            onSimulate,
+          }}
+          className="mt-4 space-y-4"
+        />
       </AccordionContent>
     </AccordionItem>
   );
