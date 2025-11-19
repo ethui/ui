@@ -1,22 +1,12 @@
-import { memo, useCallback, useState } from "react";
-import { FormProvider } from "react-hook-form";
+import { memo } from "react";
 import type { AbiFunction } from "viem";
-import { AbiItemFormWithPreview } from "../../abi-form/abi-item-form-with-preview.js";
 import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "../../shadcn/accordion.js";
-import {
-  ActionButtons,
-  ConnectWalletAlert,
-  DefaultResultDisplay,
-  MsgSenderInput,
-} from "../shared/components.js";
-import { useMsgSenderForm } from "../shared/form-utils.js";
-import type { BaseExecutionProps, ExecutionParams } from "../shared/types.js";
-import { useFunctionExecution } from "../shared/use-function-execution.js";
-import { isWriteFunction } from "../shared/utils.js";
+import { ExecutionForm } from "../shared/components/execution-form.js";
+import type { BaseExecutionProps, ExecutionParams } from "../types.js";
 
 interface FunctionItemProps extends BaseExecutionProps {
   func: AbiFunction;
@@ -42,42 +32,6 @@ export const FunctionItem = memo(
     addressRenderer,
     onHashClick,
   }: FunctionItemProps) => {
-    const [callData, setCallData] = useState<string>("");
-    const { result, isSimulating, isExecuting, simulate, execute } =
-      useFunctionExecution();
-    const { form, msgSender } = useMsgSenderForm(sender);
-
-    const isWrite = isWriteFunction(func);
-
-    const handleCallDataChange = useCallback(
-      (newCallData: string | undefined) => {
-        setCallData(newCallData || "");
-      },
-      [],
-    );
-
-    const handleSimulate = () => {
-      simulate({
-        abiFunction: func,
-        callData,
-        msgSender,
-        onQuery,
-        onWrite,
-        onSimulate,
-      });
-    };
-
-    const handleExecute = () => {
-      execute({
-        abiFunction: func,
-        callData,
-        msgSender,
-        onQuery,
-        onWrite,
-        onSimulate,
-      });
-    };
-
     const functionKey = `${func.name}-${index}`;
 
     return (
@@ -91,55 +45,23 @@ export const FunctionItem = memo(
           </span>
         </AccordionTrigger>
         <AccordionContent className="px-3 pb-3">
-          <FormProvider {...form}>
-            <div className="mt-4 space-y-6">
-              {isWrite && <MsgSenderInput />}
-
-              <AbiItemFormWithPreview
-                addresses={addresses}
-                key={func.name}
-                onChange={(data) => {
-                  const callData = data.data?.toString() ?? undefined;
-                  handleCallDataChange(callData);
-                }}
-                abiFunction={func}
-                address={address}
-                sender={sender || address}
-                chainId={chainId}
-                defaultCalldata={callData as `0x${string}` | undefined}
-                ArgProps={
-                  addressRenderer
-                    ? {
-                        addressRenderer,
-                      }
-                    : undefined
-                }
-              />
-
-              {isWrite && requiresConnection && !isConnected && (
-                <ConnectWalletAlert />
-              )}
-
-              <ActionButtons
-                isWrite={isWrite}
-                callData={callData}
-                isSimulating={isSimulating}
-                isExecuting={isExecuting}
-                isConnected={isConnected}
-                hasSimulate={!!onSimulate}
-                simulate={handleSimulate}
-                execute={handleExecute}
-              />
-
-              {result && (
-                <DefaultResultDisplay
-                  key={`${result.type}-${result.data}`}
-                  result={result}
-                  onHashClick={onHashClick}
-                />
-              )}
-            </div>
-          </FormProvider>
+          <ExecutionForm
+            abiFunction={func}
+            address={address}
+            chainId={chainId}
+            sender={sender}
+            addresses={addresses}
+            requiresConnection={requiresConnection}
+            isConnected={isConnected}
+            addressRenderer={addressRenderer}
+            onHashClick={onHashClick}
+            executionParams={{
+              onQuery,
+              onWrite,
+              onSimulate,
+            }}
+            className="space-y-4"
+          />
         </AccordionContent>
       </AccordionItem>
     );

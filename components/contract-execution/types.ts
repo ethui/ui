@@ -1,5 +1,5 @@
 import type { Abi, AbiFunction, Address, Hex } from "viem";
-import type { AddressData } from "../../address-autocomplete-input.js";
+import type { AddressData } from "../address-autocomplete-input.js";
 
 export interface BaseExecutionProps {
   address: Address;

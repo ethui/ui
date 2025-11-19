@@ -1,26 +1,16 @@
-import { useCallback, useState } from "react";
-import { FormProvider } from "react-hook-form";
-import type { Hex } from "viem";
-import { AbiItemFormWithPreview } from "../../abi-form/abi-item-form-with-preview.js";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "../../shadcn/accordion.js";
-import { Button } from "../../shadcn/button.js";
-import {
-  ConnectWalletAlert,
-  DefaultResultDisplay,
-  MsgSenderInput,
-} from "../shared/components.js";
-import { useMsgSenderForm } from "../shared/form-utils.js";
-import type { BaseExecutionProps, ExecutionParams } from "../shared/types.js";
-import { useRawExecution } from "../shared/use-raw-execution.js";
+import { ExecutionForm } from "../shared/components/execution-form.js";
+import type { BaseExecutionProps, ExecutionParams } from "../types.js";
 
 interface RawOperationsProps extends BaseExecutionProps {
   onQuery: (params: ExecutionParams) => Promise<`0x${string}`>;
   onWrite: (params: ExecutionParams) => Promise<`0x${string}`>;
+  onSimulate?: (params: ExecutionParams) => Promise<`0x${string}`>;
 }
 
 export function RawOperations({
@@ -32,6 +22,7 @@ export function RawOperations({
   isConnected,
   onQuery,
   onWrite,
+  onSimulate,
   addressRenderer,
   onHashClick,
 }: RawOperationsProps) {
@@ -46,7 +37,7 @@ export function RawOperations({
           addresses={addresses}
           requiresConnection={requiresConnection}
           isConnected={isConnected}
-          onExecute={onQuery}
+          onQuery={onQuery}
           addressRenderer={addressRenderer}
           onHashClick={onHashClick}
         />
@@ -58,7 +49,8 @@ export function RawOperations({
           addresses={addresses}
           requiresConnection={requiresConnection}
           isConnected={isConnected}
-          onExecute={onWrite}
+          onWrite={onWrite}
+          onSimulate={onSimulate}
           addressRenderer={addressRenderer}
           onHashClick={onHashClick}
         />
@@ -69,7 +61,9 @@ export function RawOperations({
 
 interface RawOperationItemProps extends BaseExecutionProps {
   type: "call" | "transaction";
-  onExecute: (params: ExecutionParams) => Promise<`0x${string}`>;
+  onQuery?: (params: ExecutionParams) => Promise<`0x${string}`>;
+  onWrite?: (params: ExecutionParams) => Promise<`0x${string}`>;
+  onSimulate?: (params: ExecutionParams) => Promise<`0x${string}`>;
 }
 
 function RawOperationItem({
@@ -80,40 +74,17 @@ function RawOperationItem({
   addresses,
   requiresConnection,
   isConnected,
-  onExecute,
+  onQuery,
+  onWrite,
+  onSimulate,
   addressRenderer,
   onHashClick,
 }: RawOperationItemProps) {
-  const [callData, setCallData] = useState<string>("");
-  const [value, setValue] = useState<bigint | undefined>();
-  const { form, msgSender } = useMsgSenderForm(sender);
-
-  const isWrite = type === "transaction";
-  const {
-    result,
-    isExecuting,
-    execute: executeRaw,
-  } = useRawExecution({
-    isWrite,
-    onExecute,
-  });
   const title = type === "call" ? "Raw Call" : "Raw Transaction";
   const description =
     type === "call"
       ? "Execute eth_call with arbitrary calldata"
       : "Send transaction with arbitrary calldata";
-
-  const handleCallDataChange = useCallback(
-    ({ data, value: newValue }: { data?: Hex; value?: bigint }) => {
-      setCallData(data || "");
-      setValue(newValue);
-    },
-    [],
-  );
-
-  const handleExecute = () => {
-    executeRaw({ callData, value, msgSender });
-  };
 
   return (
     <AccordionItem
@@ -127,53 +98,23 @@ function RawOperationItem({
         </div>
       </AccordionTrigger>
       <AccordionContent className="px-3 pb-3">
-        <FormProvider {...form}>
-          <div className="mt-4 space-y-6">
-            {isWrite && <MsgSenderInput />}
-
-            <AbiItemFormWithPreview
-              addresses={addresses}
-              onChange={handleCallDataChange}
-              abiFunction={type === "call" ? "rawCall" : "raw"}
-              address={address}
-              sender={sender || address}
-              chainId={chainId}
-              ArgProps={
-                addressRenderer
-                  ? {
-                      addressRenderer,
-                    }
-                  : undefined
-              }
-            />
-
-            {isWrite && requiresConnection && !isConnected && (
-              <ConnectWalletAlert />
-            )}
-
-            <div className="flex flex-row items-center justify-center gap-2">
-              <Button
-                onClick={handleExecute}
-                disabled={!callData || isExecuting || (isWrite && !isConnected)}
-                className="w-fit"
-              >
-                {isExecuting
-                  ? "Executing..."
-                  : type === "call"
-                    ? "Call"
-                    : "Send Transaction"}
-              </Button>
-            </div>
-
-            {result && (
-              <DefaultResultDisplay
-                key={`${result.type}-${result.data}`}
-                result={result}
-                onHashClick={onHashClick}
-              />
-            )}
-          </div>
-        </FormProvider>
+        <ExecutionForm
+          abiFunction={type === "call" ? "rawCall" : "raw"}
+          address={address}
+          chainId={chainId}
+          sender={sender}
+          addresses={addresses}
+          requiresConnection={requiresConnection}
+          isConnected={isConnected}
+          addressRenderer={addressRenderer}
+          onHashClick={onHashClick}
+          executionParams={{
+            onQuery,
+            onWrite,
+            onSimulate,
+          }}
+          className="mt-4 space-y-4"
+        />
       </AccordionContent>
     </AccordionItem>
   );

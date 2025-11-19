@@ -5,7 +5,7 @@ import { cn } from "../../../lib/utils.js";
 import { Accordion } from "../../shadcn/accordion.js";
 import { Input } from "../../shadcn/input.js";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../shadcn/tabs.js";
-import type { ContractExecutionTabsProps } from "../shared/types.js";
+import type { ContractExecutionTabsProps } from "../types.js";
 import { FunctionItem } from "./function-item.js";
 import { RawOperations } from "./raw-tab.js";
 import { SignatureOperations } from "./signature-tab.js";
@@ -213,6 +213,7 @@ export function ContractExecutionTabs({
                 isConnected={isConnected}
                 onQuery={onQuery}
                 onWrite={onWrite}
+                onSimulate={onSimulate}
                 addressRenderer={addressRenderer}
                 onHashClick={onHashClick}
               />

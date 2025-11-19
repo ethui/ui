@@ -1,10 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { Abi } from "viem";
 import { ResendTransaction } from "../components/contract-execution/resend-transaction/index.js";
-import type {
-  ExecutionParams,
-  RawCallParams,
-} from "../components/contract-execution/shared/types.js";
+import type { ExecutionParams } from "../components/contract-execution/types.js";
 
 const meta: Meta<typeof ResendTransaction> = {
   title: "ethui/ResendTransaction",
@@ -57,13 +54,6 @@ const addresses = [
   },
 ];
 
-// Mock execution handlers
-const mockQuery = async (params: ExecutionParams): Promise<`0x${string}`> => {
-  console.log("Query called with:", params);
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  return "0x0000000000000000000000000000000000000000000000003635c9adc5dea00000";
-};
-
 const mockWrite = async (params: ExecutionParams): Promise<`0x${string}`> => {
   console.log("Write called with:", params);
   await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -78,14 +68,6 @@ const mockSimulate = async (
   return "0x0000000000000000000000000000000000000000000000000000000000000001";
 };
 
-const mockRawTransaction = async (
-  params: RawCallParams,
-): Promise<`0x${string}`> => {
-  console.log("Raw transaction with:", params);
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  return "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890";
-};
-
 // Story: Resend with ABI (decoded function)
 export const WithAbi: Story = {
   args: {
@@ -97,7 +79,6 @@ export const WithAbi: Story = {
     addresses,
     requiresConnection: true,
     isConnected: true,
-    onQuery: mockQuery,
     onWrite: mockWrite,
     onSimulate: mockSimulate,
     onHashClick: (hash: string) => {
@@ -117,9 +98,7 @@ export const WithoutAbi: Story = {
     addresses,
     requiresConnection: true,
     isConnected: true,
-    onQuery: mockQuery,
     onWrite: mockWrite,
-    onRawTransaction: mockRawTransaction,
     onHashClick: (hash: string) => {
       console.log("Hash clicked:", hash);
     },
@@ -136,9 +115,7 @@ export const Disconnected: Story = {
     addresses,
     requiresConnection: true,
     isConnected: false,
-    onQuery: mockQuery,
     onWrite: mockWrite,
     onSimulate: mockSimulate,
-    onRawTransaction: mockRawTransaction,
   },
 };

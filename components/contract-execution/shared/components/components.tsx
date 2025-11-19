@@ -1,22 +1,47 @@
 import clsx from "clsx";
 import { ChevronDown, ChevronUp, ExternalLink, Info } from "lucide-react";
 import { useState } from "react";
-import { Form } from "../../form/index.js";
-import { Alert, AlertDescription, AlertTitle } from "../../shadcn/alert.js";
-import { Button } from "../../shadcn/button.js";
-import type { InternalResult } from "./use-function-execution.js";
+import { Form } from "../../../form/index.js";
+import { Alert, AlertDescription, AlertTitle } from "../../../shadcn/alert.js";
+import { Button } from "../../../shadcn/button.js";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "../../../shadcn/collapsible.js";
+import type { InternalResult } from "../hooks/use-execution-mutations.js";
 
-export function MsgSenderInput() {
+export function OptionalInputs() {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <div className="mt-4">
-      <Form.Text
-        name="msgSender"
-        label={
-          <span className="font-bold text-base">Msg Sender (Optional)</span>
-        }
-        placeholder="0x..."
-        className="w-full"
-      />
+    <div className="mt-2">
+      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+        <CollapsibleTrigger className="group flex w-full cursor-pointer items-center justify-between rounded-md border border-muted-foreground/40 border-dashed bg-muted/20 p-3 text-left transition-colors hover:bg-muted/40 data-[state=open]:rounded-b-none data-[state=open]:border-b-0">
+          <span className="font-medium text-muted-foreground text-sm group-hover:text-foreground">
+            Advanced Options
+          </span>
+          {isOpen ? (
+            <ChevronUp className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-foreground" />
+          ) : (
+            <ChevronDown className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-foreground" />
+          )}
+        </CollapsibleTrigger>
+        <CollapsibleContent className="rounded-b-md border border-muted-foreground/40 border-t-0 border-dashed bg-muted/10">
+          <div className="space-y-3 p-3">
+            <Form.Text
+              name="msgSender"
+              label={
+                <span className="font-medium text-sm">
+                  Msg Sender (Optional)
+                </span>
+              }
+              placeholder="0x..."
+              className="w-full"
+            />
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
     </div>
   );
 }
@@ -35,33 +60,31 @@ export function ConnectWalletAlert() {
 
 interface ActionButtonsProps {
   isWrite: boolean;
-  callData: string | undefined;
-  isSimulating: boolean;
-  isExecuting: boolean;
+  callData: `0x${string}` | undefined;
+  isLoading: boolean;
   isConnected: boolean;
-  hasSimulate: boolean;
   simulate?: () => void;
-  execute: () => void;
+  query?: () => void;
+  write?: () => void;
 }
 
 export function ActionButtons({
   isWrite,
   callData,
-  isSimulating,
-  isExecuting,
+  isLoading,
   isConnected,
-  hasSimulate,
   simulate,
-  execute,
+  query,
+  write,
 }: ActionButtonsProps) {
   return (
     <div className="mt-6 flex gap-2">
       {isWrite ? (
         <>
-          {hasSimulate && (
+          {simulate && (
             <Button
               type="button"
-              disabled={!callData || isSimulating || isExecuting}
+              disabled={!callData || isLoading}
               onClick={() => simulate?.()}
             >
               Simulate
@@ -69,8 +92,8 @@ export function ActionButtons({
           )}
           <Button
             type="button"
-            disabled={!isConnected || !callData || isExecuting || isSimulating}
-            onClick={() => execute()}
+            disabled={!isConnected || !callData || isLoading}
+            onClick={() => write?.()}
           >
             Write
           </Button>
@@ -78,8 +101,8 @@ export function ActionButtons({
       ) : (
         <Button
           type="button"
-          disabled={!callData || isExecuting}
-          onClick={() => execute()}
+          disabled={!callData || isLoading}
+          onClick={() => query?.()}
         >
           Query
         </Button>
@@ -127,11 +150,7 @@ export function DefaultResultDisplay({
       {result.cleanResult && (
         <div className="space-y-2">
           <div className="font-medium text-muted-foreground text-xs uppercase tracking-wide">
-            {result.type === "call"
-              ? "Result"
-              : result.type === "simulation"
-                ? "Simulation Result"
-                : "Result"}
+            Result
           </div>
           <div
             className={clsx(
@@ -182,12 +201,6 @@ export function DefaultResultDisplay({
             </pre>
           )}
         </div>
-      )}
-
-      {!result.cleanResult && !result.error && result.data && (
-        <pre className="overflow-x-auto whitespace-pre-wrap break-all rounded-md bg-muted p-4 font-mono text-sm">
-          {result.data}
-        </pre>
       )}
     </div>
   );
