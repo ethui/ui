@@ -22,6 +22,7 @@ import {
   Form as ShadForm,
 } from "../shadcn/form.js";
 import { Input, type InputProps } from "../shadcn/input.js";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "../shadcn/input-otp.js";
 import {
   Select,
   SelectContent,
@@ -31,7 +32,6 @@ import {
 } from "../shadcn/select.js";
 import { Switch as ShadSwitch } from "../shadcn/switch.js";
 import { Textarea as ShadTextarea } from "../shadcn/textarea.js";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "../shadcn/input-otp.js";
 
 interface Props<T extends FieldValues>
   extends Omit<React.FormHTMLAttributes<HTMLFormElement>, "onSubmit"> {
