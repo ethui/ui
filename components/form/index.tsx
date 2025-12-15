@@ -315,7 +315,11 @@ function Switch<T extends FieldValues>({
 Form.Switch = Switch;
 
 interface OTPProps<T extends FieldValues>
-  extends Omit<BaseInputProps<T>, "type"> {
+  extends Omit<BaseInputProps<T>, "type" | "onChange" | "value">,
+    Omit<
+      React.ComponentProps<typeof InputOTP>,
+      "value" | "onChange" | "maxLength" | "name" | "render"
+    > {
   maxLength?: number;
   children?: React.ReactNode;
   slotClassName?: string;
@@ -343,10 +347,10 @@ function OTP<T extends FieldValues>({
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
             <InputOTP
+              {...rest}
               maxLength={maxLength}
               value={String(field.value || "")}
               onChange={(value: string) => field.onChange(value)}
-              {...(rest as any)}
             >
               {children || (
                 <InputOTPGroup className={groupClassName}>
