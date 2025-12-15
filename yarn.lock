@@ -611,6 +611,7 @@ __metadata:
     class-variance-authority: "npm:^0.7.1"
     clsx: "npm:^2.1.1"
     cmdk: "npm:1.1.1"
+    input-otp: "npm:^1.4.2"
     lucide-react: "npm:^0.506.0"
     next-themes: "npm:^0.4.6"
     postcss: "npm:^8.5.3"
@@ -3825,6 +3826,16 @@ __metadata:
   version: 4.0.0
   resolution: "indent-string@npm:4.0.0"
   checksum: 10c0/1e1904ddb0cb3d6cce7cd09e27a90184908b7a5d5c21b92e232c93579d314f0b83c246ffb035493d0504b1e9147ba2c9b21df0030f48673fba0496ecd698161f
+  languageName: node
+  linkType: hard
+
+"input-otp@npm:^1.4.2":
+  version: 1.4.2
+  resolution: "input-otp@npm:1.4.2"
+  peerDependencies:
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
+  checksum: 10c0/d3a3216a75ed832993f3f2852edd7a85c5bae30ea6d251182119120488bbf9fed7cfdd91819bcee6daff57b3cfcbca94fd16d6a7c92cee4d806c0d4fa6ff1128
   languageName: node
   linkType: hard
 

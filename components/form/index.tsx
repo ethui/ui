@@ -22,6 +22,7 @@ import {
   Form as ShadForm,
 } from "../shadcn/form.js";
 import { Input, type InputProps } from "../shadcn/input.js";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "../shadcn/input-otp.js";
 import {
   Select,
   SelectContent,
@@ -312,6 +313,57 @@ function Switch<T extends FieldValues>({
   );
 }
 Form.Switch = Switch;
+
+interface OTPProps<T extends FieldValues>
+  extends Omit<BaseInputProps<T>, "type"> {
+  maxLength?: number;
+  children?: React.ReactNode;
+  slotClassName?: string;
+  groupClassName?: string;
+}
+
+function OTP<T extends FieldValues>({
+  name,
+  label,
+  className = "",
+  maxLength = 6,
+  children,
+  slotClassName = "",
+  groupClassName = "",
+  ...rest
+}: OTPProps<T>) {
+  const { control } = useFormContext();
+
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className={cn("w-full", className)}>
+          {label && <FormLabel>{label}</FormLabel>}
+          <FormControl>
+            <InputOTP
+              maxLength={maxLength}
+              value={String(field.value || "")}
+              onChange={(value: string) => field.onChange(value)}
+              {...(rest as any)}
+            >
+              {children || (
+                <InputOTPGroup className={groupClassName}>
+                  {Array.from({ length: maxLength }, (_, i) => (
+                    <InputOTPSlot className={slotClassName} key={i} index={i} />
+                  ))}
+                </InputOTPGroup>
+              )}
+            </InputOTP>
+          </FormControl>
+          <FormMessage>&nbsp;</FormMessage>
+        </FormItem>
+      )}
+    />
+  );
+}
+Form.OTP = OTP;
 
 interface SubmitLabelMapping {
   save: string;
