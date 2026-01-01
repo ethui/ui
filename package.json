@@ -92,7 +92,7 @@
     "typescript": "5.9.3",
     "viem": "^2.31.6",
     "vite": "^7.1.5",
-    "vite-tsconfig-paths": "^5.1.4",
+    "vite-tsconfig-paths": "^6.0.3",
     "zod": "^4.1.12"
   },
   "packageManager": "yarn@4.10.3"
